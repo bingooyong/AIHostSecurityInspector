@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hostsec.invalid/schemas/approval-v1.schema.json",
+  "title": "HostSec local approval document v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "canonical_version",
+    "approval_id",
+    "intent_hash",
+    "requester_principal",
+    "approver_principal",
+    "nonce",
+    "valid_from",
+    "valid_until",
+    "maintenance_window",
+    "algorithm",
+    "key_id",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "canonical_version": { "const": "approval-canonical-v1" },
+    "approval_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"
+    },
+    "intent_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "requester_principal": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"
+    },
+    "approver_principal": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"
+    },
+    "nonce": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "valid_from": { "type": "string", "format": "date-time" },
+    "valid_until": { "type": "string", "format": "date-time" },
+    "maintenance_window": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["timezone", "start", "end"],
+          "properties": {
+            "timezone": { "type": "string", "minLength": 1 },
+            "start": { "type": "string", "format": "date-time" },
+            "end": { "type": "string", "format": "date-time" }
+          }
+        }
+      ]
+    },
+    "algorithm": { "const": "ed25519" },
+    "key_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"
+    },
+    "signature": { "type": "string", "minLength": 1 }
+  }
+}

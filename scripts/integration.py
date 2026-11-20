@@ -86,4 +86,11 @@ with tempfile.TemporaryDirectory(prefix='hostsec-contract-') as directory:
     # Duplicate JSON keys must not silently override authorization.
     path.write_text(json.dumps(assets).replace('"authorized": true','"authorized": true, "authorized": false',1))
     run(['assets','validate','--file',str(path),'--json'],2)
-print(f'PASS: {count} real CLI processes; asset/plan/doctor schemas; authorization, profile, injection, and JSON rejection')
+snap=json.loads(run(['assets','snapshot','--file','examples/hosts.yaml','--json']).stdout)
+assert len(snap['content_hash'])==64
+intent=json.loads(run(['intent','--file','examples/hosts.yaml','--host','linux-test-001','--profile','quick','--requester','operator-alice','--valid-from','2026-11-20T00:00:00Z','--valid-until','2026-11-20T04:00:00Z']).stdout)
+Draft202012Validator(json.loads((root/'schemas/execution-intent-v1.schema.json').read_text()), format_checker=FormatChecker()).validate(intent['intent'])
+assert intent['intent']['mode']=='READ_ONLY'
+preflight=json.loads(run(['preflight','--file','examples/hosts.yaml','--intent-file',str(Path(tempfile.mkdtemp())/'missing.json')],2).stderr)
+assert preflight['code'] in ('INVALID_ARGUMENT','PREFLIGHT_REJECTED')
+print(f'PASS: {count} real CLI processes; asset/plan/doctor/intent schemas; authorization, profile, injection, and JSON rejection')

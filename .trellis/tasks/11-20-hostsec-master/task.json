@@ -78,6 +78,6 @@
       "docs/implementation/REPOSITORY-LAYOUT-REPORT.md",
       "docs/05-testing/evidence/layout-migration/results.json"
     ],
-    "next_step": "HOSTSEC-04: domain/schema/ExecutionIntent contracts; follow WP1-DETAILED-PLAN and ADR-008 backend module layout"
+    "next_step": "WP1 local slice in PR; next HOSTSEC-08 Linux collector on fixtures after independent 04/32A/07 review. Do not claim scan_ready."
   }
 }

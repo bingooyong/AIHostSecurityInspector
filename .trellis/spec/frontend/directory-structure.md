@@ -1,54 +1,45 @@
 # Directory Structure
 
-> How frontend code is organized in this project.
+## 1. Scope / trigger
 
----
+Planned independent React + TypeScript app under repository `frontend/`. Do not create the tree until HOSTSEC-34 starts.
 
-## Overview
+## 2. Signatures
 
-<!--
-Document your project's frontend directory structure here.
+Future npm scripts: `lint`, `typecheck`, `test`, `build`. The UI talks only to the versioned Web API; it has no SSH, collector, or SQLite access.
 
-Questions to answer:
-- Where do components live?
-- How are features/modules organized?
-- Where are shared utilities?
-- How are assets organized?
--->
+## 3. Contracts
 
-(To be filled by the team)
-
----
-
-## Directory Layout
+When implemented, keep:
 
 ```
-<!-- Replace with your actual structure -->
-src/
-├── ...
-└── ...
+frontend/
+  package.json
+  package-lock.json
+  src/app/            # routes and layout
+  src/features/       # assets, plans, evidence, approvals, reports
+  src/shared/         # design-system primitives, API client, schema types
+  tests/              # Playwright and unit tests
 ```
 
----
+Feature folders own their pages and local hooks. Shared security decisions stay in Go.
 
-## Module Organization
+## 4. Validation and errors
 
-<!-- How should new features be organized? -->
+| Condition | Required outcome |
+|---|---|
+| empty package.json / no lockfile | fail WP7 acceptance |
+| UI hiding a button as the only authorization | fail security review |
+| importing Go source or embedding rule YAML | fail layout/boundary gates |
 
-(To be filled by the team)
+## 5. Good / base / bad
 
----
+Good: typed client generated from OpenAPI/Schema, server-enforced RBAC. Base: feature folders matching product centers in the PRD. Bad: utils dumping secrets into localStorage, or a mock API that always returns PASS findings.
 
-## Naming Conventions
+## 6. Tests required
 
-<!-- File and folder naming rules -->
+Playwright against an isolated stub API covering empty, forbidden, loading, and error states. No production host data.
 
-(To be filled by the team)
+## 7. Wrong vs correct
 
----
-
-## Examples
-
-<!-- Link to well-organized modules as examples -->
-
-(To be filled by the team)
+Wrong: create `frontend/` now to mark bootstrap complete. Correct: keep these planned conventions and wait for HOSTSEC-34.

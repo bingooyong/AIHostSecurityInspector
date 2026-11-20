@@ -4,9 +4,9 @@ package planner
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/asset"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/authorization"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/policy"
 )
 
@@ -43,53 +43,33 @@ func Build(ctx context.Context, inv asset.Inventory, req Request) (*Plan, error)
 	if err := inv.Validate(); err != nil {
 		return nil, err
 	}
-	if !req.DryRun || (req.HostID == "") == (req.Targets == "") {
+	if !req.DryRun {
 		return nil, errors.New("exactly one target selector and dry-run are required")
 	}
-	p, err := policy.Get(req.Profile)
+	hosts, p, err := authorization.Select(ctx, inv, req.HostID, req.Targets, req.Profile)
 	if err != nil {
 		return nil, err
 	}
-	ids := []string{}
-	if req.HostID != "" {
-		if !asset.ValidID(req.HostID) {
-			return nil, errors.New("invalid target selector")
-		}
-		ids = append(ids, req.HostID)
-	} else {
-		if !strings.HasPrefix(req.Targets, "group:") {
-			return nil, errors.New("invalid target selector")
-		}
-		name := strings.TrimPrefix(req.Targets, "group:")
-		g, ok := inv.Groups[name]
-		if !asset.ValidID(name) || !ok || len(g.Hosts) == 0 {
-			return nil, errors.New("unknown or empty target group")
-		}
-		ids = g.Hosts
-	}
-	byID := make(map[string]asset.Host, len(inv.Hosts))
-	for _, h := range inv.Hosts {
-		byID[h.ID] = h
-	}
-	targets := make([]Target, 0, len(ids))
-	for _, id := range ids {
-		if err := ctx.Err(); err != nil {
-			return nil, err
-		}
-		h, ok := byID[id]
-		if !ok || !asset.IsAuthorized(h) {
-			return nil, errors.New("host not authorized")
-		}
-		allowed := false
-		for _, name := range h.AllowedProfiles {
-			if name == p.Name {
-				allowed = true
-			}
-		}
-		if !allowed {
-			return nil, errors.New("profile not authorized")
-		}
+	targets := make([]Target, 0, len(hosts))
+	for _, h := range hosts {
 		targets = append(targets, Target{HostID: h.ID, Addresses: append([]string{}, h.Addresses...), Transport: h.Connection.Transport, Environment: h.Environment})
 	}
-	return &Plan{SchemaVersion: "1.0", Mode: "READ_ONLY", DryRun: true, Profile: p.Name, Hosts: targets, Modules: p.Modules, Tools: p.Tools, ApprovalRequired: p.ApprovalRequired, ExecutionReady: false, Limits: p.Limits, EstimatedImpact: p.EstimatedImpact, Limitations: []string{"No collector, transport, approval verifier, rule evaluation, evidence collection, or AI call has run.", "Profiles and limits are fixed planning descriptions; execution enforcement is not implemented.", "Deep and incident-response execution require a verified approval bound to the plan and a maintenance window.", "Vulnerability intelligence, trusted baselines and scanner availability have not been checked.", "No findings or safety assessment can be inferred from this offline plan."}}, nil
+	plan := &Plan{SchemaVersion: "1.0", Mode: "READ_ONLY", DryRun: true, Profile: p.Name, Hosts: targets, Modules: p.Modules, Tools: p.Tools, ApprovalRequired: p.ApprovalRequired, ExecutionReady: false, Limits: p.Limits, EstimatedImpact: p.EstimatedImpact, Limitations: []string{"No collector, transport, approval verifier, rule evaluation, evidence collection, or AI call has run.", "Profiles and limits are fixed planning descriptions; execution enforcement is not implemented.", "Deep and incident-response execution require a verified approval bound to the plan and a maintenance window.", "Vulnerability intelligence, trusted baselines and scanner availability have not been checked.", "No findings or safety assessment can be inferred from this offline plan."}}
+	if err := ValidateOfflinePlan(*plan); err != nil {
+		return nil, err
+	}
+	return plan, nil
+}
+
+func ValidateOfflinePlan(plan Plan) error {
+	if plan.SchemaVersion != "1.0" || plan.Mode != "READ_ONLY" || !plan.DryRun || plan.ExecutionReady || plan.Limits.Enforced {
+		return errors.New("offline plan cannot claim execution")
+	}
+	if plan.ApprovalRequired != (plan.Profile == "deep" || plan.Profile == "incident-response") {
+		return errors.New("approval_required does not match profile")
+	}
+	if len(plan.Hosts) == 0 {
+		return errors.New("plan has no hosts")
+	}
+	return nil
 }

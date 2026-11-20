@@ -2,11 +2,15 @@ GO ?= go
 REPO_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 BACKEND := $(REPO_ROOT)/backend
 BUILD_DIR := $(REPO_ROOT)/build
+VERSION ?= 0.1.0-dev
+HOSTSEC_PKG := github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli
+GO_LDFLAGS := -buildid= -X $(HOSTSEC_PKG).Version=$(VERSION)
+HOSTSEC_EVIDENCE_DIR ?= docs/05-testing/evidence/ci-local
 export PATH := $(BUILD_DIR)/tools:$(PATH)
 .PHONY: tools build test vet lint schema boundaries baseline layout integration check release sbom vuln
 build:
 	mkdir -p "$(BUILD_DIR)"
-	$(GO) -C "$(BACKEND)" build -trimpath -o "$(BUILD_DIR)/hostsec" ./cmd/hostsec
+	$(GO) -C "$(BACKEND)" build -trimpath -ldflags "$(GO_LDFLAGS)" -o "$(BUILD_DIR)/hostsec" ./cmd/hostsec
 
 test:
 	$(GO) -C "$(BACKEND)" test -race -count=1 ./...
@@ -42,7 +46,7 @@ release:
 	python3 "$(REPO_ROOT)/scripts/build_release.py"
 
 check:
-	python3 "$(REPO_ROOT)/scripts/verify.py"
+	HOSTSEC_EVIDENCE_DIR="$(HOSTSEC_EVIDENCE_DIR)" python3 "$(REPO_ROOT)/scripts/verify.py"
 
 # Repository-local tooling avoids replacing user-installed binaries.
 tools:

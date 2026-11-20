@@ -1,51 +1,32 @@
 # Type Safety
 
-> Type safety patterns in this project.
+## 1. Scope / trigger
 
----
+TypeScript types for API/Schema consumption.
 
-## Overview
+## 2. Signatures
 
-<!--
-Document your project's type safety conventions here.
+Generate or hand-write types from `schemas/*.schema.json`. Do not silently widen enums. `execution_ready` remains boolean as returned by the server; the client must not coerce missing to true.
 
-Questions to answer:
-- What type system do you use?
-- How are types organized?
-- What validation library do you use?
-- How do you handle type inference?
--->
+## 3. Contracts
 
-(To be filled by the team)
+- IDs are branded strings, not IPs.
+- Rule outcomes are `"PASS" | "FAIL" | "UNKNOWN" | "NOT_APPLICABLE"` only.
+- Confidence is an integer 0–100, never a float probability used as certainty.
+- Optional AI fields are absent or typed; `ai_status !== "success"` means `ai_assessment` is null.
 
----
+## 4. Validation and errors
 
-## Type Organization
+Runtime parse failures become UI errors, not defaulted PASS. AdditionalProperties from the server are ignored only after an explicit strip step, not treated as trusted extras.
 
-<!-- Where types are defined, shared types vs local types -->
+## 5. Good / base / bad
 
-(To be filled by the team)
+Good: zod/io-ts (or equivalent) aligned with Schema. Bad: `as ScanResult` on `fetch().then(r => r.json())`.
 
----
+## 6. Tests required
 
-## Validation
+Parser tests for each negative Schema fixture used by `scripts/contracts.py`.
 
-<!-- Runtime validation patterns (Zod, Yup, io-ts, etc.) -->
+## 7. Wrong vs correct
 
-(To be filled by the team)
-
----
-
-## Common Patterns
-
-<!-- Type utilities, generics, type guards -->
-
-(To be filled by the team)
-
----
-
-## Forbidden Patterns
-
-<!-- any, type assertions, etc. -->
-
-(To be filled by the team)
+Wrong: duplicate HostSec domain rules in TypeScript. Correct: validate shape, display, and send mutations; Go remains the decision kernel.

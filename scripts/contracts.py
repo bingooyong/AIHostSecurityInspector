@@ -39,4 +39,17 @@ finding=dict(finding_id='finding-demo',scan_id='scan-demo',host_id='host-demo',r
 finding_validator.validate(finding)
 finding['evidence_refs']=[]
 assert list(finding_validator.iter_errors(finding)), 'Finding must contain evidence IDs'
-print('PASS: schema shape positives and 6 negatives; provenance/reference membership/runtime still PLANNED')
+intent_schema=json.loads((root/'schemas/execution-intent-v1.schema.json').read_text())
+intent_validator=Draft202012Validator(intent_schema, format_checker=FormatChecker())
+intent=dict(schema_version='1.0', canonical_version='execution-intent-canonical-v1',
+    requester_principal='operator-alice', host_ids=['linux-test-001'], identity_refs=['hostid-linux-test-001'],
+    asset_snapshot_hash='a'*64, policy_id='hostsec-builtin', policy_version='1.0', policy_hash='b'*64,
+    profile='quick', modules=['host_identity'], tools=[], allowed_paths=[], excluded_paths=['/proc'],
+    excluded_mount_types=['nfs'], limits=dict(timeout_seconds=900,max_concurrency=2,max_files=10000,
+        max_file_size_bytes=33554432, io_max_bytes_per_second=10485760, stop_on_resource_pressure=True,
+        maintenance_window_required=False), required_capabilities=['linux_proc'],
+    valid_from='2026-11-20T00:00:00Z', valid_until='2026-11-20T04:00:00Z', maintenance_window=None, mode='READ_ONLY')
+intent_validator.validate(intent)
+bad=deepcopy(intent); bad['mode']='WRITE'
+assert list(intent_validator.iter_errors(bad)), 'intent schema must reject non-read-only mode'
+print('PASS: schema shape positives and negatives; execution-intent v1 checked; provenance/runtime collection still PLANNED')

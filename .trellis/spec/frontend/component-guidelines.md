@@ -1,59 +1,32 @@
 # Component Guidelines
 
-> How components are built in this project.
+## 1. Scope / trigger
 
----
+WP7 React components. Not applicable until HOSTSEC-34.
 
-## Overview
+## 2. Signatures
 
-<!--
-Document your project's component conventions here.
+Components receive already-authorized view models from the API client. They never compute RuleResult or rewrite severity.
 
-Questions to answer:
-- What component patterns do you use?
-- How are props defined?
-- How do you handle composition?
-- What accessibility standards apply?
--->
+## 3. Contracts
 
-(To be filled by the team)
+- Presentational components do not fetch.
+- Findings always show evidence refs, review status, and limitations.
+- Destructive or privileged actions require an explicit confirmation that still calls a server-checked endpoint.
+- Do not render raw collector output, private keys, or unredacted argv.
 
----
+## 4. Validation and errors
 
-## Component Structure
+Unknown enum values render as UNKNOWN/unavailable, not as success. Missing evidence cannot be shown as a clean bill of health.
 
-<!-- Standard structure of a component file -->
+## 5. Good / base / bad
 
-(To be filled by the team)
+Good: FindingCard with required human-review badge. Bad: a green checkmark when `ai_status=failed` or `collection_status=failed`.
 
----
+## 6. Tests required
 
-## Props Conventions
+Component tests for empty, forbidden, and partial-scan fixtures from `schemas/`.
 
-<!-- How props should be defined and typed -->
+## 7. Wrong vs correct
 
-(To be filled by the team)
-
----
-
-## Styling Patterns
-
-<!-- How styles are applied (CSS modules, styled-components, Tailwind, etc.) -->
-
-(To be filled by the team)
-
----
-
-## Accessibility
-
-<!-- A11y requirements and patterns -->
-
-(To be filled by the team)
-
----
-
-## Common Mistakes
-
-<!-- Component-related mistakes your team has made -->
-
-(To be filled by the team)
+Wrong: client-side allow-list of host IPs. Correct: host_id from the API, never free-form scan targets.

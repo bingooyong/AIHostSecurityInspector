@@ -26,6 +26,7 @@
   ],
   "notes": "First-time setup task created by trellis init (fullstack project); HostSec backend initial contract populated 2026-11-20; frontend implementation/guidelines remain deferred WP7.",
   "meta": {
-    "delivery_status": "PARTIAL"
+    "delivery_status": "PARTIAL",
+    "next_step": "Frontend specs filled as WP7 planned contracts; do not create empty npm project until HOSTSEC-34"
   }
 }

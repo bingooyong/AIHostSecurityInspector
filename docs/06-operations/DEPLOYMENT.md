@@ -4,7 +4,7 @@
 
 ## 1. 当前本地构建边界
 
-控制端需要固定 Go 工具链与批准依赖来源，根make build调度backend模块，可用go -C backend build；程序入口为`backend/cmd/hostsec`。首切片只提供版本、doctor、资产校验/列表、离线计划；样例为文档地址，不能用于真实扫描。macOS 控制端可做离线计划，但 doctor 必须明确 Linux Collector 不可用，不能称已具备本机扫描能力。Linux amd64/arm64 交叉编译只产生构建产物，不是目标运行验收。
+控制端需要固定 Go 工具链与批准依赖来源，根 make build 调度 backend 模块，可用 `go -C backend build`；程序入口为 `backend/cmd/hostsec`。默认版本 `0.1.0-dev`，可通过 `VERSION` 与 `-ldflags -X .../cli.Version=` 注入；非法版本被 `scripts/build_release.py` 拒绝。`make check` 默认写入 `docs/05-testing/evidence/ci-local`，禁止覆盖 `layout-migration` 历史证据。当前提供 version/doctor/assets/plan 以及离线 `intent`/`preflight`；样例为文档地址，不能用于真实扫描。macOS 控制端可做离线计划，但 doctor 必须明确 Linux Collector 不可用。Linux amd64/arm64 交叉编译只产生构建产物（CROSS_BUILD_ONLY），不是目标运行验收。
 
 不把尚未实现的 scan、report、mcp 或环境变量配置描述为可运行命令；不复制 V1.0 插件中的占位 MCP URL 上线。
 

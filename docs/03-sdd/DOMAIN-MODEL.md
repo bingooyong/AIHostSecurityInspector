@@ -1,6 +1,6 @@
 # 领域模型与状态契约
 
-设计基线 0.1，2026-11-20。除首切片资产/计划契约外，以下实体和服务为 PLANNED；字段表是后续实现依据，不是已经存在的 Go struct 或数据库表。
+设计基线 0.1，2026-11-20。资产/离线计划已实现。2026-11-20 WP1 切片在 `backend/internal/domain` 增加了纯数据 ExecutionIntent/ScanJob/Attempt/Evidence/Finding/Assessment 校验与规范化摘要；这不是采集运行或数据库落地。采集、SQLite、规则求值仍为 PLANNED。
 
 ## 1. 身份与版本
 

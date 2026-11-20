@@ -5,3 +5,5 @@
 .DS_Store
 __pycache__/
 .venv/
+/docs/05-testing/evidence/ci-local/
+/docs/05-testing/evidence/ci/
