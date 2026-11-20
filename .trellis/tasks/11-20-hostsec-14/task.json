@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-14",
+  "name": "hostsec-14",
+  "title": "HOSTSEC-14 SSH固定Collector Transport",
+  "description": "严格known_hosts、专用账号、固定部署二进制与参数，禁止任意exec",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/transport/ssh/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-14",
+    "phase": "WP2",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-08",
+      "HOSTSEC-32A"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-28",
+  "name": "hostsec-28",
+  "title": "HOSTSEC-28 AI证据引用验证",
+  "description": "每结论绑定同scan-host真实允许证据集合",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/analyzer/validate.go"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-28",
+    "phase": "WP5",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-27",
+      "HOSTSEC-16"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

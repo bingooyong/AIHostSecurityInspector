@@ -1,0 +1,39 @@
+{
+  "id": "hostsec-32",
+  "name": "hostsec-32",
+  "title": "HOSTSEC-32 平台审批与审计",
+  "description": "操作审批分离、审批绑定、审计只读、持久化留痕",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/approval/",
+    "backend/internal/audit/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-32",
+    "phase": "WP6",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-32A",
+      "HOSTSEC-19"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

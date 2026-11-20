@@ -1,0 +1,6 @@
+{
+  "name": "host-security-inspector",
+  "version": "1.0.0",
+  "description": "Enterprise host security inspection workflow skill. Configure the MCP endpoint separately after deployment.",
+  "skills": "./skills/"
+}

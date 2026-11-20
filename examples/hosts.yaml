@@ -1,0 +1,44 @@
+# Documentation addresses only; the offline CLI never connects to these hosts.
+version: 1
+hosts:
+  - host_id: linux-test-001
+    hostname: linux-test-001
+    addresses: [192.0.2.10]
+    platform: linux
+    architecture: x86_64
+    zone: test-zone-a
+    environment: TEST
+    business_system: demo
+    owner: team-demo
+    criticality: medium
+    authorized: true
+    allowed_profiles: [quick, standard, deep, incident-response]
+    labels: [pilot, linux]
+    connection:
+      transport: ssh
+      port: 22
+      user: hostsec-audit
+      auth_ref: ssh-agent:pilot
+      known_hosts_ref: known-hosts:pilot
+      host_key_policy: strict
+  - host_id: linux-denied-001
+    hostname: linux-denied-001
+    addresses: [192.0.2.11]
+    platform: linux
+    architecture: arm64
+    zone: test-zone-a
+    environment: TEST
+    business_system: demo
+    owner: team-demo
+    criticality: medium
+    authorized: false
+    allowed_profiles: [quick]
+    labels: []
+    connection:
+      transport: local
+      host_key_policy: strict
+groups:
+  pilot:
+    hosts: [linux-test-001]
+  mixed:
+    hosts: [linux-test-001, linux-denied-001]

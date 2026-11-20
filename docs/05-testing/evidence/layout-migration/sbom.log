@@ -1,0 +1,6 @@
+cwd=backend
+$ cyclonedx-gomod mod -json -output /Users/bingooyong/Code/01Code/github.com/bingooyong/AIHostSecurityInspector/build/sbom.cdx.json
+exit=0
+stdout:
+
+stderr:

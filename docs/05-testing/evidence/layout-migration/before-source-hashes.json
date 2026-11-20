@@ -1,0 +1,11 @@
+{
+  "cmd/hostsec/main.go": "6cd1371dcd19035672cd2c5a6afb23210fc7dffa88bf3ba796e99362cf3ce74c",
+  "internal/asset/asset.go": "d7a667c11598336dcd0450926a1785ee70e502f50d23a618affc07f825fad9f6",
+  "internal/asset/asset_test.go": "dca1ec8d16aeebfa66094124e4f71ca1033a26e85f37df87bee487aec294d6e5",
+  "internal/cli/cli.go": "d814e2ce3debbf2839fa83d285ceacc961f434ddb32ca4a5438cfeaa8767aa3c",
+  "internal/cli/cli_test.go": "2a5dd067899fbfc8cb44d77ea83717b9623fd321782f2f8a2fb23b84cc6cf681",
+  "internal/planner/planner.go": "7aaada28cdc1c73053ded8ebe23e217e73988243ed4a4a7456665a1faab62dc2",
+  "internal/planner/planner_test.go": "83d961ba7971a27773e70731bf854ae77b0e742833b725794651ccc6b48d68c8",
+  "internal/policy/profile.go": "c8e9ba1346db0d71c5dd0013c307a562d6559fc0d57f1bfd6e7d5f30329c1703",
+  "internal/policy/profile_test.go": "dd4adffdb31a30c3b356828daf88e44301842f0af7855648467789dde19706a8"
+}

@@ -1,0 +1,37 @@
+{
+  "id": "hostsec-38",
+  "name": "hostsec-38",
+  "title": "HOSTSEC-38 软件包清单",
+  "description": "发行版原生版本/来源，不安装更新软件",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/collector/linux/packages.go"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-38",
+    "phase": "WP2",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-08"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-44",
+  "name": "hostsec-44",
+  "title": "HOSTSEC-44 可信基线与扫描差异",
+  "description": "审批基线、host identity、SSH key/config/服务差异、历史attempt",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/baseline/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-44",
+    "phase": "WP3",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-16",
+      "HOSTSEC-06"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

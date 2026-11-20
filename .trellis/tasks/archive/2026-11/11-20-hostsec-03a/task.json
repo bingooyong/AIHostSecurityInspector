@@ -1,0 +1,44 @@
+{
+  "id": "hostsec-03a",
+  "name": "hostsec-03a",
+  "title": "HOSTSEC-03A offline authorized plan CLI slice",
+  "description": "Runnable version/doctor/assets/plan commands with strict assets and four offline profiles",
+  "status": "completed",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P0",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": "2026-11-20",
+  "branch": "main",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/cmd/hostsec/main.go",
+    "docs/03-sdd/CLI-SDD.md"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-03A",
+    "phase": "WP1",
+    "delivery_status": "IMPLEMENTED",
+    "depends_on": [
+      "HOSTSEC-00",
+      "HOSTSEC-01",
+      "HOSTSEC-02"
+    ],
+    "completion_evidence": [
+      "docs/05-testing/evidence/bootstrap/results.json",
+      "docs/security/CLI-INDEPENDENT-REVIEW.md",
+      "docs/05-testing/ACCEPTANCE-RESULTS.md"
+    ],
+    "layout_adr": "ADR-008"
+  }
+}

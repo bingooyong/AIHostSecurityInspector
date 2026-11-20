@@ -1,0 +1,1866 @@
+{
+  "schema_version": "1.0",
+  "status_vocabulary": [
+    "IMPLEMENTED",
+    "PARTIAL",
+    "PLANNED",
+    "BLOCKED"
+  ],
+  "nodes": [
+    {
+      "id": "HOSTSEC-00",
+      "phase": "WP0",
+      "title": "仓库与 Trellis 盘点",
+      "depends_on": [],
+      "task_path": ".trellis/tasks/archive/2026-11/11-20-hostsec-00",
+      "input_documents": [
+        "docs/AI-Host-Security-Inspector-V1.0/README.md",
+        "AGENTS.md",
+        ".trellis/workflow.md",
+        "docs/00-project-inventory.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "docs/00-project-inventory.md",
+        "docs/implementation/v1-source-manifest.json"
+      ],
+      "scope": "保留既有文件，核对环境和22份来源",
+      "acceptance_criteria": [
+        "保留既有文件，核对环境和22份来源",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "源文件摘要复核；Trellis actual help/context"
+      ],
+      "risks": [
+        "覆盖用户未跟踪文件"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "IMPLEMENTED",
+      "completion_evidence": [
+        "docs/00-project-inventory.md",
+        "docs/implementation/v1-source-manifest.json",
+        "docs/05-testing/evidence/bootstrap/environment.json"
+      ]
+    },
+    {
+      "id": "HOSTSEC-01",
+      "phase": "WP0",
+      "title": "需求与架构基线",
+      "depends_on": [
+        "HOSTSEC-00"
+      ],
+      "task_path": ".trellis/tasks/archive/2026-11/11-20-hostsec-01",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/02-architecture/SYSTEM-ARCHITECTURE.md",
+        "docs/implementation/SOURCE-REVIEW.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "docs/01-product/PRD.md",
+        "docs/02-architecture/SYSTEM-ARCHITECTURE.md",
+        "docs/implementation/SOURCE-REVIEW.md"
+      ],
+      "scope": "六项MVP与后续范围、来源差异和ADR可追溯",
+      "acceptance_criteria": [
+        "六项MVP与后续范围、来源差异和ADR可追溯",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "链接/来源/需求AC映射校验"
+      ],
+      "risks": [
+        "文档漂移和范围膨胀"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "IMPLEMENTED",
+      "completion_evidence": [
+        "docs/implementation/BASELINE-REVIEW.md",
+        "docs/implementation/BOOTSTRAP-REPORT.md"
+      ]
+    },
+    {
+      "id": "HOSTSEC-02",
+      "phase": "WP0",
+      "title": "威胁模型与数据边界",
+      "depends_on": [
+        "HOSTSEC-01"
+      ],
+      "task_path": ".trellis/tasks/archive/2026-11/11-20-hostsec-02",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/04-security/THREAT-MODEL.md",
+        "docs/04-security/DATA-GOVERNANCE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "docs/04-security/THREAT-MODEL.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/04-security/DATA-GOVERNANCE.md"
+      ],
+      "scope": "13项对抗风险都有控制和验收任务",
+      "acceptance_criteria": [
+        "13项对抗风险都有控制和验收任务",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "威胁→控制→测试人工审查和链接校验"
+      ],
+      "risks": [
+        "把规划防护当已实现"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "IMPLEMENTED",
+      "completion_evidence": [
+        "docs/security/ADVERSARIAL-REVIEW.md",
+        "docs/implementation/BASELINE-REVIEW.md"
+      ]
+    },
+    {
+      "id": "HOSTSEC-03A",
+      "phase": "WP1",
+      "title": "离线授权计划首个垂直切片",
+      "depends_on": [
+        "HOSTSEC-00",
+        "HOSTSEC-01",
+        "HOSTSEC-02"
+      ],
+      "task_path": ".trellis/tasks/archive/2026-11/11-20-hostsec-03a",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/CLI-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/cmd/hostsec/main.go",
+        "docs/03-sdd/CLI-SDD.md"
+      ],
+      "scope": "CLI version/doctor/assets/plan可运行，未授权拒绝，绝不连接主机",
+      "acceptance_criteria": [
+        "CLI version/doctor/assets/plan可运行，未授权拒绝，绝不连接主机",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "单测/CLI进程smoke/schema/双架构构建"
+      ],
+      "risks": [
+        "离线计划误认扫描成功"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "IMPLEMENTED",
+      "completion_evidence": [
+        "docs/05-testing/evidence/bootstrap/results.json",
+        "docs/security/CLI-INDEPENDENT-REVIEW.md",
+        "docs/05-testing/ACCEPTANCE-RESULTS.md"
+      ]
+    },
+    {
+      "id": "HOSTSEC-03",
+      "phase": "WP1",
+      "title": "Go 工程构建与发布骨架",
+      "depends_on": [
+        "HOSTSEC-03A"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-03",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/CLI-SDD.md",
+        "docs/06-operations/DEPLOYMENT.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md",
+        "docs/implementation/WP1-DETAILED-PLAN.md",
+        "docs/07-decisions/ADR/ADR-008.md",
+        "docs/implementation/LAYOUT-MIGRATION-PLAN.md"
+      ],
+      "deliverables": [
+        "Makefile",
+        "docs/06-operations/DEPLOYMENT.md",
+        "backend/go.mod",
+        "backend/go.sum",
+        "backend/.golangci.yml",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md",
+        "backend/cmd/hostsec/main.go",
+        "backend/tools/check-boundaries/main.go",
+        "scripts/build_release.py",
+        "scripts/check_layout.py"
+      ],
+      "scope": "版本注入、校验和、可复现构建与平台矩阵",
+      "acceptance_criteria": [
+        "版本注入、校验和、可复现构建与平台矩阵",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "双架构构建和版本/摘要负例"
+      ],
+      "risks": [
+        "编译不代表运行"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "docs/implementation/BOOTSTRAP-REPORT.md",
+        "docs/05-testing/evidence/bootstrap/results.json",
+        "docs/implementation/REPOSITORY-LAYOUT-REPORT.md",
+        "docs/05-testing/evidence/layout-migration/results.json",
+        "docs/security/LAYOUT-INDEPENDENT-REVIEW.md"
+      ]
+    },
+    {
+      "id": "HOSTSEC-04",
+      "phase": "WP1",
+      "title": "完整领域模型与版本化Schema",
+      "depends_on": [
+        "HOSTSEC-03A"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-04",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/03-sdd/AI-ANALYZER-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md",
+        "docs/implementation/WP1-DETAILED-PLAN.md",
+        "docs/07-decisions/ADR/ADR-008.md",
+        "docs/03-sdd/CLI-SDD.md",
+        "schemas/scan-result-v1.schema.json"
+      ],
+      "deliverables": [
+        "backend/internal/domain/",
+        "schemas/scan-result-v1.schema.json",
+        "backend/internal/asset/asset.go",
+        "backend/internal/planner/planner.go",
+        "schemas/assets-v1.schema.json",
+        "schemas/plan-v1.schema.json",
+        "backend/internal/domain/testdata/"
+      ],
+      "scope": "Host/Scan/Attempt/Evidence/RuleResult/Finding/AI领域与枚举一致",
+      "acceptance_criteria": [
+        "Host/Scan/Attempt/Evidence/RuleResult/Finding/AI领域与枚举一致",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "序列化正反例、关系和兼容测试"
+      ],
+      "risks": [
+        "模型/Schema漂移"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "docs/implementation/BOOTSTRAP-REPORT.md",
+        "docs/05-testing/evidence/bootstrap/results.json"
+      ]
+    },
+    {
+      "id": "HOSTSEC-05",
+      "phase": "WP1",
+      "title": "CLI生命周期与输出契约",
+      "depends_on": [
+        "HOSTSEC-03",
+        "HOSTSEC-04"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-05",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/CLI-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md",
+        "docs/implementation/WP1-DETAILED-PLAN.md",
+        "docs/07-decisions/ADR/ADR-008.md"
+      ],
+      "deliverables": [
+        "backend/internal/cli/",
+        "docs/03-sdd/CLI-SDD.md",
+        "backend/cmd/hostsec/main.go",
+        "schemas/doctor-v1.schema.json",
+        "schemas/plan-v1.schema.json",
+        "scripts/integration.py"
+      ],
+      "scope": "取消/超时/JSON/错误码/并发参数贯穿可用命令",
+      "acceptance_criteria": [
+        "取消/超时/JSON/错误码/并发参数贯穿可用命令",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "真实进程signal/exit/stdout测试"
+      ],
+      "risks": [
+        "错误回显敏感数据"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "docs/implementation/BOOTSTRAP-REPORT.md",
+        "docs/05-testing/evidence/bootstrap/results.json"
+      ]
+    },
+    {
+      "id": "HOSTSEC-06",
+      "phase": "WP1",
+      "title": "资产授权和治理",
+      "depends_on": [
+        "HOSTSEC-05"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-06",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/CLI-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md",
+        "docs/implementation/WP1-DETAILED-PLAN.md",
+        "docs/07-decisions/ADR/ADR-008.md",
+        "schemas/assets-v1.schema.json"
+      ],
+      "deliverables": [
+        "backend/internal/asset/",
+        "schemas/assets-v1.schema.json",
+        "backend/internal/authorization/",
+        "examples/hosts.yaml",
+        "backend/internal/asset/testdata/"
+      ],
+      "scope": "YAML/JSON、分组、标签、差异、引用式认证与授权复核",
+      "acceptance_criteria": [
+        "YAML/JSON、分组、标签、差异、引用式认证与授权复核",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "重复/混合越权/资产变化/host identity漂移"
+      ],
+      "risks": [
+        "资产文件被替换"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "docs/implementation/BOOTSTRAP-REPORT.md",
+        "docs/05-testing/evidence/bootstrap/results.json"
+      ]
+    },
+    {
+      "id": "HOSTSEC-07",
+      "phase": "WP1",
+      "title": "可执行计划与策略约束",
+      "depends_on": [
+        "HOSTSEC-06",
+        "HOSTSEC-32A"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-07",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/CLI-SDD.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md",
+        "docs/implementation/WP1-DETAILED-PLAN.md",
+        "docs/07-decisions/ADR/ADR-008.md",
+        "docs/03-sdd/DOMAIN-MODEL.md"
+      ],
+      "deliverables": [
+        "backend/internal/planner/",
+        "backend/internal/policy/",
+        "schemas/plan-v1.schema.json",
+        "schemas/policy-v1.schema.json",
+        "policies/",
+        "backend/internal/planner/testdata/"
+      ],
+      "scope": "版本化策略、计划摘要、能力检查与执行前复核",
+      "acceptance_criteria": [
+        "版本化策略、计划摘要、能力检查与执行前复核",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "审批/策略/目标漂移、失效窗口、四Profile"
+      ],
+      "risks": [
+        "规划与执行TOCTOU"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "docs/implementation/BOOTSTRAP-REPORT.md",
+        "docs/05-testing/evidence/bootstrap/results.json"
+      ]
+    },
+    {
+      "id": "HOSTSEC-08",
+      "phase": "WP2",
+      "title": "Linux身份与系统采集",
+      "depends_on": [
+        "HOSTSEC-04"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-08",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/collector/linux/system.go"
+      ],
+      "scope": "发行版/内核/资源/boot/稳定身份，模块状态超时",
+      "acceptance_criteria": [
+        "发行版/内核/资源/boot/稳定身份，模块状态超时",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "无害proc/sys fixture与测试VM人工核对"
+      ],
+      "risks": [
+        "容器命名空间与伪造身份"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-09",
+      "phase": "WP2",
+      "title": "Linux进程采集",
+      "depends_on": [
+        "HOSTSEC-08"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-09",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/collector/linux/process.go"
+      ],
+      "scope": "PID/PPID/UID/路径/start/hash/缺文件原因均可复核",
+      "acceptance_criteria": [
+        "PID/PPID/UID/路径/start/hash/缺文件原因均可复核",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "进程退出竞态/EACCES/已删除二进制/双架构VM"
+      ],
+      "risks": [
+        "读取失败误当exe不存在"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-10",
+      "phase": "WP2",
+      "title": "Linux本机网络采集",
+      "depends_on": [
+        "HOSTSEC-08"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-10",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/collector/linux/network.go"
+      ],
+      "scope": "监听/连接/inode-PID关联/路由/DNS/防火墙，不探网",
+      "acceptance_criteria": [
+        "监听/连接/inode-PID关联/路由/DNS/防火墙，不探网",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "socket fixture、PID权限不足、IPv4/6、VM核对"
+      ],
+      "risks": [
+        "网络命名空间与关联缺失"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-11",
+      "phase": "WP2",
+      "title": "Linux账号权限采集",
+      "depends_on": [
+        "HOSTSEC-08"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-11",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/collector/linux/accounts.go"
+      ],
+      "scope": "用户组/UID0/sudo/公钥指纹/登录；不读私钥",
+      "acceptance_criteria": [
+        "用户组/UID0/sudo/公钥指纹/登录；不读私钥",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "缺权限/符号链接/敏感数据/账号边界fixture"
+      ],
+      "risks": [
+        "用户隐私与密钥外泄"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-12",
+      "phase": "WP2",
+      "title": "服务与持久化采集",
+      "depends_on": [
+        "HOSTSEC-08"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-12",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/collector/linux/persistence.go"
+      ],
+      "scope": "systemd/timers/cron/at/rc/profile/启动项/模块",
+      "acceptance_criteria": [
+        "systemd/timers/cron/at/rc/profile/启动项/模块",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "fixture和非systemd/缺工具VM；不执行启动内容"
+      ],
+      "risks": [
+        "恶意服务描述注入"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-13",
+      "phase": "WP2",
+      "title": "安全配置采集",
+      "depends_on": [
+        "HOSTSEC-08"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-13",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/collector/linux/security.go"
+      ],
+      "scope": "SSH/sudo/PAM/audit/SELinux/AppArmor/日志/防火墙状态",
+      "acceptance_criteria": [
+        "SSH/sudo/PAM/audit/SELinux/AppArmor/日志/防火墙状态",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "include深度/权限/缺失服务/发行版fixture"
+      ],
+      "risks": [
+        "把配置缺失当合规"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-14",
+      "phase": "WP2",
+      "title": "SSH固定Collector Transport",
+      "depends_on": [
+        "HOSTSEC-08",
+        "HOSTSEC-32A"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-14",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/02-architecture/SECURITY-ARCHITECTURE.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/transport/ssh/"
+      ],
+      "scope": "严格known_hosts、专用账号、固定部署二进制与参数，禁止任意exec",
+      "acceptance_criteria": [
+        "严格known_hosts、专用账号、固定部署二进制与参数，禁止任意exec",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "临时SSH测试容器：mismatch/auth/cancel/timeout/主机漂移"
+      ],
+      "risks": [
+        "SSH远端本质命令字符串需封闭常量构造"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-15",
+      "phase": "WP3",
+      "title": "本地SQLite和证据落盘",
+      "depends_on": [
+        "HOSTSEC-04"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-15",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/STORAGE-SDD.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/storage/",
+        "backend/internal/evidence/store.go"
+      ],
+      "scope": "事务迁移、只追加raw/normalized、安全权限与崩溃恢复",
+      "acceptance_criteria": [
+        "事务迁移、只追加raw/normalized、安全权限与崩溃恢复",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "隔离临时数据库、磁盘不足、并发/中断测试"
+      ],
+      "risks": [
+        "证据文件与元数据非原子"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-16",
+      "phase": "WP3",
+      "title": "SHA256 Manifest完整性",
+      "depends_on": [
+        "HOSTSEC-15"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-16",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/evidence/manifest.go"
+      ],
+      "scope": "原始/标准化双摘要，缺原始明确状态，不伪造摘要",
+      "acceptance_criteria": [
+        "原始/标准化双摘要，缺原始明确状态，不伪造摘要",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "篡改/重放/跨host-scan引用/损坏manifest"
+      ],
+      "risks": [
+        "hash不能证明来源真实性"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-17",
+      "phase": "WP3",
+      "title": "有限DSL YAML规则引擎",
+      "depends_on": [
+        "HOSTSEC-18",
+        "HOSTSEC-44"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-17",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/RULE-ENGINE-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/rules/",
+        "rules/"
+      ],
+      "scope": "9条MVP规则含required_evidence与PASS/FAIL/UNKNOWN/N/A；不执行代码",
+      "acceptance_criteria": [
+        "9条MVP规则含required_evidence与PASS/FAIL/UNKNOWN/N/A；不执行代码",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "每规则正反/缺证据/缺基线/非法DSL/资源界限"
+      ],
+      "risks": [
+        "规则包供应链和假绿"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-18",
+      "phase": "WP3",
+      "title": "Finding与RuleResult模型",
+      "depends_on": [
+        "HOSTSEC-04",
+        "HOSTSEC-16"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-18",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/03-sdd/RULE-ENGINE-SDD.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/findings/"
+      ],
+      "scope": "所有Finding非空真实证据引用，缺证据独立UNKNOWN结果",
+      "acceptance_criteria": [
+        "所有Finding非空真实证据引用，缺证据独立UNKNOWN结果",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "跨scan/host/未成功证据引用与四态测试"
+      ],
+      "risks": [
+        "工作流状态和检测状态混淆"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-19",
+      "phase": "WP3",
+      "title": "JSON Markdown报告",
+      "depends_on": [
+        "HOSTSEC-17",
+        "HOSTSEC-16",
+        "HOSTSEC-36"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-19",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/03-sdd/AI-ANALYZER-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/report/"
+      ],
+      "scope": "用户要求17项、覆盖率分母、未覆盖、人工复核与证据索引",
+      "acceptance_criteria": [
+        "用户要求17项、覆盖率分母、未覆盖、人工复核与证据索引",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "不完整扫描/恶意Markdown/AI故障/报告Schema"
+      ],
+      "risks": [
+        "未扫描显示安全"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-20",
+      "phase": "WP4",
+      "title": "osquery Adapter",
+      "depends_on": [
+        "HOSTSEC-40",
+        "HOSTSEC-16"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-20",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/implementation/TOOL-EVALUATION.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/tools/osquery/"
+      ],
+      "scope": "固定查询ID、版本/平台/缺工具/退出码/限额",
+      "acceptance_criteria": [
+        "固定查询ID、版本/平台/缺工具/退出码/限额",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "无工具fixture/超时/输出损坏；真实测试VM"
+      ],
+      "risks": [
+        "调用方SQL与meta commands"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-21",
+      "phase": "WP4",
+      "title": "Lynis Adapter",
+      "depends_on": [
+        "HOSTSEC-40",
+        "HOSTSEC-16"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-21",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/implementation/TOOL-EVALUATION.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/tools/lynis/"
+      ],
+      "scope": "批准审计项与受控报告目录，披露写入副作用",
+      "acceptance_criteria": [
+        "批准审计项与受控报告目录，披露写入副作用",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "版本格式/超时/工具缺失/文件副作用快照"
+      ],
+      "risks": [
+        "脚本插件和检测副作用"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-22",
+      "phase": "WP4",
+      "title": "OpenSCAP Adapter",
+      "depends_on": [
+        "HOSTSEC-40",
+        "HOSTSEC-16"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-22",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/implementation/TOOL-EVALUATION.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/tools/openscap/"
+      ],
+      "scope": "匹配OS内容包、离线且禁remediate/fetch",
+      "acceptance_criteria": [
+        "匹配OS内容包、离线且禁remediate/fetch",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "内容不匹配/缺包/退出码/超时fixture与VM"
+      ],
+      "risks": [
+        "内容许可与错误基线"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-23",
+      "phase": "WP4",
+      "title": "ClamAV Adapter",
+      "depends_on": [
+        "HOSTSEC-40",
+        "HOSTSEC-16"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-23",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/implementation/TOOL-EVALUATION.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/tools/clamav/"
+      ],
+      "scope": "仅限批准路径/签名库时效/禁止删除移动复制",
+      "acceptance_criteria": [
+        "仅限批准路径/签名库时效/禁止删除移动复制",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "EICAR无害测试、缺库、1命中/错误退出区分"
+      ],
+      "risks": [
+        "压缩炸弹/内存IO"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-24",
+      "phase": "WP4",
+      "title": "YARA Adapter",
+      "depends_on": [
+        "HOSTSEC-40",
+        "HOSTSEC-16"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-24",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/implementation/TOOL-EVALUATION.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/tools/yara/"
+      ],
+      "scope": "审查规则、固定版本、文件范围与timeout；YARA-X另评估",
+      "acceptance_criteria": [
+        "审查规则、固定版本、文件范围与timeout；YARA-X另评估",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "无害规则正反、恶意include/外部变量、超时"
+      ],
+      "risks": [
+        "上游维护模式与规则资源耗尽"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-25",
+      "phase": "WP5",
+      "title": "AI Provider抽象",
+      "depends_on": [
+        "HOSTSEC-18",
+        "HOSTSEC-19"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-25",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/AI-ANALYZER-SDD.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/04-security/DATA-GOVERNANCE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/analyzer/provider/"
+      ],
+      "scope": "默认禁用，OpenAI/兼容/本地统一请求限制",
+      "acceptance_criteria": [
+        "默认禁用，OpenAI/兼容/本地统一请求限制",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "本地httptest超时/429/5xx/大响应，无真实外发"
+      ],
+      "risks": [
+        "Provider重定向/SSRF/secret日志"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-26",
+      "phase": "WP5",
+      "title": "AI最小脱敏视图",
+      "depends_on": [
+        "HOSTSEC-25"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-26",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/AI-ANALYZER-SDD.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/04-security/DATA-GOVERNANCE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/analyzer/redaction/"
+      ],
+      "scope": "字段白名单、凭据PII脱敏、长度上限、默认本地",
+      "acceptance_criteria": [
+        "字段白名单、凭据PII脱敏、长度上限、默认本地",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "植入假密钥/连接串/私钥片段、fail-closed外发测试"
+      ],
+      "risks": [
+        "自由文本隐蔽秘密"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-27",
+      "phase": "WP5",
+      "title": "结构化AI关联研判",
+      "depends_on": [
+        "HOSTSEC-26",
+        "HOSTSEC-19"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-27",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/AI-ANALYZER-SDD.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/04-security/DATA-GOVERNANCE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/analyzer/analysis.go"
+      ],
+      "scope": "规定11字段、事实推断分离、severity不变、失败降级",
+      "acceptance_criteria": [
+        "规定11字段、事实推断分离、severity不变、失败降级",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "无效JSON/注入/枚举/超时/无模型报告"
+      ],
+      "risks": [
+        "AI越权结论或指令"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-28",
+      "phase": "WP5",
+      "title": "AI证据引用验证",
+      "depends_on": [
+        "HOSTSEC-27",
+        "HOSTSEC-16"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-28",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/AI-ANALYZER-SDD.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/04-security/DATA-GOVERNANCE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/analyzer/validate.go"
+      ],
+      "scope": "每结论绑定同scan-host真实允许证据集合",
+      "acceptance_criteria": [
+        "每结论绑定同scan-host真实允许证据集合",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "虚构ID/跨主机/缺引用/污染ref全拒绝"
+      ],
+      "risks": [
+        "存在ID但不支持结论"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-29",
+      "phase": "WP5",
+      "title": "Codex Claude Skill接入",
+      "depends_on": [
+        "HOSTSEC-28",
+        "HOSTSEC-19",
+        "HOSTSEC-36"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-29",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/MCP-SDD.md",
+        "docs/03-sdd/CLI-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "integrations/skills/host-security-inspection/SKILL.md",
+        "integrations/README.md"
+      ],
+      "scope": "只调用已实现CLI，授权/计划/报告流程；无任意shell能力",
+      "acceptance_criteria": [
+        "只调用已实现CLI，授权/计划/报告流程；无任意shell能力",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "Agent合约/参数注入/恶意证据测试"
+      ],
+      "risks": [
+        "Skill模板误报能力已交付"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-30",
+      "phase": "WP6",
+      "title": "MCP标准业务工具",
+      "depends_on": [
+        "HOSTSEC-29",
+        "HOSTSEC-32",
+        "HOSTSEC-45"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-30",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/MCP-SDD.md",
+        "docs/02-architecture/SECURITY-ARCHITECTURE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/mcp/"
+      ],
+      "scope": "10业务工具，调用者身份/权限过滤，资源上限",
+      "acceptance_criteria": [
+        "10业务工具，调用者身份/权限过滤，资源上限",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "真实MCP客户端协议测试、越权与禁止工具不存在"
+      ],
+      "risks": [
+        "会话身份与主机授权脱节"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-31",
+      "phase": "WP6",
+      "title": "区域Runner",
+      "depends_on": [
+        "HOSTSEC-30",
+        "HOSTSEC-41",
+        "HOSTSEC-32"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-31",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/MCP-SDD.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/06-operations/DEPLOYMENT.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/runner/"
+      ],
+      "scope": "区域隔离、签名任务、mTLS、nonce/有效期/反重放",
+      "acceptance_criteria": [
+        "区域隔离、签名任务、mTLS、nonce/有效期/反重放",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "两隔离测试区域、错签/跨区/重放/离线恢复"
+      ],
+      "risks": [
+        "中央跨区访问和凭据复用"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-32",
+      "phase": "WP6",
+      "title": "平台审批与审计",
+      "depends_on": [
+        "HOSTSEC-32A",
+        "HOSTSEC-19"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-32",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/MCP-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/SECURITY-ARCHITECTURE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/approval/",
+        "backend/internal/audit/"
+      ],
+      "scope": "操作审批分离、审批绑定、审计只读、持久化留痕",
+      "acceptance_criteria": [
+        "操作审批分离、审批绑定、审计只读、持久化留痕",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "角色矩阵/重放/篡改/撤销测试"
+      ],
+      "risks": [
+        "管理员绕过审批"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-33",
+      "phase": "WP7",
+      "title": "Go Web API",
+      "depends_on": [
+        "HOSTSEC-30",
+        "HOSTSEC-31",
+        "HOSTSEC-32",
+        "HOSTSEC-45"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-33",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/02-architecture/SYSTEM-ARCHITECTURE.md",
+        "docs/03-sdd/MCP-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/api/"
+      ],
+      "scope": "共用应用服务、授权和审计，不复制检测内核",
+      "acceptance_criteria": [
+        "共用应用服务、授权和审计，不复制检测内核",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "OpenAPI合约/RBAC/取消/IDOR/速率限制"
+      ],
+      "risks": [
+        "多入口授权差异"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-34",
+      "phase": "WP7",
+      "title": "React TS管理端",
+      "depends_on": [
+        "HOSTSEC-33"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-34",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/02-architecture/SYSTEM-ARCHITECTURE.md",
+        "docs/03-sdd/MCP-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "frontend/"
+      ],
+      "scope": "资产/任务/证据/规则/审批等已设计中心可操作",
+      "acceptance_criteria": [
+        "资产/任务/证据/规则/审批等已设计中心可操作",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "Playwright无害隔离E2E/访问权限/可访问性"
+      ],
+      "risks": [
+        "跨站脚本和敏感证据展示"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-35",
+      "phase": "WP7",
+      "title": "风险整改与趋势",
+      "depends_on": [
+        "HOSTSEC-34",
+        "HOSTSEC-44"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-35",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/STORAGE-SDD.md",
+        "docs/03-sdd/RULE-ENGINE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/risk/"
+      ],
+      "scope": "误报/整改/复扫关联，不自动训练或处置",
+      "acceptance_criteria": [
+        "误报/整改/复扫关联，不自动训练或处置",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "时间序列/主机身份漂移/闭环状态测试"
+      ],
+      "risks": [
+        "趋势掩盖未覆盖数据"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-36",
+      "phase": "WP3",
+      "title": "调度状态机与端到端扫描",
+      "depends_on": [
+        "HOSTSEC-07",
+        "HOSTSEC-08",
+        "HOSTSEC-09",
+        "HOSTSEC-10",
+        "HOSTSEC-11",
+        "HOSTSEC-12",
+        "HOSTSEC-13",
+        "HOSTSEC-14",
+        "HOSTSEC-16",
+        "HOSTSEC-17",
+        "HOSTSEC-32A",
+        "HOSTSEC-37",
+        "HOSTSEC-38"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-36",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/STORAGE-SDD.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/orchestrator/"
+      ],
+      "scope": "模块隔离超时/取消/压力停止/限额，计划授权复核，失败不变PASS",
+      "acceptance_criteria": [
+        "模块隔离超时/取消/压力停止/限额，计划授权复核，失败不变PASS",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "VM端到端、signal、重试attempt、资源压力/中断"
+      ],
+      "risks": [
+        "资源耗尽与丢证据"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-37",
+      "phase": "WP2",
+      "title": "受限文件元数据采集",
+      "depends_on": [
+        "HOSTSEC-08"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-37",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/collector/linux/files.go"
+      ],
+      "scope": "SUID/SGID/权限/隐藏文件/关键hash，非全盘、拒绝挂载逃逸",
+      "acceptance_criteria": [
+        "SUID/SGID/权限/隐藏文件/关键hash，非全盘、拒绝挂载逃逸",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "符号链接/路径穿越/文件数大小/网络挂载/IO上限"
+      ],
+      "risks": [
+        "误扫数据库备份或挂载目录"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-38",
+      "phase": "WP2",
+      "title": "软件包清单",
+      "depends_on": [
+        "HOSTSEC-08"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-38",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/collector/linux/packages.go"
+      ],
+      "scope": "发行版原生版本/来源，不安装更新软件",
+      "acceptance_criteria": [
+        "发行版原生版本/来源，不安装更新软件",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "dpkg/rpm fixture、权限/缺工具与VM"
+      ],
+      "risks": [
+        "版本语义不兼容"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-39",
+      "phase": "WP3",
+      "title": "离线漏洞情报关联",
+      "depends_on": [
+        "HOSTSEC-38",
+        "HOSTSEC-17"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-39",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/RULE-ENGINE-SDD.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/implementation/TOOL-EVALUATION.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/vulnerability/"
+      ],
+      "scope": "可信版本化情报与发行版回补语义，缺情报UNKNOWN",
+      "acceptance_criteria": [
+        "可信版本化情报与发行版回补语义，缺情报UNKNOWN",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "epoch/backport/过期情报/签名/无匹配对照"
+      ],
+      "risks": [
+        "字符串版本比较误报"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-40",
+      "phase": "WP4",
+      "title": "统一只读工具执行器",
+      "depends_on": [
+        "HOSTSEC-04"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-40",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/COLLECTOR-SDD.md",
+        "docs/implementation/TOOL-EVALUATION.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/tools/adapter.go",
+        "backend/internal/tools/runner.go"
+      ],
+      "scope": "固定二进制/参数白名单、版本、退出码、超时、输出字节上限",
+      "acceptance_criteria": [
+        "固定二进制/参数白名单、版本、退出码、超时、输出字节上限",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "参数注入/伪二进制/工具缺失/超时/进程组取消"
+      ],
+      "risks": [
+        "第三方工具固有写入"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-41",
+      "phase": "WP6",
+      "title": "离线结果包与来源验证",
+      "depends_on": [
+        "HOSTSEC-16",
+        "HOSTSEC-19"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-41",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/03-sdd/STORAGE-SDD.md",
+        "docs/03-sdd/MCP-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/bundle/"
+      ],
+      "scope": "zstd/tar受限解包、签名、源身份、manifest验证和导入事务",
+      "acceptance_criteria": [
+        "zstd/tar受限解包、签名、源身份、manifest验证和导入事务",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "zip/tar slip、symlink、解压炸弹、重放、跨区域"
+      ],
+      "risks": [
+        "摘要可重算不等于来源可信"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-42",
+      "phase": "WP1",
+      "title": "CI与供应链门禁",
+      "depends_on": [
+        "HOSTSEC-03A"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-42",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/05-testing/TEST-STRATEGY.md",
+        "docs/implementation/TOOL-EVALUATION.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md",
+        "docs/implementation/WP1-DETAILED-PLAN.md",
+        "docs/07-decisions/ADR/ADR-008.md"
+      ],
+      "deliverables": [
+        ".github/workflows/ci.yml",
+        "scripts/",
+        "Makefile",
+        "scripts/verify.py",
+        "scripts/check_layout.py",
+        "scripts/build_release.py",
+        "scripts/integration.py",
+        "scripts/contracts.py",
+        "scripts/validate_baseline.py",
+        "backend/tools/check-boundaries/main.go",
+        "scripts/requirements.txt"
+      ],
+      "scope": "格式/vet/lint/race/集成/schema/安全/漏洞/SBOM/双架构摘要",
+      "acceptance_criteria": [
+        "格式/vet/lint/race/集成/schema/安全/漏洞/SBOM/双架构摘要",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "本地命令结果与远端CI分开记录，依赖版本锁定"
+      ],
+      "risks": [
+        "联网检查不可用与供应链污染"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "docs/implementation/BOOTSTRAP-REPORT.md",
+        "docs/05-testing/evidence/bootstrap/results.json",
+        "docs/implementation/REPOSITORY-LAYOUT-REPORT.md",
+        "docs/05-testing/evidence/layout-migration/results.json",
+        "docs/security/LAYOUT-INDEPENDENT-REVIEW.md"
+      ]
+    },
+    {
+      "id": "HOSTSEC-43",
+      "phase": "WP5",
+      "title": "首期MVP总体验收",
+      "depends_on": [
+        "HOSTSEC-29",
+        "HOSTSEC-19",
+        "HOSTSEC-36",
+        "HOSTSEC-28",
+        "HOSTSEC-42",
+        "HOSTSEC-39"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-43",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/05-testing/TEST-STRATEGY.md",
+        "docs/implementation/MVP-PLAN.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "docs/05-testing/ACCEPTANCE-RESULTS.md"
+      ],
+      "scope": "MVP1-6全部与AC01-15逐项真实证据，Linux双架构运行",
+      "acceptance_criteria": [
+        "MVP1-6全部与AC01-15逐项真实证据，Linux双架构运行",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "3-5测试主机矩阵、资源基准、无意外变更、对抗审计"
+      ],
+      "risks": [
+        "把交叉编译/fixture当运行验收"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-44",
+      "phase": "WP3",
+      "title": "可信基线与扫描差异",
+      "depends_on": [
+        "HOSTSEC-16",
+        "HOSTSEC-06"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-44",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/EVIDENCE-SDD.md",
+        "docs/03-sdd/RULE-ENGINE-SDD.md",
+        "docs/03-sdd/STORAGE-SDD.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/baseline/"
+      ],
+      "scope": "审批基线、host identity、SSH key/config/服务差异、历史attempt",
+      "acceptance_criteria": [
+        "审批基线、host identity、SSH key/config/服务差异、历史attempt",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "首次UNKNOWN、可信基线正反、基线篡改/漂移"
+      ],
+      "risks": [
+        "攻击后快照被当可信基线"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-45",
+      "phase": "WP6",
+      "title": "身份与区域RBAC",
+      "depends_on": [
+        "HOSTSEC-32"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-45",
+      "input_documents": [
+        "docs/01-product/PRD.md",
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/05-testing/ACCEPTANCE-CRITERIA.md",
+        "docs/03-sdd/MCP-SDD.md",
+        "docs/02-architecture/SECURITY-ARCHITECTURE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md"
+      ],
+      "deliverables": [
+        "backend/internal/authorization/"
+      ],
+      "scope": "按用户/组/区域/业务授权，审计只读、Agent继承调用者",
+      "acceptance_criteria": [
+        "按用户/组/区域/业务授权，审计只读、Agent继承调用者",
+        "需求→设计→实现→自测→独立审计→真实证据验收；禁止缺证据完成"
+      ],
+      "automated_tests": [
+        "权限矩阵/IDOR/缓存撤权/跨区测试"
+      ],
+      "risks": [
+        "平台管理员隐式全权限"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    },
+    {
+      "id": "HOSTSEC-32A",
+      "phase": "WP1",
+      "title": "本地审批与审计前置",
+      "depends_on": [
+        "HOSTSEC-04",
+        "HOSTSEC-06"
+      ],
+      "task_path": ".trellis/tasks/11-20-hostsec-32a",
+      "input_documents": [
+        "docs/04-security/SECURITY-BOUNDARIES.md",
+        "docs/03-sdd/CLI-SDD.md",
+        "docs/03-sdd/DOMAIN-MODEL.md",
+        "docs/02-architecture/SECURITY-ARCHITECTURE.md",
+        "docs/02-architecture/REPOSITORY-LAYOUT.md",
+        "docs/implementation/WP1-DETAILED-PLAN.md",
+        "docs/07-decisions/ADR/ADR-008.md",
+        "docs/03-sdd/STORAGE-SDD.md"
+      ],
+      "deliverables": [
+        "backend/internal/approval/local.go",
+        "backend/internal/audit/local.go",
+        "backend/internal/approval/",
+        "backend/internal/audit/",
+        "schemas/approval-v1.schema.json",
+        "backend/internal/approval/testdata/",
+        "backend/internal/audit/testdata/"
+      ],
+      "scope": "deep/IR执行前验证审批签名/计划摘要/目标/Profile/有效期/维护窗口/执行者审批者分离，写审计",
+      "acceptance_criteria": [
+        "无审批、伪造、过期、重放、跨目标、同人审批、计划漂移均拒绝"
+      ],
+      "automated_tests": [
+        "临时目录审批验证和重放/撤权/篡改正反例"
+      ],
+      "risks": [
+        "把任意非空approval-id当授权"
+      ],
+      "parallel_allowed": true,
+      "parallel_condition": "04/06验收且文件互斥；审批与运行状态更新串行",
+      "status": "PLANNED",
+      "completion_evidence": []
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "mode": {
+      "const": "READ_ONLY"
+    },
+    "dry_run": {
+      "const": true
+    },
+    "profile": {
+      "enum": [
+        "quick",
+        "standard",
+        "deep",
+        "incident-response"
+      ]
+    },
+    "hosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "host_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$",
+            "not": {
+              "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])$"
+            }
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 45,
+              "anyOf": [
+                {
+                  "format": "ipv4"
+                },
+                {
+                  "format": "ipv6"
+                }
+              ],
+              "allOf": [
+                {
+                  "not": {
+                    "enum": [
+                      "0.0.0.0",
+                      "::"
+                    ]
+                  }
+                },
+                {
+                  "not": {
+                    "pattern": "%"
+                  }
+                },
+                {
+                  "not": {
+                    "pattern": "^(?:22[4-9]|23[0-9])\\."
+                  }
+                },
+                {
+                  "not": {
+                    "pattern": "^[fF][fF]"
+                  }
+                }
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 16,
+            "uniqueItems": true
+          },
+          "transport": {
+            "enum": [
+              "ssh",
+              "local"
+            ]
+          },
+          "environment": {
+            "enum": [
+              "TEST",
+              "UAT",
+              "PROD"
+            ]
+          }
+        },
+        "required": [
+          "host_id",
+          "addresses",
+          "transport",
+          "environment"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 1000,
+      "uniqueItems": true
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "minItems": 0,
+      "maxItems": 8,
+      "uniqueItems": true
+    },
+    "approval_required": {
+      "type": "boolean"
+    },
+    "execution_ready": {
+      "const": false
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1800
+        },
+        "max_concurrency": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "max_files": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "max_file_size_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 33554432
+        },
+        "allowed_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "minItems": 0,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "excluded_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "excluded_mount_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true
+        },
+        "io_max_bytes_per_second": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10485760
+        },
+        "stop_on_resource_pressure": {
+          "const": true
+        },
+        "maintenance_window_required": {
+          "type": "boolean"
+        },
+        "enforced": {
+          "const": false
+        }
+      },
+      "required": [
+        "timeout_seconds",
+        "max_concurrency",
+        "max_files",
+        "max_file_size_bytes",
+        "allowed_paths",
+        "excluded_paths",
+        "excluded_mount_types",
+        "io_max_bytes_per_second",
+        "stop_on_resource_pressure",
+        "maintenance_window_required",
+        "enforced"
+      ],
+      "additionalProperties": false
+    },
+    "estimated_impact": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2048
+      },
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "mode",
+    "dry_run",
+    "profile",
+    "hosts",
+    "modules",
+    "tools",
+    "approval_required",
+    "execution_ready",
+    "limits",
+    "estimated_impact",
+    "limitations"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hostsec.invalid/schemas/plan-v1.schema.json",
+  "title": "HostSec offline plan v1",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "profile": {
+            "enum": [
+              "deep",
+              "incident-response"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "approval_required": {
+            "const": true
+          },
+          "limits": {
+            "properties": {
+              "maintenance_window_required": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "approval_required": {
+            "const": false
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-23",
+  "name": "hostsec-23",
+  "title": "HOSTSEC-23 ClamAV Adapter",
+  "description": "仅限批准路径/签名库时效/禁止删除移动复制",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/tools/clamav/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-23",
+    "phase": "WP4",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-40",
+      "HOSTSEC-16"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

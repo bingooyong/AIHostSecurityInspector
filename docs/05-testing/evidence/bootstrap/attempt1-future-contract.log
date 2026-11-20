@@ -1,0 +1,6 @@
+$ python3 scripts/contracts.py
+exit=0
+stdout:
+PASS: schema shape positives and 6 negatives; provenance/reference membership/runtime still PLANNED
+
+stderr:

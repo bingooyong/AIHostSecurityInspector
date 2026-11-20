@@ -1,0 +1,46 @@
+{
+  "id": "hostsec-06",
+  "name": "hostsec-06",
+  "title": "HOSTSEC-06 资产授权和治理",
+  "description": "YAML/JSON、分组、标签、差异、引用式认证与授权复核",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P0",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/asset/",
+    "schemas/assets-v1.schema.json",
+    "backend/internal/authorization/",
+    "examples/hosts.yaml",
+    "backend/internal/asset/testdata/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-06",
+    "phase": "WP1",
+    "delivery_status": "PARTIAL",
+    "depends_on": [
+      "HOSTSEC-05"
+    ],
+    "completion_evidence": [
+      "docs/implementation/BOOTSTRAP-REPORT.md",
+      "docs/05-testing/evidence/bootstrap/results.json"
+    ],
+    "layout_adr": "ADR-008",
+    "planning_refinement": "docs/implementation/WP1-DETAILED-PLAN.md",
+    "layout_slice_status": "NOT_APPLICABLE"
+  }
+}

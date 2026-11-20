@@ -1,0 +1,5 @@
+{"file": "docs/03-sdd/CLI-SDD.md", "reason": "Public input/output contract and safe scope"}
+{"file": ".trellis/spec/backend/go/index.md", "reason": "Backend entry point"}
+{"file": ".trellis/spec/backend/go/quality-guidelines.md", "reason": "Required tests and security invariants"}
+{"file": "docs/implementation/SOURCE-REVIEW.md", "reason": "Resolved source conflicts"}
+{"file": "docs/02-architecture/REPOSITORY-LAYOUT.md", "reason": "Current monorepo layout and module/product boundaries supersede root Go layout"}

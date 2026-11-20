@@ -1,0 +1,42 @@
+{
+  "id": "hostsec-43",
+  "name": "hostsec-43",
+  "title": "HOSTSEC-43 首期MVP总体验收",
+  "description": "MVP1-6全部与AC01-15逐项真实证据，Linux双架构运行",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "docs/05-testing/ACCEPTANCE-RESULTS.md"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-43",
+    "phase": "WP5",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-29",
+      "HOSTSEC-19",
+      "HOSTSEC-36",
+      "HOSTSEC-28",
+      "HOSTSEC-42",
+      "HOSTSEC-39"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

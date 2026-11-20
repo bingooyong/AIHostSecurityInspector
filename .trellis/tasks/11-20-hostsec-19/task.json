@@ -1,0 +1,39 @@
+{
+  "id": "hostsec-19",
+  "name": "hostsec-19",
+  "title": "HOSTSEC-19 JSON Markdown报告",
+  "description": "用户要求17项、覆盖率分母、未覆盖、人工复核与证据索引",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/report/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-19",
+    "phase": "WP3",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-17",
+      "HOSTSEC-16",
+      "HOSTSEC-36"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

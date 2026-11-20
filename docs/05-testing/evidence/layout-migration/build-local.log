@@ -1,0 +1,6 @@
+cwd=backend
+$ go build -trimpath -o /Users/bingooyong/Code/01Code/github.com/bingooyong/AIHostSecurityInspector/build/hostsec ./cmd/hostsec
+exit=0
+stdout:
+
+stderr:

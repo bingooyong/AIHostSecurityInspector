@@ -1,0 +1,39 @@
+{
+  "id": "hostsec-31",
+  "name": "hostsec-31",
+  "title": "HOSTSEC-31 区域Runner",
+  "description": "区域隔离、签名任务、mTLS、nonce/有效期/反重放",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/runner/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-31",
+    "phase": "WP6",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-30",
+      "HOSTSEC-41",
+      "HOSTSEC-32"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "reviewed_at": "2026-11-20",
+  "files": [
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/.agents/skills/host-security-inspection/SKILL.md",
+      "bytes": 3267,
+      "sha256": "7d26293e8ab0bef1581fe82cb3971c918fa3134ffae8d7b3a147392714186efa",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/00-总体建设规划.md",
+      "bytes": 3485,
+      "sha256": "7a6c5af9672947dd4ce842985a9b33bc22d25ddec6343fc0d64bc6207f118182",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/01-需求规格说明书.md",
+      "bytes": 5903,
+      "sha256": "e3597ad1abdf34a499262015e78dc80ab87066b3d59fcd0b0fd6df1e0ab3c00e",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/02-技术架构设计.md",
+      "bytes": 4646,
+      "sha256": "14535ed80cf132a2d4345281fc51bced9488126d2c8fe11f4ad640b2a2b624eb",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/03-SDD-详细设计.md",
+      "bytes": 6345,
+      "sha256": "3c78a6d53f6e108fb653814ce65f7c3274258052c9b2650775e6968e4b0d6b49",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/04-巡检范围与检测规则.md",
+      "bytes": 5888,
+      "sha256": "3283c73af76e74598542990c3c1a5f08516d459ab965844f51e46e3c1d179228",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/05-CLI-MCP-Skills接口规范.md",
+      "bytes": 3990,
+      "sha256": "c680e1bdecfba3b64dbc67f3b2107514715d1eb1869dd332e1969c10b1d0e1aa",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/06-AI研判与数据治理.md",
+      "bytes": 4997,
+      "sha256": "bcd56fa76611e9ebd6668051644339407c9d27a8bc7098e73f316b0ac52df357",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/07-安全边界与应急响应.md",
+      "bytes": 3592,
+      "sha256": "05b1dc03b013dd11cd136527e3d49825f510a271f3a84e47c49ca36b654ff15a",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/08-实施路线与验收测试.md",
+      "bytes": 4030,
+      "sha256": "0bbf32537bb2a80fdfe31b103290dcaeddf2d96ea71d72ab6136a6762ff7ba23",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/09-部署与运维手册.md",
+      "bytes": 2867,
+      "sha256": "e10d1cee4fe5877b072d5fb9e0ae6f78a4dbbd13289b1bc7dc1142cfdf1daf81",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/10-Codex-Claude执行任务书.md",
+      "bytes": 3544,
+      "sha256": "62f64efcadd1f56385c5ebede7a6badffa4e281be27c19d259b239947390a4a3",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/11-参考资料与选型依据.md",
+      "bytes": 2600,
+      "sha256": "cd2c64322bbb367bee148249bf98899b962007627eeb350aaf71fef15bad821c",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/MVP-开发检查清单.md",
+      "bytes": 797,
+      "sha256": "4f4994884ba81b5d6ebf93edd5ef37646462156ece5f6fa2e49245cab2fdda91",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/README.md",
+      "bytes": 2704,
+      "sha256": "bb4cf1f5d3063a99a46e51a11264c495e7aaed66130a90431f1e06f0164d4040",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/examples/hosts.example.yaml",
+      "bytes": 879,
+      "sha256": "45b492d5404d88a4c772080dd7a1bf97f05ef7de795e42ad874c46eb68971c39",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/examples/policy.example.yaml",
+      "bytes": 2444,
+      "sha256": "85b973423aa782fafb2e84c1b8a0af460205cf39433ecc7c061671375cfd28f1",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/plugin/.codex-plugin/plugin.json",
+      "bytes": 215,
+      "sha256": "cfa30e12036842d3e7fbeb31bc77740c03f450a23fcfae5e5b125fe0fdc15720",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/plugin/.mcp.json.example",
+      "bytes": 150,
+      "sha256": "f4f095b3c25812b708b34b81ad7b89875544d4929f9c32ac5874ecfb17c036a8",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/plugin/README.md",
+      "bytes": 266,
+      "sha256": "c1e279c1c6f51a93e82cb9794df2828667de65aa9ef6255c18d4f17cee2d5d3c",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/plugin/skills/host-security-inspection/SKILL.md",
+      "bytes": 3267,
+      "sha256": "7d26293e8ab0bef1581fe82cb3971c918fa3134ffae8d7b3a147392714186efa",
+      "review": "READ"
+    },
+    {
+      "path": "docs/AI-Host-Security-Inspector-V1.0/schemas/scan-result.schema.json",
+      "bytes": 6019,
+      "sha256": "949c67fa11ec91518695462869378ec9271b96aab9a1ad3f14de857baefb916f",
+      "review": "READ"
+    }
+  ]
+}

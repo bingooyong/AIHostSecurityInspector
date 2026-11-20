@@ -1,0 +1,46 @@
+{
+  "id": "hostsec-32a",
+  "name": "hostsec-32a",
+  "title": "HOSTSEC-32A 本地审批与审计",
+  "description": "Before any deep execution, verify expiry/targets/profile/plan hash/requester separation and durable audit",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P2",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/approval/local.go",
+    "backend/internal/audit/local.go",
+    "backend/internal/approval/",
+    "backend/internal/audit/",
+    "schemas/approval-v1.schema.json",
+    "backend/internal/approval/testdata/",
+    "backend/internal/audit/testdata/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-32A",
+    "phase": "WP1",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-04",
+      "HOSTSEC-06"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008",
+    "planning_refinement": "docs/implementation/WP1-DETAILED-PLAN.md",
+    "layout_slice_status": "NOT_APPLICABLE"
+  }
+}

@@ -1,0 +1,11 @@
+$ go test ./internal/asset -run ^$ -bench BenchmarkParse1000Hosts -benchtime=1s -count=3 -benchmem
+exit=0
+goos: darwin
+goarch: arm64
+pkg: github.com/bingooyong/AIHostSecurityInspector/internal/asset
+cpu: Apple M1 Pro
+BenchmarkParse1000Hosts-10    	      79	  14720706 ns/op	  34.24 MB/s	 6655284 B/op	  129253 allocs/op
+BenchmarkParse1000Hosts-10    	      82	  14508860 ns/op	  34.74 MB/s	 6655367 B/op	  129255 allocs/op
+BenchmarkParse1000Hosts-10    	      82	  14552159 ns/op	  34.64 MB/s	 6655269 B/op	  129254 allocs/op
+PASS
+ok  	github.com/bingooyong/AIHostSecurityInspector/internal/asset	3.956s

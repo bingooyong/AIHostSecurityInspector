@@ -1,0 +1,18 @@
+[
+  {
+    "goos": "linux",
+    "goarch": "amd64",
+    "bytes": 5384972,
+    "sha256": "249debb7b8cc27e1bcfce5fd52a6d582d420932de35eb860f0d5a7a33f861841",
+    "path": "build/hostsec-linux-amd64",
+    "validation": "CROSS_BUILD_ONLY"
+  },
+  {
+    "goos": "linux",
+    "goarch": "arm64",
+    "bytes": 5115075,
+    "sha256": "d04cce0c68b3d5531fb5d5ee863eb418ffa737fdeb66b847b7672cc2e8d0313b",
+    "path": "build/hostsec-linux-arm64",
+    "validation": "CROSS_BUILD_ONLY"
+  }
+]

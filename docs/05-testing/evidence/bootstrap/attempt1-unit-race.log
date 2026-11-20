@@ -1,0 +1,11 @@
+$ go test -race -count=1 ./...
+exit=0
+stdout:
+?   	github.com/bingooyong/AIHostSecurityInspector/cmd/hostsec	[no test files]
+ok  	github.com/bingooyong/AIHostSecurityInspector/internal/asset	1.685s
+ok  	github.com/bingooyong/AIHostSecurityInspector/internal/cli	2.208s
+ok  	github.com/bingooyong/AIHostSecurityInspector/internal/planner	1.890s
+ok  	github.com/bingooyong/AIHostSecurityInspector/internal/policy	1.364s
+?   	github.com/bingooyong/AIHostSecurityInspector/scripts/check-boundaries	[no test files]
+
+stderr:

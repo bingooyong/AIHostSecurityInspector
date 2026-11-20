@@ -1,0 +1,6 @@
+{"file": "docs/implementation/SOURCE-REVIEW.md", "reason": "Master baseline"}
+{"file": "docs/03-sdd/CLI-SDD.md", "reason": "Master baseline"}
+{"file": ".trellis/spec/backend/go/index.md", "reason": "Master baseline"}
+{"file": "docs/02-architecture/REPOSITORY-LAYOUT.md", "reason": "User-approved multi-project layout correction and behavior-preserving migration"}
+{"file": "docs/implementation/LAYOUT-MIGRATION-PLAN.md", "reason": "User-approved multi-project layout correction and behavior-preserving migration"}
+{"file": "docs/07-decisions/ADR/ADR-008.md", "reason": "User-approved multi-project layout correction and behavior-preserving migration"}

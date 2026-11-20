@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-35",
+  "name": "hostsec-35",
+  "title": "HOSTSEC-35 风险整改与趋势",
+  "description": "误报/整改/复扫关联，不自动训练或处置",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/risk/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-35",
+    "phase": "WP7",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-34",
+      "HOSTSEC-44"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

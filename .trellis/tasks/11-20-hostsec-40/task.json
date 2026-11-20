@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-40",
+  "name": "hostsec-40",
+  "title": "HOSTSEC-40 统一只读工具执行器",
+  "description": "固定二进制/参数白名单、版本、退出码、超时、输出字节上限",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/tools/adapter.go",
+    "backend/internal/tools/runner.go"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-40",
+    "phase": "WP4",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-04"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

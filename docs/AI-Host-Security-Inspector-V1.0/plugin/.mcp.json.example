@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "hostsec": {
+      "type": "http",
+      "url": "https://REPLACE_WITH_APPROVED_INTERNAL_HOSTSEC_MCP_ENDPOINT/mcp"
+    }
+  }
+}

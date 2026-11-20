@@ -1,0 +1,5 @@
+$ gofmt -l cmd internal scripts/check-boundaries
+exit=0
+stdout:
+
+stderr:

@@ -1,0 +1,34 @@
+# 示例配置：不得填入真实密码、私钥或 API Key
+version: 1
+hosts:
+  - host_id: linux-test-001
+    hostname: linux-test-001
+    addresses: ["192.0.2.10"]
+    platform: linux
+    distribution: rocky
+    architecture: x86_64
+    environment: TEST
+    zone: test-zone-a
+    business_system: demo
+    owner: team-demo
+    criticality: medium
+    authorized: true
+    allowed_profiles: [quick, standard]
+    connection:
+      transport: ssh
+      port: 22
+      user: hostsec-audit
+      ssh_config_alias: linux-test-001
+      bastion_alias: test-bastion
+      host_key_policy: strict
+    labels: [pilot, linux]
+    maintenance_window:
+      timezone: Asia/Shanghai
+      allowed:
+        - weekday: Sunday
+          start: "01:00"
+          end: "05:00"
+    notes: "示例主机，部署前替换为经批准的真实资产"
+groups:
+  pilot:
+    hosts: [linux-test-001]

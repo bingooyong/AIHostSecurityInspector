@@ -1,0 +1,6 @@
+$ python3 scripts/integration.py
+exit=0
+stdout:
+PASS: 27 real CLI processes; asset/plan/doctor schemas; authorization, profile, injection, and JSON rejection
+
+stderr:

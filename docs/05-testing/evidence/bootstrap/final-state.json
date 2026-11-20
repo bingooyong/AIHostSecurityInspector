@@ -1,0 +1,16 @@
+{
+  "status_counts": {
+    "IMPLEMENTED": 4,
+    "PARTIAL": 6,
+    "PLANNED": 38
+  },
+  "gate_status": "PASS",
+  "source_hashes_verified": 24,
+  "source_manifest_files": 22,
+  "task_nodes": 48,
+  "trailing_whitespace_checked": true,
+  "git_commit_created": false,
+  "remote_ci_executed": false,
+  "linux_collector_runtime_executed": false,
+  "evidence_note": "current source hashes match verified-files; final-baseline.log covers task archive path/state updates"
+}

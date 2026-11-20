@@ -1,0 +1,8 @@
+cwd=.
+$ python3 scripts/check_layout.py
+exit=0
+stdout:
+PASS: 10 Go source files isolated in backend; root has no Go module/workspace
+PASS: 11 frozen CLI stdout/stderr/exit results match before migration byte for byte
+
+stderr:

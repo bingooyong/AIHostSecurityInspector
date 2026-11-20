@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-39",
+  "name": "hostsec-39",
+  "title": "HOSTSEC-39 离线漏洞情报关联",
+  "description": "可信版本化情报与发行版回补语义，缺情报UNKNOWN",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/vulnerability/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-39",
+    "phase": "WP3",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-38",
+      "HOSTSEC-17"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

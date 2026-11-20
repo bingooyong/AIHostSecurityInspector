@@ -1,0 +1,48 @@
+{
+  "id": "hostsec-05",
+  "name": "hostsec-05",
+  "title": "HOSTSEC-05 CLI生命周期与输出契约",
+  "description": "取消/超时/JSON/错误码/并发参数贯穿可用命令",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P0",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/cli/",
+    "docs/03-sdd/CLI-SDD.md",
+    "backend/cmd/hostsec/main.go",
+    "schemas/doctor-v1.schema.json",
+    "schemas/plan-v1.schema.json",
+    "scripts/integration.py"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-05",
+    "phase": "WP1",
+    "delivery_status": "PARTIAL",
+    "depends_on": [
+      "HOSTSEC-03",
+      "HOSTSEC-04"
+    ],
+    "completion_evidence": [
+      "docs/implementation/BOOTSTRAP-REPORT.md",
+      "docs/05-testing/evidence/bootstrap/results.json"
+    ],
+    "layout_adr": "ADR-008",
+    "planning_refinement": "docs/implementation/WP1-DETAILED-PLAN.md",
+    "layout_slice_status": "NOT_APPLICABLE"
+  }
+}

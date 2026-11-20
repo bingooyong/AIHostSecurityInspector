@@ -1,0 +1,39 @@
+{
+  "id": "hostsec-30",
+  "name": "hostsec-30",
+  "title": "HOSTSEC-30 MCP标准业务工具",
+  "description": "10业务工具，调用者身份/权限过滤，资源上限",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/mcp/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-30",
+    "phase": "WP6",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-29",
+      "HOSTSEC-32",
+      "HOSTSEC-45"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

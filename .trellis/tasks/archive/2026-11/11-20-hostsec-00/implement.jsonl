@@ -1,0 +1,5 @@
+{"file": "docs/AI-Host-Security-Inspector-V1.0/README.md", "reason": "Task security and acceptance baseline"}
+{"file": "AGENTS.md", "reason": "Task security and acceptance baseline"}
+{"file": ".trellis/workflow.md", "reason": "Task security and acceptance baseline"}
+{"file": "docs/00-project-inventory.md", "reason": "Module-specific interfaces, resource/error and security contracts"}
+{"file": "docs/02-architecture/REPOSITORY-LAYOUT.md", "reason": "Current monorepo layout and module/product boundaries supersede root Go layout"}

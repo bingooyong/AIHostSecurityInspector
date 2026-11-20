@@ -1,0 +1,39 @@
+{
+  "id": "hostsec-17",
+  "name": "hostsec-17",
+  "title": "HOSTSEC-17 有限DSL YAML规则引擎",
+  "description": "9条MVP规则含required_evidence与PASS/FAIL/UNKNOWN/N/A；不执行代码",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/rules/",
+    "rules/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-17",
+    "phase": "WP3",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-18",
+      "HOSTSEC-44"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

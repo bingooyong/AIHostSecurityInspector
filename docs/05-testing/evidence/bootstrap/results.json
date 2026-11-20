@@ -1,0 +1,182 @@
+{
+  "executed_at": "2026-11-20T09:52:11.868423+00:00",
+  "scope": "offline CLI slice; no Linux collector runtime or remote CI acceptance",
+  "status": "PASS",
+  "results": [
+    {
+      "gate": "format",
+      "command": [
+        "gofmt",
+        "-l",
+        "cmd",
+        "internal",
+        "scripts/check-boundaries"
+      ],
+      "started_at": "2026-11-20T09:51:41.843613+00:00",
+      "elapsed_seconds": 0.041,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/format.log"
+    },
+    {
+      "gate": "vet",
+      "command": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "started_at": "2026-11-20T09:51:41.884853+00:00",
+      "elapsed_seconds": 0.429,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/vet.log"
+    },
+    {
+      "gate": "unit-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "./..."
+      ],
+      "started_at": "2026-11-20T09:51:42.313597+00:00",
+      "elapsed_seconds": 3.829,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/unit-race.log"
+    },
+    {
+      "gate": "lint",
+      "command": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "started_at": "2026-11-20T09:51:46.142683+00:00",
+      "elapsed_seconds": 0.811,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/lint.log"
+    },
+    {
+      "gate": "boundaries",
+      "command": [
+        "go",
+        "run",
+        "./scripts/check-boundaries"
+      ],
+      "started_at": "2026-11-20T09:51:46.953391+00:00",
+      "elapsed_seconds": 0.096,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/boundaries.log"
+    },
+    {
+      "gate": "build-local",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "build/hostsec",
+        "./cmd/hostsec"
+      ],
+      "started_at": "2026-11-20T09:51:47.049445+00:00",
+      "elapsed_seconds": 0.267,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/build-local.log"
+    },
+    {
+      "gate": "integration-schema",
+      "command": [
+        "python3",
+        "scripts/integration.py"
+      ],
+      "started_at": "2026-11-20T09:51:47.316859+00:00",
+      "elapsed_seconds": 0.523,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/integration-schema.log"
+    },
+    {
+      "gate": "future-contract",
+      "command": [
+        "python3",
+        "scripts/contracts.py"
+      ],
+      "started_at": "2026-11-20T09:51:47.839889+00:00",
+      "elapsed_seconds": 0.141,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/future-contract.log"
+    },
+    {
+      "gate": "baseline",
+      "command": [
+        "python3",
+        "scripts/validate_baseline.py"
+      ],
+      "started_at": "2026-11-20T09:51:47.980981+00:00",
+      "elapsed_seconds": 0.104,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/baseline.log"
+    },
+    {
+      "gate": "vulnerability",
+      "command": [
+        "govulncheck",
+        "-show",
+        "verbose",
+        "./..."
+      ],
+      "started_at": "2026-11-20T09:51:48.085050+00:00",
+      "elapsed_seconds": 22.65,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/vulnerability.log"
+    },
+    {
+      "gate": "sbom",
+      "command": [
+        "cyclonedx-gomod",
+        "mod",
+        "-json",
+        "-output",
+        "build/sbom.cdx.json"
+      ],
+      "started_at": "2026-11-20T09:52:10.736098+00:00",
+      "elapsed_seconds": 0.561,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/sbom.log"
+    },
+    {
+      "gate": "cross-build",
+      "command": [
+        "python3",
+        "scripts/build_release.py"
+      ],
+      "started_at": "2026-11-20T09:52:11.297583+00:00",
+      "elapsed_seconds": 0.551,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/cross-build.log"
+    },
+    {
+      "gate": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "started_at": "2026-11-20T09:52:11.849135+00:00",
+      "elapsed_seconds": 0.014,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/bootstrap/whitespace.log"
+    }
+  ]
+}

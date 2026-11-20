@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-24",
+  "name": "hostsec-24",
+  "title": "HOSTSEC-24 YARA Adapter",
+  "description": "审查规则、固定版本、文件范围与timeout；YARA-X另评估",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/tools/yara/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-24",
+    "phase": "WP4",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-40",
+      "HOSTSEC-16"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

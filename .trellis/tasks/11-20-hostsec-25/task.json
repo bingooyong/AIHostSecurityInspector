@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-25",
+  "name": "hostsec-25",
+  "title": "HOSTSEC-25 AI Provider抽象",
+  "description": "默认禁用，OpenAI/兼容/本地统一请求限制",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/analyzer/provider/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-25",
+    "phase": "WP5",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-18",
+      "HOSTSEC-19"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

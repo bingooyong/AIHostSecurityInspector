@@ -1,0 +1,42 @@
+{
+  "id": "hostsec-01",
+  "name": "hostsec-01",
+  "title": "HOSTSEC-01 需求与架构基线",
+  "description": "六项MVP与后续范围、来源差异和ADR可追溯",
+  "status": "completed",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P0",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": "2026-11-20",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "docs/01-product/PRD.md",
+    "docs/02-architecture/SYSTEM-ARCHITECTURE.md",
+    "docs/implementation/SOURCE-REVIEW.md"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-01",
+    "phase": "WP0",
+    "delivery_status": "IMPLEMENTED",
+    "depends_on": [
+      "HOSTSEC-00"
+    ],
+    "completion_evidence": [
+      "docs/implementation/BASELINE-REVIEW.md",
+      "docs/implementation/BOOTSTRAP-REPORT.md"
+    ],
+    "layout_adr": "ADR-008"
+  }
+}

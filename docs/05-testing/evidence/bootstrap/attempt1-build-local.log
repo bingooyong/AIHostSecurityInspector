@@ -1,0 +1,5 @@
+$ go build -trimpath -o build/hostsec ./cmd/hostsec
+exit=0
+stdout:
+
+stderr:

@@ -1,0 +1,139 @@
+[
+  {
+    "args": [
+      "version",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"go_version\": \"go1.27.3\",\n  \"version\": \"0.1.0-dev\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "doctor",
+      "--json"
+    ],
+    "exit_code": 1,
+    "stdout": "{\n  \"schema_version\": \"1.0\",\n  \"version\": \"0.1.0-dev\",\n  \"os\": \"darwin\",\n  \"architecture\": \"arm64\",\n  \"offline_planning_available\": true,\n  \"linux_platform_supported\": false,\n  \"collector_available\": false,\n  \"scan_ready\": false,\n  \"limitations\": [\n    \"Collector and scan execution are not implemented; only offline planning is available.\",\n    \"No target, credential store, scanner, database, or model endpoint was accessed.\"\n  ]\n}\n",
+    "stderr": "{\"level\":\"error\",\"code\":\"COLLECTOR_UNAVAILABLE\",\"message\":\"Linux collector is not available in this release\"}\n"
+  },
+  {
+    "args": [
+      "assets",
+      "validate",
+      "--file",
+      "examples/hosts.yaml",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"group_count\": 2,\n  \"host_count\": 2,\n  \"valid\": true,\n  \"version\": 1\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "assets",
+      "list",
+      "--file",
+      "examples/hosts.yaml",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"version\": 1,\n  \"hosts\": [\n    {\n      \"host_id\": \"linux-test-001\",\n      \"hostname\": \"linux-test-001\",\n      \"addresses\": [\n        \"192.0.2.10\"\n      ],\n      \"platform\": \"linux\",\n      \"architecture\": \"x86_64\",\n      \"zone\": \"test-zone-a\",\n      \"environment\": \"TEST\",\n      \"business_system\": \"demo\",\n      \"owner\": \"team-demo\",\n      \"criticality\": \"medium\",\n      \"authorized\": true,\n      \"allowed_profiles\": [\n        \"quick\",\n        \"standard\",\n        \"deep\",\n        \"incident-response\"\n      ],\n      \"labels\": [\n        \"pilot\",\n        \"linux\"\n      ],\n      \"connection\": {\n        \"transport\": \"ssh\",\n        \"port\": 22,\n        \"user\": \"hostsec-audit\",\n        \"auth_ref\": \"ssh-agent:pilot\",\n        \"known_hosts_ref\": \"known-hosts:pilot\",\n        \"host_key_policy\": \"strict\"\n      }\n    }\n  ],\n  \"groups\": {\n    \"mixed\": {\n      \"hosts\": [\n        \"linux-test-001\"\n      ]\n    },\n    \"pilot\": {\n      \"hosts\": [\n        \"linux-test-001\"\n      ]\n    }\n  }\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "plan",
+      "--file",
+      "examples/hosts.yaml",
+      "--targets",
+      "group:pilot",
+      "--profile",
+      "quick",
+      "--dry-run",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"schema_version\": \"1.0\",\n  \"mode\": \"READ_ONLY\",\n  \"dry_run\": true,\n  \"profile\": \"quick\",\n  \"hosts\": [\n    {\n      \"host_id\": \"linux-test-001\",\n      \"addresses\": [\n        \"192.0.2.10\"\n      ],\n      \"transport\": \"ssh\",\n      \"environment\": \"TEST\"\n    }\n  ],\n  \"modules\": [\n    \"host_identity\",\n    \"process_inventory\",\n    \"network_inventory\",\n    \"account_inventory\",\n    \"service_inventory\",\n    \"persistence_inventory\",\n    \"security_config\"\n  ],\n  \"tools\": [],\n  \"approval_required\": false,\n  \"execution_ready\": false,\n  \"limits\": {\n    \"timeout_seconds\": 900,\n    \"max_concurrency\": 2,\n    \"max_files\": 10000,\n    \"max_file_size_bytes\": 33554432,\n    \"allowed_paths\": [],\n    \"excluded_paths\": [\n      \"/proc\",\n      \"/sys\",\n      \"/dev\",\n      \"/run\",\n      \"/var/lib/mysql\",\n      \"/var/lib/postgresql\",\n      \"/var/lib/docker\",\n      \"/var/backups\",\n      \"/backup\"\n    ],\n    \"excluded_mount_types\": [\n      \"nfs\",\n      \"nfs4\",\n      \"cifs\",\n      \"fuse\",\n      \"smbfs\"\n    ],\n    \"io_max_bytes_per_second\": 10485760,\n    \"stop_on_resource_pressure\": true,\n    \"maintenance_window_required\": false,\n    \"enforced\": false\n  },\n  \"estimated_impact\": \"Offline plan only; no target accessed and no resource limits executed.\",\n  \"limitations\": [\n    \"No collector, transport, approval verifier, rule evaluation, evidence collection, or AI call has run.\",\n    \"Profiles and limits are fixed planning descriptions; execution enforcement is not implemented.\",\n    \"Deep and incident-response execution require a verified approval bound to the plan and a maintenance window.\",\n    \"Vulnerability intelligence, trusted baselines and scanner availability have not been checked.\",\n    \"No findings or safety assessment can be inferred from this offline plan.\"\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "plan",
+      "--file",
+      "examples/hosts.yaml",
+      "--targets",
+      "group:pilot",
+      "--profile",
+      "standard",
+      "--dry-run",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"schema_version\": \"1.0\",\n  \"mode\": \"READ_ONLY\",\n  \"dry_run\": true,\n  \"profile\": \"standard\",\n  \"hosts\": [\n    {\n      \"host_id\": \"linux-test-001\",\n      \"addresses\": [\n        \"192.0.2.10\"\n      ],\n      \"transport\": \"ssh\",\n      \"environment\": \"TEST\"\n    }\n  ],\n  \"modules\": [\n    \"host_identity\",\n    \"process_inventory\",\n    \"network_inventory\",\n    \"account_inventory\",\n    \"service_inventory\",\n    \"persistence_inventory\",\n    \"security_config\",\n    \"package_inventory\",\n    \"vulnerability_correlation\",\n    \"baseline_assessment\",\n    \"targeted_file_scan\"\n  ],\n  \"tools\": [\n    \"lynis\"\n  ],\n  \"approval_required\": false,\n  \"execution_ready\": false,\n  \"limits\": {\n    \"timeout_seconds\": 900,\n    \"max_concurrency\": 2,\n    \"max_files\": 10000,\n    \"max_file_size_bytes\": 33554432,\n    \"allowed_paths\": [\n      \"/usr/local/bin\",\n      \"/usr/local/sbin\"\n    ],\n    \"excluded_paths\": [\n      \"/proc\",\n      \"/sys\",\n      \"/dev\",\n      \"/run\",\n      \"/var/lib/mysql\",\n      \"/var/lib/postgresql\",\n      \"/var/lib/docker\",\n      \"/var/backups\",\n      \"/backup\"\n    ],\n    \"excluded_mount_types\": [\n      \"nfs\",\n      \"nfs4\",\n      \"cifs\",\n      \"fuse\",\n      \"smbfs\"\n    ],\n    \"io_max_bytes_per_second\": 10485760,\n    \"stop_on_resource_pressure\": true,\n    \"maintenance_window_required\": false,\n    \"enforced\": false\n  },\n  \"estimated_impact\": \"Offline plan only; no target accessed and no resource limits executed.\",\n  \"limitations\": [\n    \"No collector, transport, approval verifier, rule evaluation, evidence collection, or AI call has run.\",\n    \"Profiles and limits are fixed planning descriptions; execution enforcement is not implemented.\",\n    \"Deep and incident-response execution require a verified approval bound to the plan and a maintenance window.\",\n    \"Vulnerability intelligence, trusted baselines and scanner availability have not been checked.\",\n    \"No findings or safety assessment can be inferred from this offline plan.\"\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "plan",
+      "--file",
+      "examples/hosts.yaml",
+      "--targets",
+      "group:pilot",
+      "--profile",
+      "deep",
+      "--dry-run",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"schema_version\": \"1.0\",\n  \"mode\": \"READ_ONLY\",\n  \"dry_run\": true,\n  \"profile\": \"deep\",\n  \"hosts\": [\n    {\n      \"host_id\": \"linux-test-001\",\n      \"addresses\": [\n        \"192.0.2.10\"\n      ],\n      \"transport\": \"ssh\",\n      \"environment\": \"TEST\"\n    }\n  ],\n  \"modules\": [\n    \"host_identity\",\n    \"process_inventory\",\n    \"network_inventory\",\n    \"account_inventory\",\n    \"service_inventory\",\n    \"persistence_inventory\",\n    \"security_config\",\n    \"package_inventory\",\n    \"vulnerability_correlation\",\n    \"baseline_assessment\",\n    \"targeted_file_scan\",\n    \"file_integrity\",\n    \"yara_scan\",\n    \"log_analysis\"\n  ],\n  \"tools\": [\n    \"lynis\",\n    \"yara\"\n  ],\n  \"approval_required\": true,\n  \"execution_ready\": false,\n  \"limits\": {\n    \"timeout_seconds\": 1800,\n    \"max_concurrency\": 2,\n    \"max_files\": 100000,\n    \"max_file_size_bytes\": 33554432,\n    \"allowed_paths\": [\n      \"/usr/local/bin\",\n      \"/usr/local/sbin\"\n    ],\n    \"excluded_paths\": [\n      \"/proc\",\n      \"/sys\",\n      \"/dev\",\n      \"/run\",\n      \"/var/lib/mysql\",\n      \"/var/lib/postgresql\",\n      \"/var/lib/docker\",\n      \"/var/backups\",\n      \"/backup\"\n    ],\n    \"excluded_mount_types\": [\n      \"nfs\",\n      \"nfs4\",\n      \"cifs\",\n      \"fuse\",\n      \"smbfs\"\n    ],\n    \"io_max_bytes_per_second\": 10485760,\n    \"stop_on_resource_pressure\": true,\n    \"maintenance_window_required\": true,\n    \"enforced\": false\n  },\n  \"estimated_impact\": \"Offline plan only; no target accessed and no resource limits executed.\",\n  \"limitations\": [\n    \"No collector, transport, approval verifier, rule evaluation, evidence collection, or AI call has run.\",\n    \"Profiles and limits are fixed planning descriptions; execution enforcement is not implemented.\",\n    \"Deep and incident-response execution require a verified approval bound to the plan and a maintenance window.\",\n    \"Vulnerability intelligence, trusted baselines and scanner availability have not been checked.\",\n    \"No findings or safety assessment can be inferred from this offline plan.\"\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "plan",
+      "--file",
+      "examples/hosts.yaml",
+      "--targets",
+      "group:pilot",
+      "--profile",
+      "incident-response",
+      "--dry-run",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"schema_version\": \"1.0\",\n  \"mode\": \"READ_ONLY\",\n  \"dry_run\": true,\n  \"profile\": \"incident-response\",\n  \"hosts\": [\n    {\n      \"host_id\": \"linux-test-001\",\n      \"addresses\": [\n        \"192.0.2.10\"\n      ],\n      \"transport\": \"ssh\",\n      \"environment\": \"TEST\"\n    }\n  ],\n  \"modules\": [\n    \"host_identity\",\n    \"process_inventory\",\n    \"network_inventory\",\n    \"targeted_event_evidence\"\n  ],\n  \"tools\": [],\n  \"approval_required\": true,\n  \"execution_ready\": false,\n  \"limits\": {\n    \"timeout_seconds\": 900,\n    \"max_concurrency\": 1,\n    \"max_files\": 10000,\n    \"max_file_size_bytes\": 33554432,\n    \"allowed_paths\": [],\n    \"excluded_paths\": [\n      \"/proc\",\n      \"/sys\",\n      \"/dev\",\n      \"/run\",\n      \"/var/lib/mysql\",\n      \"/var/lib/postgresql\",\n      \"/var/lib/docker\",\n      \"/var/backups\",\n      \"/backup\"\n    ],\n    \"excluded_mount_types\": [\n      \"nfs\",\n      \"nfs4\",\n      \"cifs\",\n      \"fuse\",\n      \"smbfs\"\n    ],\n    \"io_max_bytes_per_second\": 10485760,\n    \"stop_on_resource_pressure\": true,\n    \"maintenance_window_required\": true,\n    \"enforced\": false\n  },\n  \"estimated_impact\": \"Offline plan only; no target accessed and no resource limits executed.\",\n  \"limitations\": [\n    \"No collector, transport, approval verifier, rule evaluation, evidence collection, or AI call has run.\",\n    \"Profiles and limits are fixed planning descriptions; execution enforcement is not implemented.\",\n    \"Deep and incident-response execution require a verified approval bound to the plan and a maintenance window.\",\n    \"Vulnerability intelligence, trusted baselines and scanner availability have not been checked.\",\n    \"No findings or safety assessment can be inferred from this offline plan.\"\n  ]\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "scan"
+    ],
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "{\"level\":\"error\",\"code\":\"INVALID_ARGUMENT\",\"message\":\"unsupported command\"}\n"
+  },
+  {
+    "args": [
+      "plan",
+      "--file",
+      "examples/hosts.yaml",
+      "--targets",
+      "group:mixed",
+      "--dry-run"
+    ],
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "{\"level\":\"error\",\"code\":\"PLAN_REJECTED\",\"message\":\"plan target, authorization, profile, or dry-run requirement rejected\"}\n"
+  },
+  {
+    "args": [
+      "version",
+      "--exec",
+      "CANARY_SECRET"
+    ],
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "{\"level\":\"error\",\"code\":\"INVALID_ARGUMENT\",\"message\":\"invalid command arguments\"}\n"
+  }
+]

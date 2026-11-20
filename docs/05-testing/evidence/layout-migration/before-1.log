@@ -1,0 +1,2 @@
+$ go build -trimpath -o build/hostsec-before-layout ./cmd/hostsec
+exit=0

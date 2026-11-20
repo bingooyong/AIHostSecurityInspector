@@ -1,0 +1,37 @@
+{
+  "id": "hostsec-10",
+  "name": "hostsec-10",
+  "title": "HOSTSEC-10 Linux本机网络采集",
+  "description": "监听/连接/inode-PID关联/路由/DNS/防火墙，不探网",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/collector/linux/network.go"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-10",
+    "phase": "WP2",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-08"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

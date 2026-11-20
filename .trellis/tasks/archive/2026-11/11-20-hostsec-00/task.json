@@ -1,0 +1,40 @@
+{
+  "id": "hostsec-00",
+  "name": "hostsec-00",
+  "title": "HOSTSEC-00 仓库与 Trellis 盘点",
+  "description": "保留既有文件，核对环境和22份来源",
+  "status": "completed",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P0",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": "2026-11-20",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "docs/00-project-inventory.md",
+    "docs/implementation/v1-source-manifest.json"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-00",
+    "phase": "WP0",
+    "delivery_status": "IMPLEMENTED",
+    "depends_on": [],
+    "completion_evidence": [
+      "docs/00-project-inventory.md",
+      "docs/implementation/v1-source-manifest.json",
+      "docs/05-testing/evidence/bootstrap/environment.json"
+    ],
+    "layout_adr": "ADR-008"
+  }
+}

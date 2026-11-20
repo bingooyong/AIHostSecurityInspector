@@ -1,0 +1,3 @@
+# Quality
+
+Use standard Go formatting and explicit errors, immutable value-oriented domain inputs and bounded parsing. Tests must cover behavior across boundaries: unauthorized mixed groups, malformed/duplicate config, profile approval and schema output. Unit tests use local harmless fixtures, not production hosts. Cross-build is not runtime acceptance. Default read-only, no arbitrary process execution surface, no secret logging, no speculative dependencies. Dependency pinning, SBOM and vulnerability checks are release gates. Rule fixtures and Linux runtime tests become blocking when those modules exist.

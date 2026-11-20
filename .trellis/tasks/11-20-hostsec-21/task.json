@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-21",
+  "name": "hostsec-21",
+  "title": "HOSTSEC-21 Lynis Adapter",
+  "description": "批准审计项与受控报告目录，披露写入副作用",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/tools/lynis/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-21",
+    "phase": "WP4",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-40",
+      "HOSTSEC-16"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

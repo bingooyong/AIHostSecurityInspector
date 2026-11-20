@@ -1,0 +1,92 @@
+version: 1
+policy_id: enterprise-hostsec-baseline
+policy_version: 1.0.0
+defaults:
+  mode: READ_ONLY
+  max_concurrency: 2
+  connect_timeout_seconds: 10
+  command_timeout_seconds: 60
+  scan_timeout_seconds: 900
+  stop_on_resource_pressure: true
+  cpu_soft_limit_percent: 15
+  io_soft_limit_mb_per_second: 10
+  require_host_key_verification: true
+  allow_arbitrary_shell: false
+  allow_auto_remediation: false
+
+profiles:
+  quick:
+    approval_required: false
+    modules:
+      - host_identity
+      - process_inventory
+      - network_inventory
+      - account_inventory
+      - service_inventory
+      - persistence_inventory
+      - security_config
+  standard:
+    approval_required: false
+    modules:
+      - host_identity
+      - process_inventory
+      - network_inventory
+      - account_inventory
+      - service_inventory
+      - persistence_inventory
+      - security_config
+      - package_inventory
+      - vulnerability_correlation
+      - baseline_assessment
+    tools:
+      lynis: {enabled: true, required: false}
+      openscap: {enabled: false, required: false}
+      clamav: {enabled: false, required: false}
+  deep:
+    approval_required: true
+    modules:
+      - host_identity
+      - process_inventory
+      - network_inventory
+      - account_inventory
+      - service_inventory
+      - persistence_inventory
+      - security_config
+      - package_inventory
+      - file_integrity
+      - targeted_file_scan
+    tools:
+      clamav:
+        enabled: true
+        required: false
+        paths: [/usr/local/bin, /usr/local/sbin, /tmp, /var/tmp]
+      yara:
+        enabled: true
+        required: false
+        ruleset: enterprise-reviewed-v1
+
+scan_scope:
+  excluded_mount_types: [proc, sysfs, devtmpfs, cgroup, nfs, nfs4, cifs]
+  excluded_paths: [/proc, /sys, /dev, /run, /var/lib/docker/overlay2]
+  max_file_size_mb: 200
+  max_files_per_host: 100000
+  max_archive_recursion_depth: 2
+
+redaction:
+  redact_environment_variables: true
+  redact_commandline_patterns:
+    - "(?i)(password|passwd|token|secret|apikey|api_key)=([^ ]+)"
+    - "(?i)(--password|--token|--secret)\\s+\\S+"
+  redact_connection_strings: true
+  external_ai_allow_raw_logs: false
+  external_ai_allow_file_samples: false
+
+ai:
+  enabled_by_default: false
+  provider: openai-compatible
+  require_sanitization: true
+  require_evidence_reference_validation: true
+  max_findings_per_request: 30
+  max_input_chars: 30000
+  timeout_seconds: 60
+  store: false

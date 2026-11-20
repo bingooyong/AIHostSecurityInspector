@@ -1,0 +1,48 @@
+{
+  "id": "hostsec-07",
+  "name": "hostsec-07",
+  "title": "HOSTSEC-07 可执行计划与策略约束",
+  "description": "版本化策略、计划摘要、能力检查与执行前复核",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P0",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/planner/",
+    "backend/internal/policy/",
+    "schemas/plan-v1.schema.json",
+    "schemas/policy-v1.schema.json",
+    "policies/",
+    "backend/internal/planner/testdata/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-07",
+    "phase": "WP1",
+    "delivery_status": "PARTIAL",
+    "depends_on": [
+      "HOSTSEC-06",
+      "HOSTSEC-32A"
+    ],
+    "completion_evidence": [
+      "docs/implementation/BOOTSTRAP-REPORT.md",
+      "docs/05-testing/evidence/bootstrap/results.json"
+    ],
+    "layout_adr": "ADR-008",
+    "planning_refinement": "docs/implementation/WP1-DETAILED-PLAN.md",
+    "layout_slice_status": "NOT_APPLICABLE"
+  }
+}

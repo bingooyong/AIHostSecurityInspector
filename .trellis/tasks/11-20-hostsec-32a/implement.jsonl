@@ -1,0 +1,8 @@
+{"file": "docs/04-security/SECURITY-BOUNDARIES.md", "reason": "Approval boundary"}
+{"file": "docs/03-sdd/CLI-SDD.md", "reason": "Approval boundary"}
+{"file": "docs/03-sdd/DOMAIN-MODEL.md", "reason": "Module-specific interfaces, resource/error and security contracts"}
+{"file": "docs/02-architecture/SECURITY-ARCHITECTURE.md", "reason": "Module-specific interfaces, resource/error and security contracts"}
+{"file": "docs/02-architecture/REPOSITORY-LAYOUT.md", "reason": "Current monorepo layout and module/product boundaries supersede root Go layout"}
+{"file": "docs/implementation/WP1-DETAILED-PLAN.md", "reason": "Detailed WP1 work breakdown, acceptance and monorepo decision"}
+{"file": "docs/07-decisions/ADR/ADR-008.md", "reason": "Detailed WP1 work breakdown, acceptance and monorepo decision"}
+{"file": "docs/03-sdd/STORAGE-SDD.md", "reason": "Detailed task input contract"}

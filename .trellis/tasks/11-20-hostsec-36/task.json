@@ -1,0 +1,49 @@
+{
+  "id": "hostsec-36",
+  "name": "hostsec-36",
+  "title": "HOSTSEC-36 调度状态机与端到端扫描",
+  "description": "模块隔离超时/取消/压力停止/限额，计划授权复核，失败不变PASS",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/orchestrator/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-36",
+    "phase": "WP3",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-07",
+      "HOSTSEC-08",
+      "HOSTSEC-09",
+      "HOSTSEC-10",
+      "HOSTSEC-11",
+      "HOSTSEC-12",
+      "HOSTSEC-13",
+      "HOSTSEC-14",
+      "HOSTSEC-16",
+      "HOSTSEC-17",
+      "HOSTSEC-32A",
+      "HOSTSEC-37",
+      "HOSTSEC-38"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HostSec Scan Result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "scan_id",
+    "host",
+    "scan",
+    "collection_summary",
+    "evidence",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "scan_id": {
+      "type": "string"
+    },
+    "host": {
+      "type": "object",
+      "required": [
+        "host_id",
+        "hostname",
+        "platform",
+        "architecture"
+      ],
+      "properties": {
+        "host_id": {
+          "type": "string"
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "platform": {
+          "enum": [
+            "linux",
+            "windows",
+            "macos",
+            "other"
+          ]
+        },
+        "distribution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "os_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "architecture": {
+          "type": "string"
+        },
+        "environment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "zone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "scan": {
+      "type": "object",
+      "required": [
+        "profile",
+        "started_at",
+        "status",
+        "collector_version",
+        "policy_version"
+      ],
+      "properties": {
+        "profile": {
+          "enum": [
+            "quick",
+            "standard",
+            "deep",
+            "incident-response"
+          ]
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "partial",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "collector_version": {
+          "type": "string"
+        },
+        "policy_version": {
+          "type": "string"
+        },
+        "rule_bundle_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "collection_summary": {
+      "type": "object",
+      "required": [
+        "total_modules",
+        "succeeded",
+        "failed",
+        "skipped"
+      ],
+      "properties": {
+        "total_modules": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "succeeded": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coverage": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "category",
+          "collection_status",
+          "sha256",
+          "collected_at"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "collection_status": {
+            "enum": [
+              "success",
+              "partial",
+              "failed",
+              "not_available",
+              "not_applicable"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$"
+          },
+          "collected_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "raw_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "normalized_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "finding_id",
+          "rule_id",
+          "severity",
+          "confidence",
+          "title",
+          "evidence_refs",
+          "status"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string"
+          },
+          "rule_id": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low",
+              "info"
+            ]
+          },
+          "confidence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "enum": [
+              "new",
+              "confirmed",
+              "false_positive",
+              "accepted_risk",
+              "in_progress",
+              "fixed",
+              "reopened"
+            ]
+          },
+          "requires_human_review": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "ai_assessment": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

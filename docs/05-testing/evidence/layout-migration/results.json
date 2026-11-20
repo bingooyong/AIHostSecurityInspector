@@ -1,0 +1,236 @@
+{
+  "executed_at": "2026-11-20T10:49:42.176547+00:00",
+  "scope": "backend module layout migration; unchanged offline CLI; no Linux collector runtime or remote CI acceptance",
+  "status": "PASS",
+  "results": [
+    {
+      "gate": "layout-structure",
+      "command": [
+        "python3",
+        "scripts/check_layout.py",
+        "--structure-only"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-20T10:49:13.570431+00:00",
+      "elapsed_seconds": 0.146,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/layout-structure.log"
+    },
+    {
+      "gate": "format",
+      "command": [
+        "gofmt",
+        "-l",
+        "cmd",
+        "internal",
+        "tools"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:13.717237+00:00",
+      "elapsed_seconds": 0.019,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/format.log"
+    },
+    {
+      "gate": "module-verify",
+      "command": [
+        "go",
+        "mod",
+        "verify"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:13.736294+00:00",
+      "elapsed_seconds": 0.063,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/module-verify.log"
+    },
+    {
+      "gate": "vet",
+      "command": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:13.798936+00:00",
+      "elapsed_seconds": 0.307,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/vet.log"
+    },
+    {
+      "gate": "unit-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:14.105703+00:00",
+      "elapsed_seconds": 3.967,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/unit-race.log"
+    },
+    {
+      "gate": "lint",
+      "command": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:18.073333+00:00",
+      "elapsed_seconds": 0.63,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/lint.log"
+    },
+    {
+      "gate": "boundaries",
+      "command": [
+        "go",
+        "run",
+        "./tools/check-boundaries"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:18.703490+00:00",
+      "elapsed_seconds": 0.086,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/boundaries.log"
+    },
+    {
+      "gate": "build-local",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "/Users/bingooyong/Code/01Code/github.com/bingooyong/AIHostSecurityInspector/build/hostsec",
+        "./cmd/hostsec"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:18.789839+00:00",
+      "elapsed_seconds": 0.105,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/build-local.log"
+    },
+    {
+      "gate": "layout-behavior",
+      "command": [
+        "python3",
+        "scripts/check_layout.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-20T10:49:18.894994+00:00",
+      "elapsed_seconds": 0.218,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/layout-behavior.log"
+    },
+    {
+      "gate": "integration-schema",
+      "command": [
+        "python3",
+        "scripts/integration.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-20T10:49:19.113431+00:00",
+      "elapsed_seconds": 0.32,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/integration-schema.log"
+    },
+    {
+      "gate": "future-contract",
+      "command": [
+        "python3",
+        "scripts/contracts.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-20T10:49:19.433132+00:00",
+      "elapsed_seconds": 0.134,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/future-contract.log"
+    },
+    {
+      "gate": "baseline",
+      "command": [
+        "python3",
+        "scripts/validate_baseline.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-20T10:49:19.567558+00:00",
+      "elapsed_seconds": 0.165,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/baseline.log"
+    },
+    {
+      "gate": "vulnerability",
+      "command": [
+        "govulncheck",
+        "-show",
+        "verbose",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:19.733144+00:00",
+      "elapsed_seconds": 21.402,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/vulnerability.log"
+    },
+    {
+      "gate": "sbom",
+      "command": [
+        "cyclonedx-gomod",
+        "mod",
+        "-json",
+        "-output",
+        "/Users/bingooyong/Code/01Code/github.com/bingooyong/AIHostSecurityInspector/build/sbom.cdx.json"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-20T10:49:41.144719+00:00",
+      "elapsed_seconds": 0.501,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/sbom.log"
+    },
+    {
+      "gate": "cross-build",
+      "command": [
+        "python3",
+        "scripts/build_release.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-20T10:49:41.663842+00:00",
+      "elapsed_seconds": 0.495,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/cross-build.log"
+    },
+    {
+      "gate": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-20T10:49:42.158908+00:00",
+      "elapsed_seconds": 0.012,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/layout-migration/whitespace.log"
+    }
+  ]
+}

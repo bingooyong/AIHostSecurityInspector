@@ -1,0 +1,48 @@
+{
+  "id": "hostsec-04",
+  "name": "hostsec-04",
+  "title": "HOSTSEC-04 完整领域模型与版本化Schema",
+  "description": "Host/Scan/Attempt/Evidence/RuleResult/Finding/AI领域与枚举一致",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P0",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/domain/",
+    "schemas/scan-result-v1.schema.json",
+    "backend/internal/asset/asset.go",
+    "backend/internal/planner/planner.go",
+    "schemas/assets-v1.schema.json",
+    "schemas/plan-v1.schema.json",
+    "backend/internal/domain/testdata/"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-04",
+    "phase": "WP1",
+    "delivery_status": "PARTIAL",
+    "depends_on": [
+      "HOSTSEC-03A"
+    ],
+    "completion_evidence": [
+      "docs/implementation/BOOTSTRAP-REPORT.md",
+      "docs/05-testing/evidence/bootstrap/results.json"
+    ],
+    "layout_adr": "ADR-008",
+    "planning_refinement": "docs/implementation/WP1-DETAILED-PLAN.md",
+    "layout_slice_status": "NOT_APPLICABLE"
+  }
+}

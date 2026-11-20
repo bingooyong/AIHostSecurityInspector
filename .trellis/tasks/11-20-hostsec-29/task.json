@@ -1,0 +1,40 @@
+{
+  "id": "hostsec-29",
+  "name": "hostsec-29",
+  "title": "HOSTSEC-29 Codex Claude Skill接入",
+  "description": "只调用已实现CLI，授权/计划/报告流程；无任意shell能力",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "integrations/skills/host-security-inspection/SKILL.md",
+    "integrations/README.md"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-29",
+    "phase": "WP5",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-28",
+      "HOSTSEC-19",
+      "HOSTSEC-36"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

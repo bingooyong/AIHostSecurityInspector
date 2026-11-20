@@ -1,0 +1,5 @@
+$ cyclonedx-gomod mod -json -output build/sbom.cdx.json
+exit=0
+stdout:
+
+stderr:

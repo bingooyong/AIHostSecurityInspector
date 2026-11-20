@@ -1,0 +1,38 @@
+{
+  "id": "hostsec-15",
+  "name": "hostsec-15",
+  "title": "HOSTSEC-15 本地SQLite和证据落盘",
+  "description": "事务迁移、只追加raw/normalized、安全权限与崩溃恢复",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P1",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    "backend/internal/storage/",
+    "backend/internal/evidence/store.go"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-15",
+    "phase": "WP3",
+    "delivery_status": "PLANNED",
+    "depends_on": [
+      "HOSTSEC-04"
+    ],
+    "completion_evidence": [],
+    "layout_adr": "ADR-008"
+  }
+}

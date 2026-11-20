@@ -1,0 +1,8 @@
+{"file": "docs/01-product/PRD.md", "reason": "Task security and acceptance baseline"}
+{"file": "docs/04-security/SECURITY-BOUNDARIES.md", "reason": "Task security and acceptance baseline"}
+{"file": "docs/05-testing/ACCEPTANCE-CRITERIA.md", "reason": "Task security and acceptance baseline"}
+{"file": "docs/03-sdd/CLI-SDD.md", "reason": "Module-specific interfaces, resource/error and security contracts"}
+{"file": "docs/03-sdd/DOMAIN-MODEL.md", "reason": "Module-specific interfaces, resource/error and security contracts"}
+{"file": "docs/02-architecture/REPOSITORY-LAYOUT.md", "reason": "Current monorepo layout and module/product boundaries supersede root Go layout"}
+{"file": "docs/implementation/WP1-DETAILED-PLAN.md", "reason": "Detailed WP1 work breakdown, acceptance and monorepo decision"}
+{"file": "docs/07-decisions/ADR/ADR-008.md", "reason": "Detailed WP1 work breakdown, acceptance and monorepo decision"}

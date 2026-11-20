@@ -1,0 +1,59 @@
+{
+  "id": "hostsec-42",
+  "name": "hostsec-42",
+  "title": "HOSTSEC-42 CI与供应链门禁",
+  "description": "格式/vet/lint/race/集成/schema/安全/漏洞/SBOM/双架构摘要",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": "backend",
+  "priority": "P0",
+  "creator": "lvyong",
+  "assignee": "lvyong",
+  "createdAt": "2026-11-20",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-20-hostsec-master",
+  "relatedFiles": [
+    ".github/workflows/ci.yml",
+    "scripts/",
+    "Makefile",
+    "scripts/verify.py",
+    "scripts/check_layout.py",
+    "scripts/build_release.py",
+    "scripts/integration.py",
+    "scripts/contracts.py",
+    "scripts/validate_baseline.py",
+    "backend/tools/check-boundaries/main.go",
+    "scripts/requirements.txt"
+  ],
+  "notes": "",
+  "meta": {
+    "hostsec_id": "HOSTSEC-42",
+    "phase": "WP1",
+    "delivery_status": "PARTIAL",
+    "depends_on": [
+      "HOSTSEC-03A"
+    ],
+    "completion_evidence": [
+      "docs/implementation/BOOTSTRAP-REPORT.md",
+      "docs/05-testing/evidence/bootstrap/results.json",
+      "docs/implementation/REPOSITORY-LAYOUT-REPORT.md",
+      "docs/05-testing/evidence/layout-migration/results.json",
+      "docs/security/LAYOUT-INDEPENDENT-REVIEW.md"
+    ],
+    "layout_adr": "ADR-008",
+    "planning_refinement": "docs/implementation/WP1-DETAILED-PLAN.md",
+    "layout_slice_status": "IMPLEMENTED",
+    "layout_slice_evidence": [
+      "docs/05-testing/evidence/layout-migration/results.json",
+      "docs/02-architecture/REPOSITORY-LAYOUT.md"
+    ]
+  }
+}
