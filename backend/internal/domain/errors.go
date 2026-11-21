@@ -1,7 +1,5 @@
 package domain
 
-import "fmt"
-
 // Stable validation codes. Messages must not echo raw secrets, argv, or host output.
 const (
 	CodeInvalidID                = "INVALID_ID"
@@ -32,8 +30,4 @@ func (e *Error) Error() string {
 
 func fail(code, message string) *Error {
 	return &Error{Code: code, Message: message}
-}
-
-func failf(code, format string, args ...any) *Error {
-	return &Error{Code: code, Message: fmt.Sprintf(format, args...)}
 }

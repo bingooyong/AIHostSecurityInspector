@@ -37,6 +37,10 @@ func main() {
 					fmt.Fprintf(os.Stderr, "%s: forbidden offline-slice import %s\n", path, name)
 					failed = true
 				}
+				if strings.Contains(filepath.ToSlash(path), "internal/collector/") && collectorForbidden(name) {
+					fmt.Fprintf(os.Stderr, "%s: collector must not import %s\n", path, name)
+					failed = true
+				}
 			}
 			return nil
 		})
@@ -49,4 +53,28 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println("PASS: offline slice has no process execution or network client imports")
+}
+
+func collectorForbidden(name string) bool {
+	if name == "database/sql" || name == "os/exec" {
+		return true
+	}
+	markers := []string{
+		"/internal/cli",
+		"/internal/planner",
+		"/internal/approval",
+		"/internal/audit",
+		"/internal/authorization",
+		"/internal/analyzer",
+		"/internal/provider",
+		"/internal/mcp",
+		"/internal/webapi",
+		"/internal/storage",
+	}
+	for _, marker := range markers {
+		if strings.Contains(name, marker) {
+			return true
+		}
+	}
+	return false
 }

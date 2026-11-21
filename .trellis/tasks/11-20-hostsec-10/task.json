@@ -3,7 +3,7 @@
   "name": "hostsec-10",
   "title": "HOSTSEC-10 Linux本机网络采集",
   "description": "监听/连接/inode-PID关联/路由/DNS/防火墙，不探网",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "backend",
@@ -27,11 +27,14 @@
   "meta": {
     "hostsec_id": "HOSTSEC-10",
     "phase": "WP2",
-    "delivery_status": "PLANNED",
+    "delivery_status": "PARTIAL",
     "depends_on": [
       "HOSTSEC-08"
     ],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "backend/internal/collector/linux/network.go",
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json"
+    ],
     "layout_adr": "ADR-008"
   }
 }

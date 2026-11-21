@@ -3,7 +3,7 @@
   "name": "hostsec-08",
   "title": "HOSTSEC-08 Linux身份与系统采集",
   "description": "发行版/内核/资源/boot/稳定身份，模块状态超时",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "backend",
@@ -27,11 +27,14 @@
   "meta": {
     "hostsec_id": "HOSTSEC-08",
     "phase": "WP2",
-    "delivery_status": "PLANNED",
+    "delivery_status": "PARTIAL",
     "depends_on": [
       "HOSTSEC-04"
     ],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "backend/internal/collector/linux/system.go",
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json"
+    ],
     "layout_adr": "ADR-008"
   }
 }

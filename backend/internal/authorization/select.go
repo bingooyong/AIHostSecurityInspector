@@ -29,7 +29,7 @@ func Select(ctx context.Context, inv asset.Inventory, hostID, targets, profileNa
 	if err != nil {
 		return nil, policy.Profile{}, err
 	}
-	ids := []string{}
+	var ids []string
 	if hostID != "" {
 		if !asset.ValidHostID(hostID) {
 			return nil, policy.Profile{}, ErrSelector

@@ -49,8 +49,10 @@ check:
 	HOSTSEC_EVIDENCE_DIR="$(HOSTSEC_EVIDENCE_DIR)" python3 "$(REPO_ROOT)/scripts/verify.py"
 
 # Repository-local tooling avoids replacing user-installed binaries.
+# Pin the toolchain to backend/go.mod so golangci-lint is not built with an older Go than the module.
+GO_MODULE_VERSION := $(shell awk '/^go /{print $$2; exit}' "$(BACKEND)/go.mod")
 tools:
 	mkdir -p "$(BUILD_DIR)/tools"
-	GOBIN="$(BUILD_DIR)/tools" $(GO) -C "$(BACKEND)" install golang.org/x/vuln/cmd/govulncheck@v1.6.0
-	GOBIN="$(BUILD_DIR)/tools" $(GO) -C "$(BACKEND)" install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.15.0
-	GOBIN="$(BUILD_DIR)/tools" $(GO) -C "$(BACKEND)" install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@v1.12.0
+	GOBIN="$(BUILD_DIR)/tools" GOTOOLCHAIN=go$(GO_MODULE_VERSION) $(GO) -C "$(BACKEND)" install golang.org/x/vuln/cmd/govulncheck@v1.6.0
+	GOBIN="$(BUILD_DIR)/tools" GOTOOLCHAIN=go$(GO_MODULE_VERSION) $(GO) -C "$(BACKEND)" install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.15.0
+	GOBIN="$(BUILD_DIR)/tools" GOTOOLCHAIN=go$(GO_MODULE_VERSION) $(GO) -C "$(BACKEND)" install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@v1.12.0

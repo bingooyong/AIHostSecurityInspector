@@ -2,7 +2,6 @@ package approval
 
 import (
 	"crypto/ed25519"
-	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -99,9 +98,4 @@ func Sign(private ed25519.PrivateKey, doc Document) (Document, error) {
 func nonceValid(v string) bool {
 	raw, err := hex.DecodeString(v)
 	return err == nil && len(raw) == 32
-}
-
-func payloadDigest(canonical []byte) string {
-	sum := sha256.Sum256(canonical)
-	return hex.EncodeToString(sum[:])
 }

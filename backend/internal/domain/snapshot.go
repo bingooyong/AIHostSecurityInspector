@@ -130,7 +130,7 @@ func ValidateSnapshot(snapshot ScanSnapshot) error {
 	if snapshot.HumanReview.Status != "pending" && snapshot.HumanReview.Status != "reviewed" {
 		return fail(CodeInvalidEnum, "human_review status is invalid")
 	}
-	if snapshot.Limitations == nil || len(snapshot.Limitations) == 0 {
+	if len(snapshot.Limitations) == 0 {
 		return fail(CodeInvalidCanonical, "limitations must describe coverage gaps")
 	}
 	return nil

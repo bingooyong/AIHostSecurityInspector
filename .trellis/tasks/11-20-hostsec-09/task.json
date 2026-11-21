@@ -3,7 +3,7 @@
   "name": "hostsec-09",
   "title": "HOSTSEC-09 Linux进程采集",
   "description": "PID/PPID/UID/路径/start/hash/缺文件原因均可复核",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "backend",
@@ -27,11 +27,14 @@
   "meta": {
     "hostsec_id": "HOSTSEC-09",
     "phase": "WP2",
-    "delivery_status": "PLANNED",
+    "delivery_status": "PARTIAL",
     "depends_on": [
       "HOSTSEC-08"
     ],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "backend/internal/collector/linux/process.go",
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json"
+    ],
     "layout_adr": "ADR-008"
   }
 }

@@ -437,8 +437,12 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PLANNED",
-      "completion_evidence": []
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "backend/internal/collector/linux/system.go",
+        "docs/05-testing/evidence/hostsec-wp2-2026-11-21/TASK-MATRIX.md",
+        "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json"
+      ]
     },
     {
       "id": "HOSTSEC-09",
@@ -472,8 +476,12 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PLANNED",
-      "completion_evidence": []
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "backend/internal/collector/linux/process.go",
+        "docs/05-testing/evidence/hostsec-wp2-2026-11-21/TASK-MATRIX.md",
+        "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json"
+      ]
     },
     {
       "id": "HOSTSEC-10",
@@ -507,8 +515,12 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PLANNED",
-      "completion_evidence": []
+      "status": "PARTIAL",
+      "completion_evidence": [
+        "backend/internal/collector/linux/network.go",
+        "docs/05-testing/evidence/hostsec-wp2-2026-11-21/TASK-MATRIX.md",
+        "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json"
+      ]
     },
     {
       "id": "HOSTSEC-11",
@@ -1704,7 +1716,8 @@
         "docs/05-testing/evidence/bootstrap/results.json",
         "docs/implementation/REPOSITORY-LAYOUT-REPORT.md",
         "docs/05-testing/evidence/layout-migration/results.json",
-        "docs/security/LAYOUT-INDEPENDENT-REVIEW.md"
+        "docs/security/LAYOUT-INDEPENDENT-REVIEW.md",
+        "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json"
       ]
     },
     {

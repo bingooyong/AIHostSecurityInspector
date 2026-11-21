@@ -1,0 +1,89 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:eb4ee6f1-e84a-4b56-8c7d-fe695bc60e85",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-21T01:20:57Z",
+    "tools": [
+      {
+        "vendor": "CycloneDX",
+        "name": "cyclonedx-gomod",
+        "version": "v1.12.0",
+        "hashes": [
+          {
+            "alg": "MD5",
+            "content": "3ebe0a72feab4404730c6fdf8eb5d1bc"
+          },
+          {
+            "alg": "SHA-1",
+            "content": "80c6143a69bdc1ca7e57eb07e60e59cf34a0ecc8"
+          },
+          {
+            "alg": "SHA-256",
+            "content": "dc1644b494f3486f9c0edf20da984d7c15e2805cb1b248b3ca6e0dd878dde5c1"
+          },
+          {
+            "alg": "SHA-384",
+            "content": "ff1dfe29a9110ca1d644caf4b912bfe730e3b542c797e0b565eef0962c86b60489bc68ab062a5abb255747f3916a28fd"
+          },
+          {
+            "alg": "SHA-512",
+            "content": "7a48d2776dda60b1c1b0f13095eb958264637b2fcc03f4b9df2b9d20a34aa32c59a0838f806d5352e216d7cc4e8c0668a32a4bbfa5453d16da04e6de728a2d03"
+          }
+        ],
+        "externalReferences": [
+          {
+            "url": "https://github.com/CycloneDX/cyclonedx-gomod",
+            "type": "vcs"
+          },
+          {
+            "url": "https://cyclonedx.org",
+            "type": "website"
+          }
+        ]
+      }
+    ],
+    "component": {
+      "bom-ref": "pkg:golang/github.com/bingooyong/AIHostSecurityInspector/backend@v0.0.0-20261120145903-8bf8d081d6f7?type=module",
+      "type": "application",
+      "name": "github.com/bingooyong/AIHostSecurityInspector/backend",
+      "version": "v0.0.0-20261120145903-8bf8d081d6f7",
+      "purl": "pkg:golang/github.com/bingooyong/AIHostSecurityInspector/backend@v0.0.0-20261120145903-8bf8d081d6f7?goarch=amd64\u0026goos=linux\u0026type=module",
+      "externalReferences": [
+        {
+          "url": "https://github.com/bingooyong/AIHostSecurityInspector/backend",
+          "type": "vcs"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "pkg:golang/go.yaml.in/yaml/v4@v4.0.0?type=module",
+      "type": "library",
+      "name": "go.yaml.in/yaml/v4",
+      "version": "v4.0.0",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fcb1b5a4d3bce19e25eb4de3ff1327ebd09c4b939884c43f7fb9762e84141aec"
+        }
+      ],
+      "purl": "pkg:golang/go.yaml.in/yaml/v4@v4.0.0?goarch=amd64\u0026goos=linux\u0026type=module"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:golang/github.com/bingooyong/AIHostSecurityInspector/backend@v0.0.0-20261120145903-8bf8d081d6f7?type=module",
+      "dependsOn": [
+        "pkg:golang/go.yaml.in/yaml/v4@v4.0.0?type=module"
+      ]
+    },
+    {
+      "ref": "pkg:golang/go.yaml.in/yaml/v4@v4.0.0?type=module"
+    }
+  ]
+}
