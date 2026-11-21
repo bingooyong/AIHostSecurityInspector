@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hostsec.local/schemas/policy-v1.schema.json",
+  "title": "HostSec policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_id",
+    "policy_version",
+    "canonical_version",
+    "mode",
+    "profiles"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "policy_id": { "const": "hostsec-builtin" },
+    "policy_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+    },
+    "canonical_version": { "const": "policy-canonical-v1" },
+    "mode": { "const": "READ_ONLY" },
+    "profiles": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/profile" }
+    }
+  },
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "modules",
+        "tools",
+        "approval_required",
+        "limits",
+        "estimated_impact"
+      ],
+      "properties": {
+        "name": {
+          "enum": ["quick", "standard", "deep", "incident-response"]
+        },
+        "modules": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "host_identity",
+              "process_inventory",
+              "network_inventory",
+              "account_inventory",
+              "service_inventory",
+              "persistence_inventory",
+              "security_config",
+              "package_inventory",
+              "vulnerability_correlation",
+              "baseline_assessment",
+              "targeted_file_scan",
+              "file_integrity",
+              "yara_scan",
+              "log_analysis",
+              "targeted_event_evidence"
+            ]
+          }
+        },
+        "tools": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["lynis", "yara", "osquery", "openscap", "clamav"]
+          }
+        },
+        "approval_required": { "type": "boolean" },
+        "estimated_impact": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "limits": { "$ref": "#/$defs/limits" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timeout_seconds",
+        "max_concurrency",
+        "max_files",
+        "max_file_size_bytes",
+        "allowed_paths",
+        "excluded_paths",
+        "excluded_mount_types",
+        "io_max_bytes_per_second",
+        "stop_on_resource_pressure",
+        "maintenance_window_required",
+        "enforced"
+      ],
+      "properties": {
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 1800 },
+        "max_concurrency": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "max_files": { "type": "integer", "minimum": 1, "maximum": 100000 },
+        "max_file_size_bytes": { "type": "integer", "minimum": 1, "maximum": 33554432 },
+        "allowed_paths": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "pattern": "^/" }
+        },
+        "excluded_paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1, "pattern": "^/" }
+        },
+        "excluded_mount_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "io_max_bytes_per_second": { "type": "integer", "minimum": 1, "maximum": 10485760 },
+        "stop_on_resource_pressure": { "const": true },
+        "maintenance_window_required": { "type": "boolean" },
+        "enforced": { "const": false }
+      }
+    }
+  }
+}

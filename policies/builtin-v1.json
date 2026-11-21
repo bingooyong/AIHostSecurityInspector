@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "hostsec-builtin",
+  "policy_version": "1.0",
+  "canonical_version": "policy-canonical-v1",
+  "mode": "READ_ONLY",
+  "profiles": [
+    {
+      "name": "quick",
+      "modules": [
+        "host_identity",
+        "process_inventory",
+        "network_inventory",
+        "account_inventory",
+        "service_inventory",
+        "persistence_inventory",
+        "security_config"
+      ],
+      "tools": [],
+      "approval_required": false,
+      "limits": {
+        "timeout_seconds": 900,
+        "max_concurrency": 2,
+        "max_files": 10000,
+        "max_file_size_bytes": 33554432,
+        "allowed_paths": [],
+        "excluded_paths": [
+          "/proc",
+          "/sys",
+          "/dev",
+          "/run",
+          "/var/lib/mysql",
+          "/var/lib/postgresql",
+          "/var/lib/docker",
+          "/var/backups",
+          "/backup"
+        ],
+        "excluded_mount_types": [
+          "nfs",
+          "nfs4",
+          "cifs",
+          "fuse",
+          "smbfs"
+        ],
+        "io_max_bytes_per_second": 10485760,
+        "stop_on_resource_pressure": true,
+        "maintenance_window_required": false,
+        "enforced": false
+      },
+      "estimated_impact": "Offline plan only; no target accessed and no resource limits executed."
+    },
+    {
+      "name": "standard",
+      "modules": [
+        "host_identity",
+        "process_inventory",
+        "network_inventory",
+        "account_inventory",
+        "service_inventory",
+        "persistence_inventory",
+        "security_config",
+        "package_inventory",
+        "vulnerability_correlation",
+        "baseline_assessment",
+        "targeted_file_scan"
+      ],
+      "tools": [
+        "lynis"
+      ],
+      "approval_required": false,
+      "limits": {
+        "timeout_seconds": 900,
+        "max_concurrency": 2,
+        "max_files": 10000,
+        "max_file_size_bytes": 33554432,
+        "allowed_paths": [
+          "/usr/local/bin",
+          "/usr/local/sbin"
+        ],
+        "excluded_paths": [
+          "/proc",
+          "/sys",
+          "/dev",
+          "/run",
+          "/var/lib/mysql",
+          "/var/lib/postgresql",
+          "/var/lib/docker",
+          "/var/backups",
+          "/backup"
+        ],
+        "excluded_mount_types": [
+          "nfs",
+          "nfs4",
+          "cifs",
+          "fuse",
+          "smbfs"
+        ],
+        "io_max_bytes_per_second": 10485760,
+        "stop_on_resource_pressure": true,
+        "maintenance_window_required": false,
+        "enforced": false
+      },
+      "estimated_impact": "Offline plan only; no target accessed and no resource limits executed."
+    },
+    {
+      "name": "deep",
+      "modules": [
+        "host_identity",
+        "process_inventory",
+        "network_inventory",
+        "account_inventory",
+        "service_inventory",
+        "persistence_inventory",
+        "security_config",
+        "package_inventory",
+        "vulnerability_correlation",
+        "baseline_assessment",
+        "targeted_file_scan",
+        "file_integrity",
+        "yara_scan",
+        "log_analysis"
+      ],
+      "tools": [
+        "lynis",
+        "yara"
+      ],
+      "approval_required": true,
+      "limits": {
+        "timeout_seconds": 1800,
+        "max_concurrency": 2,
+        "max_files": 100000,
+        "max_file_size_bytes": 33554432,
+        "allowed_paths": [
+          "/usr/local/bin",
+          "/usr/local/sbin"
+        ],
+        "excluded_paths": [
+          "/proc",
+          "/sys",
+          "/dev",
+          "/run",
+          "/var/lib/mysql",
+          "/var/lib/postgresql",
+          "/var/lib/docker",
+          "/var/backups",
+          "/backup"
+        ],
+        "excluded_mount_types": [
+          "nfs",
+          "nfs4",
+          "cifs",
+          "fuse",
+          "smbfs"
+        ],
+        "io_max_bytes_per_second": 10485760,
+        "stop_on_resource_pressure": true,
+        "maintenance_window_required": true,
+        "enforced": false
+      },
+      "estimated_impact": "Offline plan only; no target accessed and no resource limits executed."
+    },
+    {
+      "name": "incident-response",
+      "modules": [
+        "host_identity",
+        "process_inventory",
+        "network_inventory",
+        "targeted_event_evidence"
+      ],
+      "tools": [],
+      "approval_required": true,
+      "limits": {
+        "timeout_seconds": 900,
+        "max_concurrency": 1,
+        "max_files": 10000,
+        "max_file_size_bytes": 33554432,
+        "allowed_paths": [],
+        "excluded_paths": [
+          "/proc",
+          "/sys",
+          "/dev",
+          "/run",
+          "/var/lib/mysql",
+          "/var/lib/postgresql",
+          "/var/lib/docker",
+          "/var/backups",
+          "/backup"
+        ],
+        "excluded_mount_types": [
+          "nfs",
+          "nfs4",
+          "cifs",
+          "fuse",
+          "smbfs"
+        ],
+        "io_max_bytes_per_second": 10485760,
+        "stop_on_resource_pressure": true,
+        "maintenance_window_required": true,
+        "enforced": false
+      },
+      "estimated_impact": "Offline plan only; no target accessed and no resource limits executed."
+    }
+  ]
+}

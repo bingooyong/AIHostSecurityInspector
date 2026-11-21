@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ "$1" = "--version" ]; then
+  echo "ok-tool 1.0.0"
+  exit 0
+fi
+echo "readonly fixture output"
+exit 0

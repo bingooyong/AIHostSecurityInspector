@@ -3,6 +3,7 @@ module github.com/bingooyong/AIHostSecurityInspector/backend
 go 1.27.4
 
 require (
+	github.com/klauspost/compress v1.20.2
 	go.yaml.in/yaml/v4 v4.0.0
 	golang.org/x/crypto v0.58.0
 	modernc.org/sqlite v1.62.0

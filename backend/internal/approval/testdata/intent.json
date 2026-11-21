@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "canonical_version": "execution-intent-canonical-v1",
+  "requester_principal": "operator-alice",
+  "host_ids": [
+    "linux-test-001"
+  ],
+  "identity_refs": [
+    "hostid-linux-test-001"
+  ],
+  "asset_snapshot_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "policy_id": "hostsec-builtin",
+  "policy_version": "1.0",
+  "policy_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "profile": "deep",
+  "modules": [
+    "host_identity",
+    "process_inventory"
+  ],
+  "tools": [],
+  "allowed_paths": [
+    "/usr/local/bin"
+  ],
+  "excluded_paths": [
+    "/proc",
+    "/sys"
+  ],
+  "excluded_mount_types": [
+    "nfs",
+    "cifs"
+  ],
+  "limits": {
+    "timeout_seconds": 1800,
+    "max_concurrency": 2,
+    "max_files": 100000,
+    "max_file_size_bytes": 33554432,
+    "io_max_bytes_per_second": 10485760,
+    "stop_on_resource_pressure": true,
+    "maintenance_window_required": true
+  },
+  "required_capabilities": [
+    "linux_proc"
+  ],
+  "valid_from": "2026-11-20T00:00:00Z",
+  "valid_until": "2026-11-20T06:00:00Z",
+  "maintenance_window": {
+    "timezone": "UTC",
+    "start": "2026-11-20T01:00:00Z",
+    "end": "2026-11-20T03:00:00Z"
+  },
+  "mode": "READ_ONLY"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "canonical_version": "approval-canonical-v1",
+  "approval_id": "approval-revoked-1",
+  "intent_hash": "d0f902dbc6595ac55c8bf3abb5f210a8a36e8fb28c619464f7a2312b0cc3e0a3",
+  "requester_principal": "operator-alice",
+  "approver_principal": "approver-bob",
+  "nonce": "3333333333333333333333333333333333333333333333333333333333333333",
+  "valid_from": "2026-11-20T00:00:00Z",
+  "valid_until": "2026-11-20T06:00:00Z",
+  "maintenance_window": {
+    "timezone": "UTC",
+    "start": "2026-11-20T01:00:00Z",
+    "end": "2026-11-20T03:00:00Z"
+  },
+  "algorithm": "ed25519",
+  "key_id": "key-approver",
+  "signature": "ROtx8TTcT8KCT2tpkYkOy+NFJZ2M3nNa2AIdt60Q6UoI0qcGo31q/MYZEmIHM7Lb8Rx+KDg2axcipY84aL6KDQ=="
+}

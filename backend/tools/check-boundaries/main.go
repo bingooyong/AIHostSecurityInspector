@@ -66,6 +66,9 @@ func allowlistedImport(path, name string) bool {
 	if name == "net" && strings.HasPrefix(slash, "internal/transport/mtls/") {
 		return true
 	}
+	if name == "os/exec" && strings.HasPrefix(slash, "internal/tools/") {
+		return true
+	}
 	return false
 }
 

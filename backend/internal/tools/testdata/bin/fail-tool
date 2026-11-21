@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ "$1" = "--version" ]; then
+  echo "fail-tool 1.0.0"
+  exit 0
+fi
+echo "failed" >&2
+exit 2

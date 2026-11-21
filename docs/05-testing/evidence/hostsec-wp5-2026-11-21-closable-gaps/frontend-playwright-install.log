@@ -1,0 +1,6 @@
+cwd=frontend
+$ npx playwright install chromium
+exit=0
+stdout:
+
+stderr:

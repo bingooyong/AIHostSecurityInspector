@@ -33,7 +33,7 @@
   "meta": {
     "hostsec_id": "HOSTSEC-32A",
     "phase": "WP1",
-    "delivery_status": "PARTIAL",
+    "delivery_status": "IMPLEMENTED",
     "depends_on": [
       "HOSTSEC-04",
       "HOSTSEC-06"

@@ -77,6 +77,11 @@ func TestNineRulesOutcomes(t *testing.T) {
 			SUID:         []string{"usr/bin/passwd"}, ListenAllow: []string{"tcp/127.0.0.1:22"},
 			ConfigHashes: map[string]string{"ssh": "no|no|false"}, SuspiciousDirs: []string{"/tmp"},
 		}
+		hash, err := baseline.HashPayload(base)
+		if err != nil {
+			t.Fatal(err)
+		}
+		base.PayloadHash = hash
 		results, found, err := Evaluate(context.Background(), "scan-fixture-001", "linux-test-001", domain.ProfileStandard, all, base, bundle)
 		if err != nil {
 			t.Fatal(err)

@@ -1,0 +1,21 @@
+cwd=frontend
+$ npm run test
+exit=0
+stdout:
+
+> hostsec-frontend@0.1.0-dev test
+> vitest run
+
+
+ RUN  v4.0.8 /workspace/AIHostSecurityInspector-lab/frontend
+
+ ✓ tests/client.test.ts (3 tests) 6ms
+ ✓ tests/pages.test.tsx (6 tests) 43ms
+
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+   Start at  17:16:18
+   Duration  560ms (transform 111ms, setup 85ms, collect 137ms, tests 49ms, environment 556ms, prepare 11ms)
+
+
+stderr:

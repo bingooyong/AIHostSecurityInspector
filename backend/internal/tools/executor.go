@@ -3,8 +3,6 @@ package tools
 import (
 	"context"
 	"sort"
-
-	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain"
 )
 
 const (
@@ -34,19 +32,16 @@ var catalog = map[string]bool{
 	ToolOsquery: true, ToolLynis: true, ToolOpenSCAP: true, ToolClamAV: true, ToolYARA: true,
 }
 
-type Executor struct{}
+type Executor struct {
+	Runner *Runner
+}
 
-func (Executor) Run(ctx context.Context, req Request) (Result, error) {
-	if err := ctx.Err(); err != nil {
-		return Result{}, err
+func (e Executor) Run(ctx context.Context, req Request) (Result, error) {
+	runner := DefaultRunner()
+	if e.Runner != nil {
+		runner = *e.Runner
 	}
-	if !catalog[req.Tool] {
-		return Result{Tool: req.Tool, Status: domain.CollectionFailed, Warning: "unknown_tool", Notes: []string{"refusing arbitrary tool execution"}}, nil
-	}
-	return Result{
-		Tool: req.Tool, Status: domain.CollectionNotAvailable, Warning: "tool_not_installed", Findings: 0,
-		Notes: []string{"readonly executor does not spawn host tools in this slice", "missing tool cannot be reported as a clean scan"},
-	}, nil
+	return runner.Run(ctx, req)
 }
 
 func Known() []string {

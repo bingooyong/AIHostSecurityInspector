@@ -100,53 +100,80 @@ func requiredCapabilities(profile policy.Profile) []string {
 	return caps
 }
 
+type PreflightInput struct {
+	Inventory    asset.Inventory
+	Intent       domain.ExecutionIntent
+	Store        approval.TrustStore
+	Document     *approval.Document
+	Now          approval.Clock
+	Journal      *audit.Journal
+	Ledger       *approval.Ledger
+	Consume      bool
+	Capabilities map[string]bool
+}
+
 func Preflight(ctx context.Context, inv asset.Inventory, intent domain.ExecutionIntent, store approval.TrustStore, doc *approval.Document, now approval.Clock, journal *audit.Journal, ledger *approval.Ledger, consume bool) (PreflightResult, error) {
+	return PreflightCheck(ctx, PreflightInput{
+		Inventory: inv, Intent: intent, Store: store, Document: doc, Now: now, Journal: journal, Ledger: ledger, Consume: consume,
+	})
+}
+
+func PreflightCheck(ctx context.Context, in PreflightInput) (PreflightResult, error) {
 	if err := ctx.Err(); err != nil {
 		return PreflightResult{}, err
 	}
-	if now == nil {
+	if in.Now == nil {
 		return PreflightResult{}, errors.New("clock is required")
 	}
-	if err := intent.Validate(); err != nil {
+	if err := in.Intent.Validate(); err != nil {
 		return PreflightResult{}, err
 	}
-	if err := asset.Revalidate(intent.AssetSnapshotHash, inv); err != nil {
+	if err := asset.Revalidate(in.Intent.AssetSnapshotHash, in.Inventory); err != nil {
 		return PreflightResult{Reasons: []string{"asset snapshot drifted"}}, err
 	}
-	hash, err := domain.HashExecutionIntent(intent)
+	if err := revalidatePolicy(in.Intent); err != nil {
+		return PreflightResult{Reasons: []string{err.Error()}}, err
+	}
+	hash, err := domain.HashExecutionIntent(in.Intent)
 	if err != nil {
 		return PreflightResult{}, err
 	}
 	result := PreflightResult{
 		IntentHash:         hash,
-		AssetSnapshotHash:  intent.AssetSnapshotHash,
+		AssetSnapshotHash:  in.Intent.AssetSnapshotHash,
 		CollectorAvailable: false,
 		LimitsEnforced:     false,
 		ExecutionReady:     false,
 		Reasons:            []string{"Linux collector is not available; preflight cannot mark execution ready.", "Resource limits are described but not enforced by a running scanner."},
 	}
-	if domain.ProfileRequiresApproval(intent.Profile) {
-		if doc == nil {
+	if reasons, err := checkCapabilities(in.Intent.RequiredCapabilities, in.Capabilities); err != nil {
+		result.Reasons = append(result.Reasons, reasons...)
+		return result, err
+	} else {
+		result.Reasons = append(result.Reasons, reasons...)
+	}
+	if domain.ProfileRequiresApproval(in.Intent.Profile) {
+		if in.Document == nil {
 			result.Reasons = append(result.Reasons, "deep and incident-response require a verified approval")
 			return result, approval.ErrInvalid
 		}
-		verified, err := approval.Verify(store, *doc, intent, now())
+		verified, err := approval.Verify(in.Store, *in.Document, in.Intent, in.Now())
 		if err != nil {
 			return result, err
 		}
 		result.ApprovalVerified = true
-		if consume {
-			if journal == nil {
+		if in.Consume {
+			if in.Journal == nil {
 				return result, errors.New("audit journal is required to consume an approval")
 			}
-			if ledger == nil {
+			if in.Ledger == nil {
 				return result, errors.New("nonce ledger is required to consume an approval")
 			}
-			event := audit.Event{EventID: "consume-" + verified.Document.ApprovalID, At: now().UTC().Format(domain.TimeLayout), Decision: "allow"}
-			if err := journal.ConsumeAndAudit(verified, event); err != nil {
+			event := audit.Event{EventID: "consume-" + verified.Document.ApprovalID, At: in.Now().UTC().Format(domain.TimeLayout), Decision: "allow"}
+			if err := in.Journal.ConsumeAndAudit(verified, event); err != nil {
 				return result, err
 			}
-			if err := ledger.Consume(verified.Document.Nonce); err != nil {
+			if err := in.Ledger.Consume(verified.Document.Nonce); err != nil {
 				return result, err
 			}
 		} else {
@@ -154,6 +181,36 @@ func Preflight(ctx context.Context, inv asset.Inventory, intent domain.Execution
 		}
 	}
 	return result, nil
+}
+
+func revalidatePolicy(intent domain.ExecutionIntent) error {
+	if intent.PolicyID != policy.PolicyID || intent.PolicyVersion != policy.PolicyVersion {
+		return errors.New("policy identity drifted")
+	}
+	current, err := policy.CurrentHash(intent.Profile)
+	if err != nil {
+		return err
+	}
+	if current != intent.PolicyHash {
+		return errors.New("policy hash drifted")
+	}
+	return nil
+}
+
+func checkCapabilities(required []string, available map[string]bool) ([]string, error) {
+	if available == nil {
+		return []string{"required capabilities have not been probed; unknown is not available"}, nil
+	}
+	var missing []string
+	for _, name := range required {
+		if !available[name] {
+			missing = append(missing, name)
+		}
+	}
+	if len(missing) > 0 {
+		return []string{"required capability is unavailable: " + fmt.Sprintf("%v", missing)}, errors.New("required capability is unavailable")
+	}
+	return []string{"declared capabilities were present in the preflight inventory"}, nil
 }
 
 func FormatIdentityRef(hostID string) string {

@@ -55,6 +55,10 @@ for profile in ('quick','standard','deep','incident-response'):
 doctor=json.loads(run(['doctor','--json'],1).stdout)
 validate('doctor-v1.schema.json',doctor)
 assert not doctor['collector_available'] and not doctor['scan_ready']
+policy=json.loads((root/'policies/builtin-v1.json').read_text())
+validate('policy-v1.schema.json',policy)
+assert policy['mode']=='READ_ONLY' and policy['policy_id']=='hostsec-builtin'
+assert {p['name'] for p in policy['profiles']}=={'quick','standard','deep','incident-response'}
 for args in (
     ['scan','--host','linux-test-001'],['mcp','serve'],['version','--exec','CANARY_SECRET'],
     ['plan','--file','examples/hosts.yaml','--targets','group:mixed','--dry-run','--json'],
