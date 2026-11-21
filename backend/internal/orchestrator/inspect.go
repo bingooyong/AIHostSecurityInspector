@@ -3,6 +3,7 @@ package orchestrator
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"path/filepath"
 	"strings"
 	"time"
@@ -23,16 +24,19 @@ import (
 )
 
 type Request struct {
-	Root      string
-	Live      bool
-	Inventory asset.Inventory
-	HostID    string
-	Profile   string
-	OutDir    string
-	ScanID    string
-	AttemptID string
-	Now       func() time.Time
-	SSH       *ssh.DialConfig
+	Root         string
+	Live         bool
+	Inventory    asset.Inventory
+	HostID       string
+	Profile      string
+	OutDir       string
+	ScanID       string
+	AttemptID    string
+	Now          func() time.Time
+	SSH          *ssh.DialConfig
+	Pressure     PressureSource
+	SnapshotHash string
+	PolicyHash   string
 }
 
 type Result struct {
@@ -105,14 +109,19 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 	if timeout <= 0 {
 		timeout = 30 * time.Second
 	}
-	for _, module := range prof.Modules {
-		if err := ctx.Err(); err != nil {
+	moduleTimeout := timeout / time.Duration(len(prof.Modules)+1)
+	for i, module := range prof.Modules {
+		if err := beforeModule(ctx, req.Pressure, prof.Limits.StopOnResourcePressure); err != nil {
+			if errors.Is(err, ErrResourcePressure) || errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+				out.Modules = append(out.Modules, skippedModules(prof.Modules[i:], req, err)...)
+				break
+			}
 			return out, err
 		}
 		result := collectModule(ctx, req.Root, req.Now, collector.Request{
 			ScanID: req.ScanID, AttemptID: req.AttemptID, HostID: req.HostID,
 			ModuleID: module, Profile: req.Profile, PolicyVersion: policy.PolicyVersion,
-			Limits: collector.Limits{Timeout: timeout / time.Duration(len(prof.Modules)+1), MaxRecords: 4096, MaxBytes: prof.Limits.MaxFileSizeBytes},
+			Limits: collector.Limits{Timeout: moduleTimeout, MaxRecords: 4096, MaxBytes: prof.Limits.MaxFileSizeBytes},
 		})
 		out.Modules = append(out.Modules, result)
 		if err := putResult(ctx, store, req, result); err != nil {
@@ -142,10 +151,11 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 	if err != nil {
 		return out, err
 	}
+	results = rejectPassOnFailedCollection(results, out.Modules)
 	out.RuleResults = results
 	out.Findings = findings
 	out.Evidence = items
-	out.JobStatus = domain.JobPartial
+	out.JobStatus = jobStatusFor(out.Modules)
 	exec := tools.Executor{}
 	for _, tool := range prof.Tools {
 		rep, toolErr := adapter.Lynis(ctx, exec, req.HostID, req.ScanID)

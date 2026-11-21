@@ -41,6 +41,9 @@ func TestInspectLocalCollectsAuthorizedLoopback(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("live inspect requires linux")
 	}
+	if os.Getenv("HOSTSEC_LIVE_LINUX") != "1" {
+		t.Skip("set HOSTSEC_LIVE_LINUX=1 to run live root filesystem inspect")
+	}
 	out := t.TempDir()
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
@@ -68,6 +71,9 @@ func TestInspectLocalCollectsAuthorizedLoopback(t *testing.T) {
 func TestRunAuthorizedCancelDoesNotComplete(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("live inspect requires linux")
+	}
+	if os.Getenv("HOSTSEC_LIVE_LINUX") != "1" {
+		t.Skip("set HOSTSEC_LIVE_LINUX=1 to run live root filesystem inspect")
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()

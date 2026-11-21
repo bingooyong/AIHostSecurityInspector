@@ -3,6 +3,7 @@ package orchestrator
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/adapter"
@@ -87,9 +88,13 @@ func InspectLocal(ctx context.Context, req Request) (Result, error) {
 		timeout = 30 * time.Second
 	}
 	moduleTimeout := timeout / time.Duration(len(prof.Modules)+1)
-	for _, module := range prof.Modules {
-		if err := ctx.Err(); err != nil {
-			out.JobStatus = domain.JobCancelled
+	for i, module := range prof.Modules {
+		if err := beforeModule(ctx, req.Pressure, prof.Limits.StopOnResourcePressure); err != nil {
+			if errors.Is(err, ErrResourcePressure) || errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+				out.Modules = append(out.Modules, skippedModules(prof.Modules[i:], req, err)...)
+				break
+			}
+			out.JobStatus = domain.JobFailed
 			return failOpen(out, err)
 		}
 		creq := collector.Request{
@@ -257,10 +262,8 @@ func rejectPassOnFailedCollection(results []domain.RuleResult, modules []collect
 		if result.Outcome != domain.OutcomePass {
 			continue
 		}
-		if len(result.MissingEvidence) > 0 {
-			out[i].Outcome = domain.OutcomeUnknown
-			out[i].ReasonCode = "collection_failed"
-		}
+		out[i].Outcome = domain.OutcomeUnknown
+		out[i].ReasonCode = "collection_failed"
 	}
 	return out
 }

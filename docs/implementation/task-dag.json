@@ -1167,12 +1167,13 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "completion_evidence": [
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/analyzer/provider.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-lab-surfaces/TASK-MATRIX.md"
       ]
     },
     {
@@ -1208,12 +1209,13 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "completion_evidence": [
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/analyzer/provider.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-lab-surfaces/TASK-MATRIX.md"
       ]
     },
     {
@@ -1250,12 +1252,13 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "completion_evidence": [
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/analyzer/provider.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-lab-surfaces/TASK-MATRIX.md"
       ]
     },
     {
@@ -1292,12 +1295,13 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "completion_evidence": [
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/analyzer/cite.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-lab-surfaces/TASK-MATRIX.md"
       ]
     },
     {
@@ -1335,12 +1339,13 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "completion_evidence": [
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "integrations/hostsec-skill/SKILL.md",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-lab-surfaces/TASK-MATRIX.md"
       ]
     },
     {
@@ -1601,13 +1606,14 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "completion_evidence": [
         "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
         "backend/internal/risk/risk.go",
         "backend/internal/risk/risk_test.go",
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-lab-surfaces/TASK-MATRIX.md"
       ]
     },
     {
@@ -1655,7 +1661,7 @@
       ],
       "parallel_allowed": true,
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "completion_evidence": [
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
@@ -1665,7 +1671,8 @@
         "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
         "backend/internal/orchestrator/job.go",
         "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json",
-        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-box-lab/TASK-MATRIX.md"
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-box-lab/TASK-MATRIX.md",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-lab-surfaces/TASK-MATRIX.md"
       ]
     },
     {

@@ -2,8 +2,11 @@ package orchestrator
 
 import (
 	"context"
+	"errors"
 
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/asset"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/policy"
 )
 
 // RunAuthorized advances a job through a legal path around InspectLocal or InspectFixture.
@@ -16,7 +19,18 @@ func RunAuthorized(ctx context.Context, jobs *JobStore, job Job, req Request, li
 	if created.ScanID != job.ScanID {
 		return created, Result{}, nil
 	}
-	for _, next := range []string{domain.JobValidating, domain.JobQueued, domain.JobRunning, domain.JobCollecting} {
+	created, err = jobs.Advance(created.ScanID, domain.JobValidating)
+	if err != nil {
+		return created, Result{}, err
+	}
+	if err := RecheckAuthorization(req); err != nil {
+		created, advErr := jobs.Advance(created.ScanID, domain.JobRejected)
+		if advErr != nil {
+			return created, Result{}, errors.Join(err, advErr)
+		}
+		return created, Result{ScanID: req.ScanID, HostID: req.HostID, Profile: req.Profile, JobStatus: domain.JobRejected, Limitations: []string{"plan or authorization recheck failed; scan was not started"}}, err
+	}
+	for _, next := range []string{domain.JobQueued, domain.JobRunning, domain.JobCollecting} {
 		created, err = jobs.Advance(created.ScanID, next)
 		if err != nil {
 			return created, Result{}, err
@@ -76,4 +90,28 @@ func RunAuthorized(ctx context.Context, jobs *JobStore, job Job, req Request, li
 	created, _ = jobs.Advance(created.ScanID, domain.JobFailed)
 	result.JobStatus = domain.JobFailed
 	return created, result, &domain.Error{Code: domain.CodeInvalidStateTransition, Message: "inspect result status is not a legal completion"}
+}
+
+func RecheckAuthorization(req Request) error {
+	if err := req.Inventory.Validate(); err != nil {
+		return err
+	}
+	if _, err := authorizedHost(req.Inventory, req.HostID, req.Profile); err != nil {
+		return err
+	}
+	if req.SnapshotHash != "" {
+		if err := asset.Revalidate(req.SnapshotHash, req.Inventory); err != nil {
+			return err
+		}
+	}
+	if req.PolicyHash != "" {
+		current, err := policy.CurrentHash(req.Profile)
+		if err != nil {
+			return err
+		}
+		if current != req.PolicyHash {
+			return errors.New("policy hash drifted")
+		}
+	}
+	return nil
 }
