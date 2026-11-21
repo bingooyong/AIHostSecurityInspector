@@ -35,4 +35,8 @@ func TestWorkflowRequestIsNotAGrantAndRejectsSelfApprove(t *testing.T) {
 	if err != nil || granted.Status != RequestGranted || signed.Signature == "" {
 		t.Fatal(err, granted)
 	}
+	listed := flow.List()
+	if len(listed) != 1 || listed[0].RequestID != "request-deep-1" || listed[0].Status != RequestGranted {
+		t.Fatalf("list: %+v", listed)
+	}
 }

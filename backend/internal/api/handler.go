@@ -38,7 +38,10 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /v1/scans", s.wrap(s.listScans))
 	mux.HandleFunc("GET /v1/scans/{id}", s.wrap(s.getScan))
 	mux.HandleFunc("GET /v1/scans/{id}/findings", s.wrap(s.listFindings))
+	mux.HandleFunc("GET /v1/scans/{id}/evidence", s.wrap(s.listEvidence))
 	mux.HandleFunc("GET /v1/evidence/{id}", s.wrap(s.getEvidence))
+	mux.HandleFunc("GET /v1/approvals", s.wrap(s.listApprovals))
+	mux.HandleFunc("GET /v1/audit", s.wrap(s.listAudit))
 	mux.HandleFunc("POST /v1/scans/{id}/analyze", s.wrap(s.analyze))
 	mux.HandleFunc("POST /v1/scans/{id}/report", s.wrap(s.report))
 	return loopbackCORS(mux)
@@ -79,6 +82,10 @@ func Serve(ctx context.Context, addr string, handler http.Handler) error {
 func (s *Server) wrap(next func(http.ResponseWriter, *http.Request, authorization.Principal)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
+		if err := r.Context().Err(); err != nil {
+			writeError(w, http.StatusRequestTimeout, app.CodeCancelled, "request cancelled")
+			return
+		}
 		principalID := strings.TrimSpace(r.Header.Get("X-HostSec-Principal"))
 		if principalID == "" {
 			writeError(w, http.StatusUnauthorized, app.CodeAuthDenied, "caller identity header is required")
@@ -90,7 +97,7 @@ func (s *Server) wrap(next func(http.ResponseWriter, *http.Request, authorizatio
 			return
 		}
 		if !s.limit.allow(caller.ID) {
-			writeError(w, http.StatusTooManyRequests, app.CodeSchema, "principal rate limit exceeded")
+			writeError(w, http.StatusTooManyRequests, app.CodeRateLimited, "principal rate limit exceeded")
 			return
 		}
 		next(w, r, caller)
@@ -186,6 +193,36 @@ func (s *Server) listFindings(w http.ResponseWriter, r *http.Request, caller aut
 	}
 	findings, rules, err := s.Service.ListFindings(r.Context(), caller, r.PathValue("id"), limit, offset)
 	writeJSON(w, map[string]any{"findings": findings, "rule_results": rules}, err)
+}
+
+func (s *Server) listEvidence(w http.ResponseWriter, r *http.Request, caller authorization.Principal) {
+	limit, offset, err := pageQuery(r)
+	if err != nil {
+		writeJSON(w, nil, err)
+		return
+	}
+	items, err := s.Service.ListEvidence(r.Context(), caller, r.PathValue("id"), limit, offset)
+	writeJSON(w, items, err)
+}
+
+func (s *Server) listApprovals(w http.ResponseWriter, r *http.Request, caller authorization.Principal) {
+	limit, offset, err := pageQuery(r)
+	if err != nil {
+		writeJSON(w, nil, err)
+		return
+	}
+	items, err := s.Service.ListApprovals(r.Context(), caller, limit, offset)
+	writeJSON(w, items, err)
+}
+
+func (s *Server) listAudit(w http.ResponseWriter, r *http.Request, caller authorization.Principal) {
+	limit, offset, err := pageQuery(r)
+	if err != nil {
+		writeJSON(w, nil, err)
+		return
+	}
+	items, err := s.Service.ListAudit(r.Context(), caller, limit, offset)
+	writeJSON(w, items, err)
 }
 
 func (s *Server) getEvidence(w http.ResponseWriter, r *http.Request, caller authorization.Principal) {
@@ -310,6 +347,10 @@ func statusFor(err error) (int, string, string) {
 			return http.StatusNotFound, coded.Code, coded.Message
 		case app.CodeApprovalRequired:
 			return http.StatusConflict, coded.Code, coded.Message
+		case app.CodeRateLimited:
+			return http.StatusTooManyRequests, coded.Code, coded.Message
+		case app.CodeCancelled:
+			return http.StatusRequestTimeout, coded.Code, coded.Message
 		default:
 			return http.StatusBadRequest, coded.Code, coded.Message
 		}

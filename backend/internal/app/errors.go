@@ -22,6 +22,8 @@ const (
 	CodeCollectionPartial = "COLLECTION_PARTIAL"
 	CodeAIProvider        = "AI_PROVIDER_ERROR"
 	CodeNotFound          = "NOT_FOUND"
+	CodeRateLimited       = "RATE_LIMITED"
+	CodeCancelled         = "CANCELLED"
 )
 
 func fail(code, message string) *Error {

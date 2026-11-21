@@ -36,6 +36,24 @@ test("loopback API rejects missing identity, self-asserted roles, and live-scan 
   expect(scan.scan_ready).toBe(false);
   expect(scan.collector_available).toBe(false);
   expect(scan.status).toBe("PARTIAL");
+
+  const evidence = await request.get(`${api}/v1/scans/${scan.scan_id}/evidence?limit=20&offset=0`, { headers: principal });
+  expect(evidence.ok()).toBeTruthy();
+  const listed = (await evidence.json()) as { items: Array<{ evidence_id: string; module: string }>; total: number };
+  expect(listed.total).toBeGreaterThan(0);
+  expect(listed.items[0]?.evidence_id).toBeTruthy();
+  expect(JSON.stringify(listed)).not.toContain("auth_ref");
+
+  const stolen = await request.get(`${api}/v1/scans/${scan.scan_id}/evidence`, {
+    headers: { "X-HostSec-Principal": "operator-zone-b" }
+  });
+  expect(stolen.status()).toBe(403);
+
+  const operatorAudit = await request.get(`${api}/v1/audit`, { headers: principal });
+  expect(operatorAudit.status()).toBe(403);
+  const audit = await request.get(`${api}/v1/audit`, { headers: { "X-HostSec-Principal": "auditor-carol" } });
+  expect(audit.ok()).toBeTruthy();
+  expect(JSON.stringify(await audit.json())).toContain("run_host_scan");
 });
 
 test("console fetches real loopback hosts and PARTIAL jobs", async ({ page, request }) => {

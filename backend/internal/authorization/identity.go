@@ -27,6 +27,7 @@ const (
 	ActionReadScan        = "read_scan"
 	ActionAnalyze         = "analyze"
 	ActionReport          = "report"
+	ActionReadAudit       = "read_audit"
 )
 
 var (
@@ -160,6 +161,7 @@ func (p Principal) Can(action string) error {
 		ActionReadScan:        {RoleOperator, RoleApprover, RoleAuditor},
 		ActionAnalyze:         {RoleOperator},
 		ActionReport:          {RoleOperator, RoleApprover, RoleAuditor},
+		ActionReadAudit:       {RoleAuditor},
 	}
 	roles, ok := allowed[action]
 	if !ok {

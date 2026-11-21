@@ -25,10 +25,36 @@ describe("local API client", () => {
           next_offset: null
         });
       }
+      if (url.includes("/v1/approvals")) {
+        return Response.json({
+          items: [{ request_id: "request-1", status: "pending", requester_principal: "operator-alice" }],
+          total: 1,
+          limit: 20,
+          offset: 0,
+          next_offset: null
+        });
+      }
       if (url.includes("/v1/scans") && url.includes("findings")) {
         return Response.json({
           findings: { items: [], total: 0, limit: 20, offset: 0, next_offset: null },
           rule_results: [{ rule_id: "proc-listening", outcome: "PASS", reason_code: "ok" }]
+        });
+      }
+      if (url.includes("/v1/scans") && url.includes("evidence")) {
+        return Response.json({
+          items: [
+            {
+              evidence_id: "ev-1",
+              scan_id: "scan-local-1",
+              host_id: "linux-test-001",
+              module: "process_inventory",
+              integrity_status: "verified"
+            }
+          ],
+          total: 1,
+          limit: 20,
+          offset: 0,
+          next_offset: null
         });
       }
       if (url.includes("/v1/scans")) {
@@ -59,6 +85,8 @@ describe("local API client", () => {
     expect(snapshot.jobs[0]?.status).toBe("PARTIAL");
     expect(snapshot.jobs[0]?.scan_ready).toBe(false);
     expect(snapshot.rules[0]?.rule_id).toBe("proc-listening");
+    expect(snapshot.evidence[0]?.integrity_status).toBe("verified");
+    expect(snapshot.approvals[0]?.request_id).toBe("request-1");
     vi.unstubAllGlobals();
   });
 

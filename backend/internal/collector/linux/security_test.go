@@ -29,8 +29,16 @@ func TestSecurityConfigDoesNotTreatMissingAsCompliant(t *testing.T) {
 	}
 	rec := result.Records[0]
 	ssh := rec["ssh"].(map[string]any)
-	if ssh["permit_root_login"] != "no" || ssh["complete_policy"] != false || ssh["include_unresolved"] != true {
-		t.Fatalf("ssh fragment treated as complete policy %+v", ssh)
+	if ssh["permit_root_login"] != "prohibit-password" || ssh["complete_policy"] != true || ssh["include_unresolved"] != false {
+		t.Fatalf("sshd Include was not applied last-wins %+v", ssh)
+	}
+	includes, _ := json.Marshal(ssh["includes"])
+	if !strings.Contains(string(includes), "sshd_config.d") {
+		t.Fatalf("resolved includes missing: %s", includes)
+	}
+	sudo, _ := json.Marshal(rec["sudo"])
+	if !strings.Contains(string(sudo), "etc/sudoers.d/fixture-svc") {
+		t.Fatalf("sudoers.d path was not collected: %s", sudo)
 	}
 	caveats := rec["caveats"].([]any)
 	joined := strings.Join(stringify(caveats), ",")
@@ -50,6 +58,30 @@ func TestSecurityLiveRootRejected(t *testing.T) {
 	}
 	if result.Status != domain.CollectionNotAvailable {
 		t.Fatalf("status=%s", result.Status)
+	}
+}
+
+func TestSecurityIncludeEscapeDoesNotReadOutsideRoot(t *testing.T) {
+	col := Security{Root: fixtureRoot(t, "ssh-escape"), Now: time.Now}
+	result, err := col.Collect(context.Background(), securityReq())
+	if err != nil {
+		t.Fatal(err)
+	}
+	ssh := result.Records[0]["ssh"].(map[string]any)
+	if ssh["permit_root_login"] != "no" || ssh["include_unresolved"] != true || ssh["complete_policy"] != false {
+		t.Fatalf("escaped include applied host file: %+v", ssh)
+	}
+}
+
+func TestSecurityIncludeDepthIsBounded(t *testing.T) {
+	col := Security{Root: fixtureRoot(t, "ssh-deep"), Now: time.Now}
+	result, err := col.Collect(context.Background(), securityReq())
+	if err != nil {
+		t.Fatal(err)
+	}
+	ssh := result.Records[0]["ssh"].(map[string]any)
+	if ssh["permit_root_login"] == "yes" || ssh["include_unresolved"] != true {
+		t.Fatalf("unbounded include chain: %+v warnings=%v", ssh, result.Warnings)
 	}
 }
 

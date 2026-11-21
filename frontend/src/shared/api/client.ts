@@ -11,8 +11,10 @@ export type ConsoleSnapshot = {
 export async function fetchSnapshot(baseUrl: string, principal: string): Promise<ConsoleSnapshot> {
   const hostsPage = await getJSON<Page<HostView>>(baseUrl, "/v1/hosts?limit=20&offset=0", principal);
   const jobsPage = await getJSON<Page<JobView>>(baseUrl, "/v1/scans?limit=20&offset=0", principal);
+  const approvalsPage = await getJSON<Page<ApprovalView>>(baseUrl, "/v1/approvals?limit=20&offset=0", principal);
   const jobs = Array.isArray(jobsPage.items) ? jobsPage.items.map(publicJob) : [];
   const hosts = Array.isArray(hostsPage.items) ? hostsPage.items.map(publicHost) : [];
+  const approvals = Array.isArray(approvalsPage.items) ? approvalsPage.items : [];
   const evidence: EvidenceView[] = [];
   const rules: RuleView[] = [];
   for (const job of jobs) {
@@ -21,21 +23,24 @@ export async function fetchSnapshot(baseUrl: string, principal: string): Promise
       `/v1/scans/${encodeURIComponent(job.scan_id)}/findings?limit=20&offset=0`,
       principal
     );
-    for (const finding of findings.findings.items ?? []) {
-      for (const ref of finding.evidence_refs ?? []) {
-        evidence.push({
-          evidence_id: ref,
-          scan_id: finding.scan_id,
-          host_id: finding.host_id,
-          module: "metadata",
-          integrity_status: "unknown",
-          title: finding.title
-        });
-      }
+    const listed = await getJSON<Page<EvidenceMeta>>(
+      baseUrl,
+      `/v1/scans/${encodeURIComponent(job.scan_id)}/evidence?limit=20&offset=0`,
+      principal
+    );
+    for (const item of listed.items ?? []) {
+      evidence.push({
+        evidence_id: item.evidence_id,
+        scan_id: item.scan_id,
+        host_id: item.host_id,
+        module: item.module,
+        integrity_status: item.integrity_status,
+        title: item.module
+      });
     }
     rules.push(...(findings.rule_results ?? []));
   }
-  return { hosts, jobs, evidence, rules, approvals: [] as ApprovalView[] };
+  return { hosts, jobs, evidence, rules, approvals };
 }
 
 type FindingRow = {
@@ -43,6 +48,14 @@ type FindingRow = {
   host_id: string;
   title?: string;
   evidence_refs?: string[];
+};
+
+type EvidenceMeta = {
+  evidence_id: string;
+  scan_id: string;
+  host_id: string;
+  module: string;
+  integrity_status: string;
 };
 
 async function getJSON<T>(baseUrl: string, path: string, principal: string): Promise<T> {

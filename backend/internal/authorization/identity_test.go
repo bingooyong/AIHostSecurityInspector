@@ -34,6 +34,12 @@ func TestDirectoryRejectsAdminAndFiltersZones(t *testing.T) {
 	if err := auditor.Can(ActionReadScan); err != nil {
 		t.Fatal(err)
 	}
+	if err := auditor.Can(ActionReadAudit); err != nil {
+		t.Fatal(err)
+	}
+	if err := operator.Can(ActionReadAudit); err == nil {
+		t.Fatal("operator read the audit journal")
+	}
 	inv := twoZone(t)
 	visible := operator.FilterHosts(inv.Authorized().Hosts)
 	if len(visible) != 1 || visible[0].ID != "linux-test-001" {

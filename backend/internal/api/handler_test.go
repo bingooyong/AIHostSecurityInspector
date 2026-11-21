@@ -2,12 +2,14 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/app"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/asset"
@@ -115,6 +117,42 @@ func TestAPILoopbackRBACAndIDOR(t *testing.T) {
 	if stolen.Code != http.StatusForbidden {
 		t.Fatalf("IDOR allowed: %d %s", stolen.Code, stolen.Body.String())
 	}
+	evidence := do(t, handler, http.MethodGet, "/v1/scans/"+payload.Job.ScanID+"/evidence", "operator-alice", nil)
+	if evidence.Code != 200 || !bytes.Contains(evidence.Body.Bytes(), []byte("evidence_id")) {
+		t.Fatalf("evidence list: %s", evidence.Body.String())
+	}
+	stolenEvidence := do(t, handler, http.MethodGet, "/v1/scans/"+payload.Job.ScanID+"/evidence", "operator-zone-b", nil)
+	if stolenEvidence.Code != http.StatusForbidden {
+		t.Fatalf("evidence IDOR allowed: %d %s", stolenEvidence.Code, stolenEvidence.Body.String())
+	}
+	deep := do(t, handler, http.MethodPost, "/v1/plans", "operator-alice", map[string]string{"host_id": "linux-test-001", "profile": "deep"})
+	if deep.Code != 200 {
+		t.Fatal(deep.Body.String())
+	}
+	var deepPlan app.PlanRecord
+	if err := json.Unmarshal(deep.Body.Bytes(), &deepPlan); err != nil {
+		t.Fatal(err)
+	}
+	asked := do(t, handler, http.MethodPost, "/v1/approvals/requests", "operator-alice", map[string]string{"plan_id": deepPlan.PlanID, "reason": "fixture deep request"})
+	if asked.Code != 200 {
+		t.Fatalf("approval request: %s", asked.Body.String())
+	}
+	approvals := do(t, handler, http.MethodGet, "/v1/approvals", "operator-alice", nil)
+	if approvals.Code != 200 || !bytes.Contains(approvals.Body.Bytes(), []byte(deepPlan.PlanID)) {
+		t.Fatalf("approval list: %s", approvals.Body.String())
+	}
+	hiddenApprovals := do(t, handler, http.MethodGet, "/v1/approvals", "operator-zone-b", nil)
+	if hiddenApprovals.Code != 200 || bytes.Contains(hiddenApprovals.Body.Bytes(), []byte(deepPlan.PlanID)) {
+		t.Fatalf("cross-zone approvals: %s", hiddenApprovals.Body.String())
+	}
+	deniedAudit := do(t, handler, http.MethodGet, "/v1/audit", "operator-alice", nil)
+	if deniedAudit.Code != http.StatusForbidden {
+		t.Fatalf("operator read audit: %s", deniedAudit.Body.String())
+	}
+	audit := do(t, handler, http.MethodGet, "/v1/audit", "auditor-carol", nil)
+	if audit.Code != 200 || !bytes.Contains(audit.Body.Bytes(), []byte("plan_host_scan")) {
+		t.Fatalf("auditor audit: %s", audit.Body.String())
+	}
 	role := do(t, handler, http.MethodPost, "/v1/plans", "operator-alice", map[string]any{"host_id": "linux-test-001", "profile": "quick", "role": "admin"})
 	if role.Code != http.StatusForbidden {
 		t.Fatalf("self-asserted role accepted: %s", role.Body.String())
@@ -143,4 +181,42 @@ func do(t *testing.T, handler http.Handler, method, path, principal string, body
 	rec := httptest.NewRecorder()
 	handler.ServeHTTP(rec, req)
 	return rec
+}
+
+func TestAPIRateLimitAndCancel(t *testing.T) {
+	inv, err := asset.Load(t.Context(), "../../../examples/hosts.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	raw, err := os.ReadFile("../../../examples/identities.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	dir, err := authorization.ParseDirectory(raw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	svc := app.New(*inv, dir)
+	server := New(svc, dir)
+	server.limit = newLimiter(2, time.Minute)
+	handler := server.Handler()
+	if do(t, handler, http.MethodGet, "/v1/hosts", "operator-alice", nil).Code != 200 {
+		t.Fatal("first host list failed")
+	}
+	if do(t, handler, http.MethodGet, "/v1/hosts", "operator-alice", nil).Code != 200 {
+		t.Fatal("second host list failed")
+	}
+	limited := do(t, handler, http.MethodGet, "/v1/hosts", "operator-alice", nil)
+	if limited.Code != http.StatusTooManyRequests || !bytes.Contains(limited.Body.Bytes(), []byte("RATE_LIMITED")) {
+		t.Fatalf("rate limit: %d %s", limited.Code, limited.Body.String())
+	}
+	req := httptest.NewRequest(http.MethodGet, "/v1/hosts", nil)
+	req.Header.Set("X-HostSec-Principal", "operator-alice")
+	ctx, cancel := context.WithCancel(req.Context())
+	cancel()
+	rec := httptest.NewRecorder()
+	handler.ServeHTTP(rec, req.WithContext(ctx))
+	if rec.Code != http.StatusRequestTimeout || !bytes.Contains(rec.Body.Bytes(), []byte("CANCELLED")) {
+		t.Fatalf("cancel: %d %s", rec.Code, rec.Body.String())
+	}
 }

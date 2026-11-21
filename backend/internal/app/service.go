@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"sort"
 	"sync"
 	"time"
 
@@ -39,6 +40,17 @@ type EvidenceMeta struct {
 	Warnings         []string `json:"warnings"`
 }
 
+type AuditEvent struct {
+	EventID  string `json:"event_id"`
+	At       string `json:"at"`
+	Actor    string `json:"actor"`
+	Action   string `json:"action"`
+	HostID   string `json:"host_id,omitempty"`
+	ScanID   string `json:"scan_id,omitempty"`
+	PlanID   string `json:"plan_id,omitempty"`
+	Decision string `json:"decision"`
+}
+
 type Service struct {
 	mu          sync.Mutex
 	Inventory   asset.Inventory
@@ -48,6 +60,7 @@ type Service struct {
 	plans       map[string]PlanRecord
 	results     map[string]orchestrator.Result
 	evidence    map[string]domain.Evidence
+	audit       []AuditEvent
 	seq         int
 	FixtureRoot string
 	OutDir      string
@@ -58,7 +71,7 @@ func New(inv asset.Inventory, dir authorization.Directory) *Service {
 	return &Service{
 		Inventory: inv, Directory: dir, Jobs: orchestrator.NewJobStore(), Workflow: approval.NewWorkflow(),
 		plans: map[string]PlanRecord{}, results: map[string]orchestrator.Result{}, evidence: map[string]domain.Evidence{},
-		Now: time.Now,
+		audit: []AuditEvent{}, Now: time.Now,
 	}
 }
 
@@ -113,13 +126,14 @@ func (s *Service) PlanHostScan(ctx context.Context, caller authorization.Princip
 		return PlanRecord{}, err
 	}
 	s.mu.Lock()
-	defer s.mu.Unlock()
 	s.seq++
 	rec := PlanRecord{
 		PlanID: fmt.Sprintf("plan-%d", s.seq), Owner: caller.ID, HostID: hostID, Profile: profile,
 		CreatedAt: s.Now().UTC().Format(domain.TimeLayout), Plan: *plan,
 	}
 	s.plans[rec.PlanID] = rec
+	s.mu.Unlock()
+	s.recordAudit(caller.ID, "plan_host_scan", hostID, "", rec.PlanID, "allow")
 	return rec, nil
 }
 
@@ -140,7 +154,12 @@ func (s *Service) RequestScanApproval(_ context.Context, caller authorization.Pr
 	s.seq++
 	requestID := fmt.Sprintf("request-%d", s.seq)
 	s.mu.Unlock()
-	return s.Workflow.Request(requestID, planID, "plan:"+planID, caller.ID, reason)
+	rec, err := s.Workflow.Request(requestID, planID, "plan:"+planID, caller.ID, reason)
+	if err != nil {
+		return rec, err
+	}
+	s.recordAudit(caller.ID, "request_scan_approval", plan.HostID, "", planID, "allow")
+	return rec, nil
 }
 
 func (s *Service) RunHostScan(ctx context.Context, caller authorization.Principal, planID, approvalID, idempotency, hostID, profile string) (orchestrator.Job, orchestrator.Result, error) {
@@ -211,6 +230,7 @@ func (s *Service) RunHostScan(ctx context.Context, caller authorization.Principa
 	s.RememberInspect(result)
 	s.rememberEvidence(job.ScanID, result.Evidence)
 	_ = approvalID
+	s.recordAudit(caller.ID, "run_host_scan", hostID, job.ScanID, planID, "allow")
 	return job, result, nil
 }
 
@@ -305,11 +325,87 @@ func (s *Service) GetEvidenceMetadata(_ context.Context, caller authorization.Pr
 	if err := s.visibleHost(caller, item.HostID); err != nil {
 		return EvidenceMeta{}, err
 	}
+	return metaFrom(item), nil
+}
+
+func (s *Service) ListEvidence(_ context.Context, caller authorization.Principal, scanID string, limit, offset int) (Page[EvidenceMeta], error) {
+	if err := s.require(caller, authorization.ActionReadScan); err != nil {
+		return Page[EvidenceMeta]{}, err
+	}
+	job, err := s.Jobs.Get(scanID)
+	if err != nil {
+		return Page[EvidenceMeta]{}, fail(CodeNotFound, "scan is unknown")
+	}
+	if err := s.visibleHost(caller, job.HostID); err != nil {
+		return Page[EvidenceMeta]{}, err
+	}
+	s.mu.Lock()
+	items := make([]EvidenceMeta, 0)
+	for _, item := range s.evidence {
+		if item.ScanID == scanID {
+			items = append(items, metaFrom(item))
+		}
+	}
+	s.mu.Unlock()
+	sort.Slice(items, func(i, j int) bool { return items[i].EvidenceID < items[j].EvidenceID })
+	return Paginate(items, limit, offset)
+}
+
+func (s *Service) ListApprovals(_ context.Context, caller authorization.Principal, limit, offset int) (Page[approval.Request], error) {
+	if err := s.require(caller, authorization.ActionReadScan); err != nil {
+		return Page[approval.Request]{}, err
+	}
+	visible := make([]approval.Request, 0)
+	for _, rec := range s.Workflow.List() {
+		s.mu.Lock()
+		plan, ok := s.plans[rec.PlanID]
+		s.mu.Unlock()
+		if !ok {
+			continue
+		}
+		if err := s.visibleHost(caller, plan.HostID); err != nil {
+			continue
+		}
+		visible = append(visible, rec)
+	}
+	return Paginate(visible, limit, offset)
+}
+
+func (s *Service) ListAudit(_ context.Context, caller authorization.Principal, limit, offset int) (Page[AuditEvent], error) {
+	if err := s.require(caller, authorization.ActionReadAudit); err != nil {
+		return Page[AuditEvent]{}, err
+	}
+	s.mu.Lock()
+	events := append([]AuditEvent{}, s.audit...)
+	s.mu.Unlock()
+	visible := make([]AuditEvent, 0, len(events))
+	for _, event := range events {
+		if event.HostID != "" {
+			if err := s.visibleHost(caller, event.HostID); err != nil {
+				continue
+			}
+		}
+		visible = append(visible, event)
+	}
+	return Paginate(visible, limit, offset)
+}
+
+func (s *Service) recordAudit(actor, action, hostID, scanID, planID, decision string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.seq++
+	s.audit = append(s.audit, AuditEvent{
+		EventID: fmt.Sprintf("audit-%d", s.seq), At: s.Now().UTC().Format(domain.TimeLayout),
+		Actor: actor, Action: action, HostID: hostID, ScanID: scanID, PlanID: planID, Decision: decision,
+	})
+}
+
+func metaFrom(item domain.Evidence) EvidenceMeta {
 	return EvidenceMeta{
 		EvidenceID: item.EvidenceID, ScanID: item.ScanID, HostID: item.HostID, Module: item.Module,
 		CollectionStatus: item.CollectionStatus, IntegrityStatus: item.IntegrityStatus, Completeness: item.Completeness,
 		SHA256: item.SHA256, Warnings: item.Warnings,
-	}, nil
+	}
 }
 
 func (s *Service) AnalyzeScanFindings(ctx context.Context, caller authorization.Principal, scanID string) (analyzer.Result, error) {

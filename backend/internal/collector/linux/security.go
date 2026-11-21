@@ -2,11 +2,18 @@ package linux
 
 import (
 	"context"
+	"path"
+	"sort"
 	"strings"
 	"time"
 
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/collector"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain"
+)
+
+const (
+	maxSSHIncludeDepth = 4
+	maxSSHIncludeFiles = 16
 )
 
 const ModuleSecurityConfig = "security_config"
@@ -121,25 +128,20 @@ func readSecurity(ctx context.Context, view fileView) (securityInventory, []stri
 	}
 	refs := []string{}
 	warnings := []string{}
-	raw, ref, warn, err := readOptionalText(ctx, view, "etc/ssh/sshd_config")
+	ssh, sshRefs, sshWarn, err := readSSH(ctx, view, "etc/ssh/sshd_config", 0, map[string]struct{}{})
 	if isContext(err) {
 		return inv, nil, nil, err
 	}
-	if ref != "" {
-		refs = append(refs, ref)
-	}
-	if warn != "" {
-		warnings = append(warnings, warn)
-	}
-	if raw != "" {
-		inv.SSH = parseSSHD(raw)
-	} else {
+	inv.SSH = ssh
+	refs = append(refs, sshRefs...)
+	warnings = append(warnings, sshWarn...)
+	if ssh.Source == "" {
 		inv.Caveats = append(inv.Caveats, "sshd_config_missing_not_compliant")
 	}
 	for _, path := range []string{"etc/sudoers", "etc/sudoers.d"} {
 		if strings.HasSuffix(path, ".d") {
 			for _, name := range listDir(view, path) {
-				meta, mref, mwarn, metaErr := readOptionalMeta(ctx, view, path+"/"+name)
+				meta, mref, mwarn, metaErr := readOptionalMeta(ctx, view, name)
 				if isContext(metaErr) {
 					return inv, refs, warnings, metaErr
 				}
@@ -184,7 +186,8 @@ func readSecurity(ctx context.Context, view fileView) (securityInventory, []stri
 			warnings = append(warnings, mwarn)
 		}
 	}
-	if raw, ref, warn, err = readOptionalText(ctx, view, "etc/audit/auditd.conf"); isContext(err) {
+	raw, ref, warn, err := readOptionalText(ctx, view, "etc/audit/auditd.conf")
+	if isContext(err) {
 		return inv, refs, warnings, err
 	} else if raw != "" {
 		inv.Audit = subsystemStatus{Status: domain.CollectionSuccess, Source: "etc/audit/auditd.conf"}
@@ -240,8 +243,70 @@ func readSecurity(ctx context.Context, view fileView) (securityInventory, []stri
 	return inv, compactRefs(refs...), compactRefs(warnings...), nil
 }
 
-func parseSSHD(raw string) sshSettings {
-	set := sshSettings{Source: "etc/ssh/sshd_config", Includes: []string{}, CompletePolicy: false, IncludeUnresolved: false}
+func readSSH(ctx context.Context, view fileView, file string, depth int, seen map[string]struct{}) (sshSettings, []string, []string, error) {
+	set := sshSettings{Includes: []string{}, CompletePolicy: false, IncludeUnresolved: false}
+	raw, ref, warn, err := readOptionalText(ctx, view, file)
+	if isContext(err) {
+		return set, nil, nil, err
+	}
+	if raw == "" {
+		set.IncludeUnresolved = true
+		return set, compactRefs(ref), compactRefs(warn, "sshd_include_missing"), nil
+	}
+	set.Source = file
+	refs := []string{ref}
+	warnings := []string{}
+	if warn != "" {
+		warnings = append(warnings, warn)
+	}
+	seen[file] = struct{}{}
+	applySSHD(&set, raw)
+	includes := sshIncludes(raw)
+	if depth >= maxSSHIncludeDepth && len(includes) > 0 {
+		set.IncludeUnresolved = true
+		warnings = append(warnings, "sshd_include_depth_exceeded")
+		set.CompletePolicy = false
+		return set, compactRefs(refs...), compactRefs(warnings...), nil
+	}
+	for _, pattern := range includes {
+		files, ok := expandSSHInclude(view, pattern)
+		if !ok {
+			set.IncludeUnresolved = true
+			warnings = append(warnings, "sshd_include_escape")
+			continue
+		}
+		if len(set.Includes)+len(files) > maxSSHIncludeFiles {
+			set.IncludeUnresolved = true
+			warnings = append(warnings, "sshd_include_limit")
+			break
+		}
+		for _, next := range files {
+			if _, dup := seen[next]; dup {
+				continue
+			}
+			set.Includes = append(set.Includes, next)
+			child, childRefs, childWarn, childErr := readSSH(ctx, view, next, depth+1, seen)
+			if isContext(childErr) {
+				return set, refs, warnings, childErr
+			}
+			refs = append(refs, childRefs...)
+			warnings = append(warnings, childWarn...)
+			if child.IncludeUnresolved {
+				set.IncludeUnresolved = true
+			}
+			if child.PermitRootLogin != "" {
+				set.PermitRootLogin = child.PermitRootLogin
+			}
+			if child.PasswordAuthentication != "" {
+				set.PasswordAuthentication = child.PasswordAuthentication
+			}
+		}
+	}
+	set.CompletePolicy = !set.IncludeUnresolved
+	return set, compactRefs(refs...), compactRefs(warnings...), nil
+}
+
+func applySSHD(set *sshSettings, raw string) {
 	for _, line := range strings.Split(raw, "\n") {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, "#") {
@@ -256,16 +321,57 @@ func parseSSHD(raw string) sshSettings {
 			set.PermitRootLogin = fields[1]
 		case "passwordauthentication":
 			set.PasswordAuthentication = fields[1]
-		case "include":
-			set.Includes = append(set.Includes, fields[1])
-			set.IncludeUnresolved = true
-			set.CompletePolicy = false
 		}
 	}
-	if !set.IncludeUnresolved {
-		set.CompletePolicy = true
+}
+
+func sshIncludes(raw string) []string {
+	out := []string{}
+	for _, line := range strings.Split(raw, "\n") {
+		fields := strings.Fields(strings.TrimSpace(line))
+		if len(fields) >= 2 && strings.EqualFold(fields[0], "include") {
+			out = append(out, fields[1])
+		}
 	}
-	return set
+	return out
+}
+
+func expandSSHInclude(view fileView, pattern string) ([]string, bool) {
+	rel, ok := fixtureRel(pattern)
+	if !ok {
+		return nil, false
+	}
+	if !strings.ContainsAny(path.Base(rel), "*?[") {
+		return []string{rel}, true
+	}
+	dir, base := path.Split(rel)
+	dir = strings.TrimSuffix(dir, "/")
+	entries, err := view.ReadDir(dir)
+	if err != nil {
+		return nil, true
+	}
+	out := []string{}
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		matched, matchErr := path.Match(base, entry.Name())
+		if matchErr != nil || !matched {
+			continue
+		}
+		out = append(out, path.Join(dir, entry.Name()))
+	}
+	sort.Strings(out)
+	return out, true
+}
+
+func fixtureRel(p string) (string, bool) {
+	p = strings.TrimSpace(strings.ReplaceAll(p, "\\", "/"))
+	p = strings.TrimPrefix(p, "/")
+	if p == "" || strings.Contains(p, "..") {
+		return "", false
+	}
+	return p, true
 }
 
 func parseSELinux(raw string) selinuxStatus {

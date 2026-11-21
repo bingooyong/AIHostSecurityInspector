@@ -3,6 +3,7 @@ package approval
 import (
 	"crypto/ed25519"
 	"errors"
+	"sort"
 	"sync"
 
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain"
@@ -99,6 +100,17 @@ func (w *Workflow) MarkConsumed(requestID string) error {
 	rec.Status = RequestConsumed
 	w.requests[requestID] = rec
 	return nil
+}
+
+func (w *Workflow) List() []Request {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	out := make([]Request, 0, len(w.requests))
+	for _, rec := range w.requests {
+		out = append(out, rec)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].RequestID < out[j].RequestID })
+	return out
 }
 
 func (w *Workflow) Get(requestID string) (Request, error) {
