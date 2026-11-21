@@ -467,7 +467,7 @@ func (s *Service) GenerateScanReport(_ context.Context, caller authorization.Pri
 	if !ok {
 		return report.Document{}, "", fail(CodeNotFound, "scan results are unknown")
 	}
-	doc := report.Build(result.ScanID, result.HostID, result.Profile, nil, result.RuleResults, result.Findings, result.Integrity, result.Limitations)
+	doc := report.BuildFromInput(reportInputFromResult(result))
 	switch format {
 	case "", "json":
 		return doc, "", nil

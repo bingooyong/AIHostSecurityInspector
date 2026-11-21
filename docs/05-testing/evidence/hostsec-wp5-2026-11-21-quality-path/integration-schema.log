@@ -1,0 +1,7 @@
+cwd=.
+$ python3 scripts/integration.py
+exit=0
+stdout:
+PASS: 33 real CLI processes; asset/plan/doctor/intent schemas; authorization, profile, injection, JSON rejection, and signal/timeout cancellation
+
+stderr:

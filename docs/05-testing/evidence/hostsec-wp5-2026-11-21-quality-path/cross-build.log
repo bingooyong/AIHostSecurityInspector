@@ -1,0 +1,53 @@
+cwd=.
+$ python3 scripts/build_release.py
+exit=0
+stdout:
+{
+  "schema_version": "build-manifest-v1",
+  "binary_name": "hostsec",
+  "version": "0.1.0-dev",
+  "source_commit": "47e07c17cd62a1bf907f08cd7f753e04642344a8",
+  "source_tree_hash": "a586320225047000f2a127a515db5653adf131160a7cf56532d90ad647a1ad15",
+  "dirty": true,
+  "workspace_dirty": true,
+  "go_version": "go1.27.4",
+  "cgo": false,
+  "cgo_enabled": false,
+  "build_flags": [
+    "-trimpath",
+    "-ldflags",
+    "-buildid= -X github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli.Version=0.1.0-dev"
+  ],
+  "ldflags": "-buildid= -X github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli.Version=0.1.0-dev",
+  "reproducible_linux_amd64_sha256": "55b2e94ad688b4f4563a6a35fbe9071d50fa4848291d588f3dc6a4f587d52fd3",
+  "artifacts": [
+    {
+      "binary_name": "hostsec",
+      "goos": "linux",
+      "goarch": "amd64",
+      "bytes": 22592331,
+      "sha256": "55b2e94ad688b4f4563a6a35fbe9071d50fa4848291d588f3dc6a4f587d52fd3",
+      "path": "build/hostsec-linux-amd64",
+      "validation": "CROSS_BUILD_ONLY",
+      "validation_level": "CROSS_BUILD_ONLY",
+      "runtime_version_check": "NATIVE_VERSION_CHECK",
+      "version": "0.1.0-dev"
+    },
+    {
+      "binary_name": "hostsec",
+      "goos": "linux",
+      "goarch": "arm64",
+      "bytes": 21192265,
+      "sha256": "33b54f41ed4c378e811aeed36cf1e8ce81f72b55b12e2ba4c2acae6d694eeb3b",
+      "path": "build/hostsec-linux-arm64",
+      "validation": "CROSS_BUILD_ONLY",
+      "validation_level": "CROSS_BUILD_ONLY",
+      "runtime_version_check": "CROSS_BUILD_ONLY",
+      "version": "0.1.0-dev"
+    }
+  ],
+  "validation": "CROSS_BUILD_ONLY",
+  "validation_level": "CROSS_BUILD_ONLY"
+}
+
+stderr:

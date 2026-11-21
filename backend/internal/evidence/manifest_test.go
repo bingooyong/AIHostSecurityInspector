@@ -91,3 +91,63 @@ func TestMissingObjectFailsVerify(t *testing.T) {
 		t.Fatalf("missing object not reported %+v", report)
 	}
 }
+
+func TestCorruptManifestAndCrossScanAreRejected(t *testing.T) {
+	store := openStore(t)
+	if _, err := store.Put(context.Background(), sampleInput("evidence-manifest-004", []byte("keep"))); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.BuildManifest(context.Background(), "scan-fixture-001", "0.1.0"); err != nil {
+		t.Fatal(err)
+	}
+	report, err := store.Verify(context.Background(), "scan-other-001")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report.OK {
+		t.Fatal("cross-scan manifest verified")
+	}
+	if err := os.WriteFile(filepath.Join(store.root, "manifest.json"), []byte("{not-json"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.LoadManifest(); err == nil {
+		t.Fatal("corrupt manifest loaded")
+	}
+	corrupt, err := store.Verify(context.Background(), "scan-fixture-001")
+	if err == nil && corrupt.OK {
+		t.Fatalf("corrupt manifest verified %+v", corrupt)
+	}
+}
+
+func TestReplayObjectDoesNotForgeSecondScan(t *testing.T) {
+	first := openStore(t)
+	if _, err := first.Put(context.Background(), sampleInput("evidence-manifest-005", []byte("original"))); err != nil {
+		t.Fatal(err)
+	}
+	man, err := first.BuildManifest(context.Background(), "scan-fixture-001", "0.1.0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	second := openStore(t)
+	if _, err := second.Put(context.Background(), sampleInput("evidence-manifest-006", []byte("other-scan-bytes"))); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := second.BuildManifest(context.Background(), "scan-fixture-002", "0.1.0"); err != nil {
+		t.Fatal(err)
+	}
+	// Replaying another scan's manifest into this store must not verify.
+	payload, err := os.ReadFile(filepath.Join(first.root, "manifest.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(second.root, "manifest.json"), payload, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	report, err := second.Verify(context.Background(), "scan-fixture-002")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report.OK {
+		t.Fatalf("replayed manifest verified %+v %+v", report, man)
+	}
+}

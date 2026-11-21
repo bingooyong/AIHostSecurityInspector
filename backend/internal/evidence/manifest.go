@@ -130,6 +130,11 @@ func (s *Store) Verify(ctx context.Context, scanID string) (VerificationReport, 
 	}
 	man, err := s.LoadManifest()
 	if err != nil {
+		if _, statErr := os.Lstat(filepath.Join(s.root, "manifest.json")); statErr == nil {
+			// A present but unreadable/corrupt manifest must not be rebuilt into a passing report.
+			report.Mismatches = append(report.Mismatches, "manifest")
+			return report, err
+		}
 		man, err = s.BuildManifest(ctx, scanID, "0.1.0")
 		if err != nil {
 			return report, err

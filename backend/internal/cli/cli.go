@@ -314,6 +314,9 @@ func runMCP(ctx context.Context, stdout, stderr io.Writer, inv asset.Inventory, 
 		}
 		return fail(stderr, "MCP_FAILED", "mcp stdio session failed", 1)
 	}
+	if err := ctx.Err(); err != nil {
+		return fail(stderr, "CANCELLED", "operation cancelled", 1)
+	}
 	return 0
 }
 
@@ -330,6 +333,9 @@ func runAPI(ctx context.Context, stderr io.Writer, inv asset.Inventory, identiti
 			return fail(stderr, "CANCELLED", "operation cancelled", 1)
 		}
 		return fail(stderr, "API_FAILED", "localhost API failed", 1)
+	}
+	if err := ctx.Err(); err != nil {
+		return fail(stderr, "CANCELLED", "operation cancelled", 1)
 	}
 	return 0
 }

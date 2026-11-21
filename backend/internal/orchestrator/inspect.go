@@ -158,7 +158,7 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 		out.ToolReports = append(out.ToolReports, rep)
 	}
 	out.Intel = intel.Correlate(items, nil)
-	doc := report.Build(out.ScanID, out.HostID, out.Profile, items, results, findings, out.Integrity, out.Limitations)
+	doc := report.BuildFromInput(reportInput(out, bundle))
 	path, err := report.Write(req.OutDir, doc)
 	if err != nil {
 		return out, err
