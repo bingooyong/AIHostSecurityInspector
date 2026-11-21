@@ -157,8 +157,10 @@ channel:
 # prompt_injection:
 #   skip_keyword: "no-trellis"   # "" disables the escape hatch entirely
 
-# HostSec current engineering package (future frontend is not an implemented package).
+# HostSec current engineering packages. frontend is a local isolated console, not an enterprise deployment.
 packages:
   backend:
     path: backend
+  frontend:
+    path: frontend
 default_package: backend

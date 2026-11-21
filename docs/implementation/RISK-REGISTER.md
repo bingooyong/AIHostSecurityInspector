@@ -15,4 +15,4 @@
 | R11 | CI配置与本地通过误当远端通过 | 两种结果分别报告 | 本轮持续；42 |
 | R12 | 版本化YAML/SQLite供应链变化 | 固定依赖/漏洞/SBOM；无需求不加驱动 | 本轮/15/42 |
 | R13 | 原未跟踪用户文件混入提交 | 保留源字节，显式pathspec，只报告不自动提交用户来源 | 本轮持续 |
-| R14 | Go1.27.3标准库GO-2026-6859（net/http MaxBytesReader竞态，1.27.4修复） | 当前CLI不导入net/http且govulncheck零可达；新增Provider/API/MCP前升级工具链并复查 | OPEN/不可达；25/30/33/42 |
+| R14 | Go1.27.3标准库GO-2026-6859（net/http MaxBytesReader竞态，1.27.4修复） | 本地 loopback API 引入 `net/http` 后按本台账升级到 Go 1.27.4 并重扫；stdio MCP 仍不使用 net/http | MITIGATED/本轮重扫；25/30/33/42 |

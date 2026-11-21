@@ -47,6 +47,8 @@ type Result struct {
 	Intel              intel.Report                `json:"intel"`
 	AIStatus           string                      `json:"ai_status"`
 	ReportPath         string                      `json:"report_path"`
+	Evidence           []domain.Evidence           `json:"evidence"`
+	JobStatus          string                      `json:"job_status"`
 	Limitations        []string                    `json:"limitations"`
 }
 
@@ -55,7 +57,7 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 		ScanID: req.ScanID, HostID: req.HostID, Profile: req.Profile,
 		CollectorAvailable: false, ScanReady: false, ExecutionReady: false,
 		Modules: []collector.Result{}, RuleResults: []domain.RuleResult{}, Findings: []domain.Finding{},
-		ToolReports: []adapter.Report{}, AIStatus: domain.AIDisabled,
+		ToolReports: []adapter.Report{}, Evidence: []domain.Evidence{}, JobStatus: domain.JobCreated, AIStatus: domain.AIDisabled,
 		Limitations: []string{
 			"fixture inspect is not enterprise host scanning",
 			"doctor collector_available and scan_ready remain false",
@@ -139,6 +141,8 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 	}
 	out.RuleResults = results
 	out.Findings = findings
+	out.Evidence = items
+	out.JobStatus = domain.JobPartial
 	exec := tools.Executor{}
 	for _, tool := range prof.Tools {
 		rep, toolErr := adapter.Lynis(ctx, exec, req.HostID, req.ScanID)

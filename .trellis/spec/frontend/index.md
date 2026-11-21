@@ -1,6 +1,6 @@
 # Frontend Development Guidelines
 
-Package: frontend (frontend/); layer: planned React + TypeScript client. No `frontend/` tree, package.json, or running UI exists. These files capture HostSec WP7 contracts so a future implementation does not invent a second security kernel.
+Package: frontend (frontend/); layer: local React + TypeScript console. A lockfile, lint/typecheck/test/build scripts, and isolated pages exist. This is not an enterprise web deployment, platform login, or Playwright-vs-production acceptance.
 
 ## Pre-Development Checklist
 
@@ -11,7 +11,7 @@ Package: frontend (frontend/); layer: planned React + TypeScript client. No `fro
 
 ## Quality Check
 
-Frontend implementation (HOSTSEC-33/34/35) is PLANNED. Until then, do not add an empty npm project, CI job that reports PASS without sources, or generated types that bypass server validation. When WP7 starts, register the real frontend package in Trellis and add lockfile, lint, typecheck, test, and build gates.
+HOSTSEC-34 is PARTIAL: local pages for assets/jobs/evidence/rules/approvals, plus lint/typecheck/test/build gates. Authorization remains in Go. Playwright against a live API, platform identity, and production hosting remain unverified.
 
 ## Existing examples
 

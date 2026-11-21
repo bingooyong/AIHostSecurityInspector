@@ -2,7 +2,7 @@
 
 ## 1. Scope / trigger
 
-Planned independent React + TypeScript app under repository `frontend/`. Do not create the tree until HOSTSEC-34 starts.
+Independent React + TypeScript app under repository `frontend/`. HOSTSEC-34 local slice has started; do not treat this as enterprise UI acceptance.
 
 ## 2. Signatures
 

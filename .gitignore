@@ -1,5 +1,8 @@
 /build/
 /dist/
+/frontend/dist/
+/frontend/coverage/
+node_modules/
 /coverage.out
 *.test
 .DS_Store

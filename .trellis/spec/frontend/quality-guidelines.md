@@ -6,7 +6,7 @@ Lint, typecheck, unit, and Playwright gates for the future frontend package.
 
 ## 2. Signatures
 
-Required scripts once HOSTSEC-34 starts: `lint`, `typecheck`, `test`, `build`. CI must not invent PASS jobs while `frontend/` is absent.
+Required scripts: `lint`, `typecheck`, `test`, `build`. `make check` runs them after `npm ci`. Absence of Playwright live-API E2E keeps HOSTSEC-34 PARTIAL.
 
 ## 3. Contracts
 
@@ -29,4 +29,4 @@ Empty, loading, error, 403, and partial-scan journeys for every feature that HOS
 
 ## 7. Wrong vs correct
 
-Wrong: mark bootstrap complete because these docs exist and then add a placeholder `npm test` that exits 0. Correct: keep frontend PLANNED until real tests run.
+Wrong: mark HOSTSEC-34 IMPLEMENTED because lint/typecheck/test/build pass locally. Correct: keep PARTIAL until Playwright E2E, server-enforced platform identity, and hosted API acceptance exist.

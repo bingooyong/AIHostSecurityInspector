@@ -117,3 +117,17 @@ func TestValidVersion(t *testing.T) {
 		t.Fatal("version validation mismatch")
 	}
 }
+
+func TestMCPStdioAndAPILoopback(t *testing.T) {
+	orig := Stdin
+	Stdin = strings.NewReader(`{"jsonrpc":"2.0","id":1,"method":"tools/list"}` + "\n")
+	defer func() { Stdin = orig }()
+	code, out, err := call("mcp", "stdio", "--file", "../../../examples/hosts.yaml", "--identities", "../../../examples/identities.json", "--principal", "operator-alice")
+	if code != 0 || err != "" || !strings.Contains(out, "list_authorized_hosts") || strings.Contains(out, "execute_shell") {
+		t.Fatalf("mcp stdio failed %d %s %s", code, out, err)
+	}
+	code, out, err = call("api", "--file", "../../../examples/hosts.yaml", "--identities", "../../../examples/identities.json", "--listen", "0.0.0.0:18080")
+	if code == 0 || out != "" || !json.Valid([]byte(err)) {
+		t.Fatalf("non-loopback API accepted %d %s %s", code, out, err)
+	}
+}

@@ -100,7 +100,7 @@ func requiredCapabilities(profile policy.Profile) []string {
 	return caps
 }
 
-func Preflight(ctx context.Context, inv asset.Inventory, intent domain.ExecutionIntent, store approval.TrustStore, doc *approval.Document, now approval.Clock, journal *audit.Journal, consume bool) (PreflightResult, error) {
+func Preflight(ctx context.Context, inv asset.Inventory, intent domain.ExecutionIntent, store approval.TrustStore, doc *approval.Document, now approval.Clock, journal *audit.Journal, ledger *approval.Ledger, consume bool) (PreflightResult, error) {
 	if err := ctx.Err(); err != nil {
 		return PreflightResult{}, err
 	}
@@ -139,8 +139,14 @@ func Preflight(ctx context.Context, inv asset.Inventory, intent domain.Execution
 			if journal == nil {
 				return result, errors.New("audit journal is required to consume an approval")
 			}
+			if ledger == nil {
+				return result, errors.New("nonce ledger is required to consume an approval")
+			}
 			event := audit.Event{EventID: "consume-" + verified.Document.ApprovalID, At: now().UTC().Format(domain.TimeLayout), Decision: "allow"}
 			if err := journal.ConsumeAndAudit(verified, event); err != nil {
+				return result, err
+			}
+			if err := ledger.Consume(verified.Document.Nonce); err != nil {
 				return result, err
 			}
 		} else {

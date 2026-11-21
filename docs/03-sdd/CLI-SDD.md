@@ -4,9 +4,9 @@
 
 ## 已授权的首切片边界
 
-Go工程位于backend/（根无go.mod），目录权威见REPOSITORY-LAYOUT。Go module `github.com/bingooyong/AIHostSecurityInspector/backend`，Go 1.27.3，std flag CLI；YAML 组织维护 `go.yaml.in/yaml/v4 v4.0.0` 为用户明确要求 YAML 解析所需唯一运行依赖，Schema 校验优先 Python jsonschema。CLI 仅解析参数和展示，backend/internal/asset 管资产、backend/internal/policy 管固定 Profile、backend/internal/planner 管授权计划。无 SSH、无执行器、无数据库、无模型调用。无需为未来模块制造空实现。
+Go工程位于backend/（根无go.mod），目录权威见REPOSITORY-LAYOUT。Go module `github.com/bingooyong/AIHostSecurityInspector/backend`，Go 1.27.4，std flag CLI；YAML 组织维护 `go.yaml.in/yaml/v4 v4.0.0` 为用户明确要求 YAML 解析所需唯一运行依赖，Schema 校验优先 Python jsonschema。CLI 仅解析参数和展示，backend/internal/asset 管资产、backend/internal/policy 管固定 Profile、backend/internal/planner 管授权计划。无 SSH、无执行器、无数据库、无模型调用。无需为未来模块制造空实现。
 
-实现：`hostsec version [--json]`、`doctor [--json]`、`assets validate|list|snapshot --file PATH [--json]`、`assets diff --file PATH --against PATH [--json]`、`plan --file PATH (--host ID|--targets group:NAME) --profile NAME --dry-run [--json]`、`intent`（签名用执行意图，不执行）、`preflight`（复核当前资产快照与可选审批，不消费审批，不把 execution_ready 设为 true）。帮助应展示实际已实现命令；未实现命令（含 `scan`）退出非零，不输出假成功。可选 `--timeout-seconds` / `--max-concurrency` 只约束本次 CLI 进程且不得放宽 Profile 上限。
+实现：`hostsec version [--json]`、`doctor [--json]`、`assets validate|list|snapshot --file PATH [--json]`、`assets diff --file PATH --against PATH [--json]`、`plan --file PATH (--host ID|--targets group:NAME) --profile NAME --dry-run [--json]`、`intent`（签名用执行意图，不执行）、`preflight`（复核当前资产快照与可选审批；默认不消费审批，`--consume` 需要 journal/ledger 且仍不把 execution_ready 设为 true）、`inspect-fixture`（合成根只读巡检）、`mcp stdio`（本地10个业务工具，继承 `--principal`）、`api --listen 127.0.0.1:PORT`（loopback Web API）。帮助应展示实际已实现命令；未实现命令（含 `scan`、`mcp serve`）退出非零，不输出假成功。可选 `--timeout-seconds` / `--max-concurrency` 只约束本次 CLI 进程且不得放宽 Profile 上限。
 
 每个命令独立 FlagSet；拒绝未知 flags、额外 positional、混合目标选择器、空组、未授权资产、未允许 Profile；不能接受裸 IP、网段、任意 SQL/Shell/路径作为扫描目标。assets list 仅展示 authorized=true，validate 允许存在未授权主机但缺失 authorized 必须失败。plan 在授权失败时不返回部分成功计划。
 

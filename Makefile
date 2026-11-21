@@ -7,7 +7,7 @@ HOSTSEC_PKG := github.com/bingooyong/AIHostSecurityInspector/backend/internal/cl
 GO_LDFLAGS := -buildid= -X $(HOSTSEC_PKG).Version=$(VERSION)
 HOSTSEC_EVIDENCE_DIR ?= docs/05-testing/evidence/ci-local
 export PATH := $(BUILD_DIR)/tools:$(PATH)
-.PHONY: tools build test vet lint schema boundaries baseline layout integration check release sbom vuln
+.PHONY: tools build test vet lint schema boundaries baseline layout integration check release sbom vuln frontend-lint frontend-test frontend-build
 build:
 	mkdir -p "$(BUILD_DIR)"
 	$(GO) -C "$(BACKEND)" build -trimpath -ldflags "$(GO_LDFLAGS)" -o "$(BUILD_DIR)/hostsec" ./cmd/hostsec
@@ -44,6 +44,17 @@ sbom:
 
 release:
 	python3 "$(REPO_ROOT)/scripts/build_release.py"
+
+frontend-lint:
+	npm --prefix "$(REPO_ROOT)/frontend" ci
+	npm --prefix "$(REPO_ROOT)/frontend" run lint
+	npm --prefix "$(REPO_ROOT)/frontend" run typecheck
+
+frontend-test:
+	npm --prefix "$(REPO_ROOT)/frontend" run test
+
+frontend-build:
+	npm --prefix "$(REPO_ROOT)/frontend" run build
 
 check:
 	HOSTSEC_EVIDENCE_DIR="$(HOSTSEC_EVIDENCE_DIR)" python3 "$(REPO_ROOT)/scripts/verify.py"

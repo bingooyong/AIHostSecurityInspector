@@ -1,11 +1,13 @@
 name: HostSec quality gates
 on:
   push:
+    branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened]
 permissions:
   contents: read
 concurrency:
-  group: hostsec-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   offline-cli:

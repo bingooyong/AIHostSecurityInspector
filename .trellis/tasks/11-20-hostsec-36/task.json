@@ -47,7 +47,11 @@
       "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
       "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
       "backend/internal/orchestrator/inspect.go",
-      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/TASK-MATRIX.md",
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
+      "backend/internal/orchestrator/job.go",
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
     ],
     "layout_adr": "ADR-008"
   }

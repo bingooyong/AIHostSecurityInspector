@@ -23,7 +23,7 @@ func TestBuildIntentAndPreflightStayNotReady(t *testing.T) {
 	}
 	result, err := Preflight(t.Context(), inv, intent, approval.TrustStore{}, nil, func() time.Time {
 		return time.Date(2026, 11, 20, 1, 0, 0, 0, time.UTC)
-	}, nil, false)
+	}, nil, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -43,7 +43,7 @@ func TestPreflightRejectsSnapshotDriftAndMissingDeepApproval(t *testing.T) {
 		t.Fatal(err)
 	}
 	clock := func() time.Time { return time.Date(2026, 11, 20, 1, 30, 0, 0, time.UTC) }
-	if _, err := Preflight(t.Context(), inv, intent, approval.TrustStore{}, nil, clock, nil, false); err == nil {
+	if _, err := Preflight(t.Context(), inv, intent, approval.TrustStore{}, nil, clock, nil, nil, false); err == nil {
 		t.Fatal("deep preflight without approval")
 	}
 	changed := inv
@@ -59,7 +59,7 @@ func TestPreflightRejectsSnapshotDriftAndMissingDeepApproval(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := Preflight(t.Context(), changed, quick, approval.TrustStore{}, nil, clock, nil, false); err == nil {
+	if _, err := Preflight(t.Context(), changed, quick, approval.TrustStore{}, nil, clock, nil, nil, false); err == nil {
 		t.Fatal("drifted assets accepted")
 	}
 }

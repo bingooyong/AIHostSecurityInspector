@@ -70,4 +70,4 @@ HOSTSEC-32A 独立节点：依赖04/06，07/14/36必须等待其审批验收。�
 
 ## 当前工程目录与近期细化
 
-Go交付路径统一backend/（ADR-008），前端为frontend/，产品Agent接入材料为integrations/。实际Trellis包为backend，规范层为go。WP1的7个活动节点已有字段/状态/测试/回滚级详细计划，62项内部执行检查项见[WP1详细计划](WP1-DETAILED-PLAN.md)；这些检查项没有增加48个子任务记录。归档任务和bootstrap原始日志保留其历史时点，DAG的交付路径索引指向当前工程位置。
+Go交付路径统一backend/（ADR-008），前端为frontend/，产品Agent接入材料为integrations/。实际Trellis包为backend（go）与frontend（本地控制台 PARTIAL）。WP1的7个活动节点已有字段/状态/测试/回滚级详细计划，62项内部执行检查项见[WP1详细计划](WP1-DETAILED-PLAN.md)；这些检查项没有增加48个子任务记录。归档任务和bootstrap原始日志保留其历史时点，DAG的交付路径索引指向当前工程位置。

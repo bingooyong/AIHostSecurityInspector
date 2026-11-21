@@ -7,16 +7,24 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"os"
 	"regexp"
 	"runtime"
 	"time"
 
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/api"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/app"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/approval"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/asset"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/audit"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/authorization"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/mcp"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/orchestrator"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/planner"
 )
+
+var Stdin io.Reader
 
 var Version = "0.1.0-dev"
 
@@ -36,12 +44,16 @@ Usage:
   hostsec assets diff --file PATH --against PATH [--json]
   hostsec plan --file PATH (--host ID | --targets group:NAME) --profile quick --dry-run [--json]
   hostsec intent --file PATH (--host ID | --targets group:NAME) --profile NAME --requester ID --valid-from RFC3339 --valid-until RFC3339 [--json]
-  hostsec preflight --file PATH --intent-file PATH [--approval PATH] [--trust-store PATH] [--json]
+  hostsec preflight --file PATH --intent-file PATH [--approval PATH] [--trust-store PATH] [--journal PATH] [--ledger PATH] [--consume] [--json]
   hostsec inspect-fixture --file PATH --host ID --root ABS_PATH --out DIR --profile quick|standard [--json]
+  hostsec mcp stdio --file PATH --identities PATH --principal ID [--root ABS_PATH] [--out DIR]
+  hostsec api --listen 127.0.0.1:PORT --file PATH --identities PATH [--root ABS_PATH] [--out DIR]
 
 Profiles: quick, standard, deep, incident-response.
 This release plans and verifies approvals offline. hostsec scan remains unsupported.
-inspect-fixture reads a synthetic rooted fixture only; it does not set collector_available or scan_ready.
+inspect-fixture, mcp stdio and localhost api reuse the same authorization kernel.
+They read synthetic fixtures only and never set collector_available or scan_ready.
+mcp serve remains unsupported. API bind is loopback-only. Local identities are not a platform IdP.
 `
 
 type diagnostic struct {
@@ -76,8 +88,8 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	fs := flag.NewFlagSet(command, flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	jsonOut := fs.Bool("json", false, "machine-readable JSON")
-	var file, host, targets, profile, against, requester, validFrom, validUntil, windowStart, windowEnd, timezone, intentFile, approvalFile, trustStore, inspectRoot, outDir string
-	var dryRun bool
+	var file, host, targets, profile, against, requester, validFrom, validUntil, windowStart, windowEnd, timezone, intentFile, approvalFile, trustStore, inspectRoot, outDir, identities, principal, listen, journalPath, ledgerPath string
+	var dryRun, consume bool
 	var timeoutSeconds, maxConcurrency int
 	action := ""
 	switch command {
@@ -121,11 +133,36 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		fs.StringVar(&intentFile, "intent-file", "", "execution intent JSON")
 		fs.StringVar(&approvalFile, "approval", "", "signed approval JSON")
 		fs.StringVar(&trustStore, "trust-store", "", "trusted principal store JSON")
+		fs.StringVar(&journalPath, "journal", "", "audit journal path required to consume")
+		fs.StringVar(&ledgerPath, "ledger", "", "nonce ledger path required to consume")
+		fs.BoolVar(&consume, "consume", false, "consume a verified approval once; planning remains non-executable")
 		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
 	case "inspect-fixture":
 		fs.StringVar(&file, "file", "", "asset inventory file")
 		fs.StringVar(&host, "host", "", "registered host ID")
 		fs.StringVar(&profile, "profile", "quick", "scan profile")
+		fs.StringVar(&inspectRoot, "root", "", "absolute synthetic fixture root")
+		fs.StringVar(&outDir, "out", "", "absolute output directory")
+		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
+	case "mcp":
+		if len(rest) == 0 {
+			return fail(stderr, "INVALID_ARGUMENT", "mcp action is required", 2)
+		}
+		action = rest[0]
+		rest = rest[1:]
+		if action != "stdio" {
+			return fail(stderr, "INVALID_ARGUMENT", "unsupported mcp action", 2)
+		}
+		fs.StringVar(&file, "file", "", "asset inventory file")
+		fs.StringVar(&identities, "identities", "", "local identity directory JSON")
+		fs.StringVar(&principal, "principal", "", "inherited local caller principal")
+		fs.StringVar(&inspectRoot, "root", "", "absolute synthetic fixture root")
+		fs.StringVar(&outDir, "out", "", "absolute output directory")
+		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
+	case "api":
+		fs.StringVar(&file, "file", "", "asset inventory file")
+		fs.StringVar(&identities, "identities", "", "local identity directory JSON")
+		fs.StringVar(&listen, "listen", "", "loopback listen address")
 		fs.StringVar(&inspectRoot, "root", "", "absolute synthetic fixture root")
 		fs.StringVar(&outDir, "out", "", "absolute output directory")
 		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
@@ -180,13 +217,19 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		return runAssets(ctx, stdout, stderr, *jsonOut, action, against, inv)
 	}
 	if command == "preflight" {
-		return runPreflight(ctx, stdout, stderr, *jsonOut, *inv, intentFile, approvalFile, trustStore)
+		return runPreflight(ctx, stdout, stderr, *jsonOut, *inv, intentFile, approvalFile, trustStore, journalPath, ledgerPath, consume)
 	}
 	if command == "intent" {
 		return runIntent(ctx, stdout, stderr, *jsonOut, *inv, host, targets, profile, requester, validFrom, validUntil, timezone, windowStart, windowEnd)
 	}
 	if command == "inspect-fixture" {
 		return runInspectFixture(ctx, stdout, stderr, *jsonOut, *inv, host, profile, inspectRoot, outDir)
+	}
+	if command == "mcp" {
+		return runMCP(ctx, stdout, stderr, *inv, identities, principal, inspectRoot, outDir)
+	}
+	if command == "api" {
+		return runAPI(ctx, stderr, *inv, identities, listen, inspectRoot, outDir)
 	}
 	plan, err := planner.Build(ctx, *inv, planner.Request{HostID: host, Targets: targets, Profile: profile, DryRun: dryRun})
 	if err != nil {
@@ -227,6 +270,62 @@ func runAssets(ctx context.Context, stdout, stderr io.Writer, jsonOut bool, acti
 	}
 }
 
+func runMCP(ctx context.Context, stdout, stderr io.Writer, inv asset.Inventory, identities, principal, root, outDir string) int {
+	svc, caller, err := localService(inv, identities, principal, root, outDir)
+	if err != nil {
+		return fail(stderr, "AUTH_DENIED", "local caller identity is required", 2)
+	}
+	in := Stdin
+	if in == nil {
+		in = os.Stdin
+	}
+	if err := (mcp.Server{Service: svc, Caller: caller}).Serve(ctx, in, stdout); err != nil {
+		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			return fail(stderr, "CANCELLED", "operation cancelled", 1)
+		}
+		return fail(stderr, "MCP_FAILED", "mcp stdio session failed", 1)
+	}
+	return 0
+}
+
+func runAPI(ctx context.Context, stderr io.Writer, inv asset.Inventory, identities, listen, root, outDir string) int {
+	if err := api.ListenAllowed(listen); err != nil {
+		return fail(stderr, "INVALID_ARGUMENT", "API listen address must be loopback", 2)
+	}
+	svc, _, err := localService(inv, identities, "", root, outDir)
+	if err != nil {
+		return fail(stderr, "AUTH_DENIED", "local identity directory is required", 2)
+	}
+	if err := api.Serve(ctx, listen, api.New(svc, svc.Directory).Handler()); err != nil {
+		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			return fail(stderr, "CANCELLED", "operation cancelled", 1)
+		}
+		return fail(stderr, "API_FAILED", "localhost API failed", 1)
+	}
+	return 0
+}
+
+func localService(inv asset.Inventory, identities, principal, root, outDir string) (*app.Service, authorization.Principal, error) {
+	if identities == "" {
+		return nil, authorization.Principal{}, errors.New("identities are required")
+	}
+	dir, err := authorization.LoadDirectory(identities)
+	if err != nil {
+		return nil, authorization.Principal{}, err
+	}
+	var caller authorization.Principal
+	if principal != "" {
+		caller, err = dir.Lookup(principal)
+		if err != nil {
+			return nil, authorization.Principal{}, err
+		}
+	}
+	svc := app.New(inv, dir)
+	svc.FixtureRoot = root
+	svc.OutDir = outDir
+	return svc, caller, nil
+}
+
 func runInspectFixture(ctx context.Context, stdout, stderr io.Writer, _ bool, inv asset.Inventory, host, profile, root, outDir string) int {
 	if host == "" || root == "" || outDir == "" {
 		return fail(stderr, "INVALID_ARGUMENT", "inspect-fixture requires --host, --root and --out", 2)
@@ -260,7 +359,7 @@ func runIntent(ctx context.Context, stdout, stderr io.Writer, jsonOut bool, inv 
 	return output(stdout, stderr, true, map[string]any{"intent": intent, "intent_hash": hash}, "")
 }
 
-func runPreflight(ctx context.Context, stdout, stderr io.Writer, jsonOut bool, inv asset.Inventory, intentFile, approvalFile, trustStore string) int {
+func runPreflight(ctx context.Context, stdout, stderr io.Writer, jsonOut bool, inv asset.Inventory, intentFile, approvalFile, trustStore, journalPath, ledgerPath string, consume bool) int {
 	if intentFile == "" {
 		return fail(stderr, "INVALID_ARGUMENT", "intent file is required", 2)
 	}
@@ -282,7 +381,21 @@ func runPreflight(ctx context.Context, stdout, stderr io.Writer, jsonOut bool, i
 			return fail(stderr, "INVALID_ARGUMENT", "approval document could not be loaded", 2)
 		}
 	}
-	result, err := planner.Preflight(ctx, inv, intent, store, doc, time.Now, nil, false)
+	var journal *audit.Journal
+	if journalPath != "" {
+		journal, err = audit.Open(journalPath)
+		if err != nil {
+			return fail(stderr, "INVALID_ARGUMENT", "audit journal could not be opened", 2)
+		}
+	}
+	var ledger *approval.Ledger
+	if ledgerPath != "" {
+		ledger, err = approval.OpenLedger(ledgerPath)
+		if err != nil {
+			return fail(stderr, "INVALID_ARGUMENT", "nonce ledger could not be opened", 2)
+		}
+	}
+	result, err := planner.Preflight(ctx, inv, intent, store, doc, time.Now, journal, ledger, consume)
 	if err != nil {
 		_ = output(stdout, stderr, true, result, "")
 		return fail(stderr, "PREFLIGHT_REJECTED", "preflight rejected the execution intent", 2)
