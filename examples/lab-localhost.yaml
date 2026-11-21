@@ -53,8 +53,50 @@ hosts:
       auth_ref: lab-identity:box
       known_hosts_ref: lab-known-hosts:box
       host_key_policy: strict
+  - host_id: linux-box-lab-ssh-002
+    hostname: linux-box-lab-ssh-002
+    addresses: [127.0.0.1]
+    platform: linux
+    architecture: x86_64
+    zone: test-zone-a
+    environment: TEST
+    business_system: demo
+    owner: team-demo
+    criticality: medium
+    authorized: true
+    allowed_profiles: [quick, standard]
+    labels: [lab, loopback, ssh]
+    connection:
+      transport: ssh
+      port: 2223
+      user: hostsec-lab-b
+      auth_ref: lab-identity:box-b
+      known_hosts_ref: lab-known-hosts:box-b
+      host_key_policy: strict
+  - host_id: linux-box-lab-ssh-unlisted
+    hostname: linux-box-lab-ssh-unlisted
+    addresses: [127.0.0.1]
+    platform: linux
+    architecture: x86_64
+    zone: test-zone-a
+    environment: TEST
+    business_system: demo
+    owner: team-demo
+    criticality: medium
+    authorized: true
+    allowed_profiles: [quick]
+    labels: [lab, loopback, ssh]
+    connection:
+      transport: ssh
+      port: 2224
+      user: hostsec-lab-c
+      auth_ref: lab-identity:box-c
+      known_hosts_ref: lab-known-hosts:box-c
+      host_key_policy: strict
 groups:
   lab:
     hosts: [linux-box-lab-001]
   lab-ssh:
     hosts: [linux-box-lab-ssh-001]
+  lab-ssh-pair:
+    hosts: [linux-box-lab-ssh-001, linux-box-lab-ssh-002]

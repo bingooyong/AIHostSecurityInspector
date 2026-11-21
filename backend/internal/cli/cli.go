@@ -53,16 +53,22 @@ Usage:
   hostsec preflight --file PATH --intent-file PATH [--approval PATH] [--trust-store PATH] [--journal PATH] [--ledger PATH] [--consume] [--json]
   hostsec inspect-fixture --file PATH --host ID --root ABS_PATH --out DIR --profile quick|standard [--json]
   hostsec inspect-local --file PATH --host ID --out DIR --profile quick|standard [--identity PATH --known-hosts PATH] [--json]
+  hostsec inspect-authorized --file PATH --allowlist PATH --intent-file PATH --out DIR --profile quick|standard [--bindings PATH] [--approval PATH] [--trust-store PATH] [--json]
   hostsec collect --module ID --scan-id ID --attempt-id ID --host-id ID --profile NAME --json
   hostsec mcp stdio --file PATH --identities PATH --principal ID [--root ABS_PATH] [--out DIR]
   hostsec api --listen 127.0.0.1:PORT --file PATH --identities PATH [--root ABS_PATH] [--out DIR]
 
 Profiles: quick, standard, deep, incident-response.
 This release plans and verifies approvals offline. hostsec scan remains unsupported.
+This is authorized collection, not a general intranet scanner.
 inspect-fixture, mcp stdio and localhost api reuse the same authorization kernel.
 They read synthetic fixtures only and never set collector_available or scan_ready.
-inspect-local collects an authorized loopback host only and also leaves those flags false.
-mcp serve remains unsupported. API bind is loopback-only. Local identities are not a platform IdP.
+inspect-local collects one authorized loopback host only and also leaves those flags false.
+inspect-authorized collects only hosts the operator explicitly allowlists, binds to an
+execution intent, and (for SSH) maps to a strict known_hosts and identity. In this
+release those targets must be loopback lab listeners or local lab filesystems.
+doctor flags stay not-ready until acceptance is met. mcp serve remains unsupported.
+API bind is loopback-only. Local identities are not a platform IdP.
 `
 
 type diagnostic struct {
@@ -97,7 +103,7 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	fs := flag.NewFlagSet(command, flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	jsonOut := fs.Bool("json", false, "machine-readable JSON")
-	var file, host, targets, profile, against, requester, validFrom, validUntil, windowStart, windowEnd, timezone, intentFile, approvalFile, trustStore, inspectRoot, outDir, identities, principal, listen, journalPath, ledgerPath, module, scanID, attemptID, policyVersion, identityPath, knownHostsPath string
+	var file, host, targets, profile, against, requester, validFrom, validUntil, windowStart, windowEnd, timezone, intentFile, approvalFile, trustStore, inspectRoot, outDir, identities, principal, listen, journalPath, ledgerPath, module, scanID, attemptID, policyVersion, identityPath, knownHostsPath, allowlistPath, bindingsPath string
 	var dryRun, consume bool
 	var timeoutSeconds, maxConcurrency int
 	action := ""
@@ -160,6 +166,16 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		fs.StringVar(&outDir, "out", "", "absolute output directory")
 		fs.StringVar(&identityPath, "identity", "", "SSH identity path")
 		fs.StringVar(&knownHostsPath, "known-hosts", "", "strict known_hosts path")
+		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
+	case "inspect-authorized":
+		fs.StringVar(&file, "file", "", "asset inventory file")
+		fs.StringVar(&allowlistPath, "allowlist", "", "explicit per-run host allowlist")
+		fs.StringVar(&bindingsPath, "bindings", "", "per-host SSH identity and known_hosts map")
+		fs.StringVar(&intentFile, "intent-file", "", "execution intent JSON")
+		fs.StringVar(&approvalFile, "approval", "", "signed approval JSON")
+		fs.StringVar(&trustStore, "trust-store", "", "trusted principal store JSON")
+		fs.StringVar(&profile, "profile", "quick", "scan profile")
+		fs.StringVar(&outDir, "out", "", "absolute output directory")
 		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
 	case "collect":
 		fs.StringVar(&module, "module", "", "collector module")
@@ -253,6 +269,9 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	}
 	if command == "inspect-local" {
 		return runInspectLocal(ctx, stdout, stderr, *inv, host, profile, outDir, identityPath, knownHostsPath)
+	}
+	if command == "inspect-authorized" {
+		return runInspectAuthorized(ctx, stdout, stderr, *inv, allowlistPath, bindingsPath, intentFile, approvalFile, trustStore, profile, outDir)
 	}
 	if command == "mcp" {
 		return runMCP(ctx, stdout, stderr, *inv, identities, principal, inspectRoot, outDir)
@@ -432,6 +451,60 @@ func runInspectLocal(ctx context.Context, stdout, stderr io.Writer, inv asset.In
 	}
 	if result.CollectorAvailable || result.ScanReady || result.ExecutionReady {
 		return fail(stderr, "INSPECT_REJECTED", "local inspect must not mark scan ready", 1)
+	}
+	return output(stdout, stderr, true, result, "")
+}
+
+func runInspectAuthorized(ctx context.Context, stdout, stderr io.Writer, inv asset.Inventory, allowlistPath, bindingsPath, intentFile, approvalFile, trustStorePath, profile, outDir string) int {
+	if allowlistPath == "" || intentFile == "" || outDir == "" {
+		return fail(stderr, "INVALID_ARGUMENT", "inspect-authorized requires --allowlist, --intent-file and --out", 2)
+	}
+	allowlist, err := authorization.LoadAllowlist(ctx, allowlistPath)
+	if err != nil {
+		return fail(stderr, "INVALID_ARGUMENT", "collection allowlist could not be loaded", 2)
+	}
+	var bindings authorization.CollectionBindings
+	if bindingsPath != "" {
+		bindings, err = authorization.LoadBindings(ctx, bindingsPath)
+		if err != nil {
+			return fail(stderr, "INVALID_ARGUMENT", "collection bindings could not be loaded", 2)
+		}
+	}
+	intent, err := loadIntent(intentFile)
+	if err != nil {
+		return fail(stderr, "INVALID_ARGUMENT", "execution intent could not be loaded", 2)
+	}
+	var store approval.TrustStore
+	if trustStorePath != "" {
+		store, err = approval.LoadTrustStore(trustStorePath)
+		if err != nil {
+			return fail(stderr, "INVALID_ARGUMENT", "trust store could not be loaded", 2)
+		}
+	}
+	var doc *approval.Document
+	if approvalFile != "" {
+		doc, err = approval.LoadDocument(approvalFile)
+		if err != nil {
+			return fail(stderr, "INVALID_ARGUMENT", "approval document could not be loaded", 2)
+		}
+	}
+	result, err := orchestrator.InspectAuthorized(ctx, orchestrator.AuthorizedRequest{
+		Inventory: inv, Allowlist: allowlist, Bindings: bindings, Intent: intent,
+		Approval: doc, TrustStore: store, Profile: profile, OutDir: outDir,
+	})
+	if err != nil {
+		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			return fail(stderr, "CANCELLED", "operation cancelled", 1)
+		}
+		return fail(stderr, "INSPECT_REJECTED", "authorized collection was rejected or failed", 2)
+	}
+	if result.CollectorAvailable || result.ScanReady || result.ExecutionReady {
+		return fail(stderr, "INSPECT_REJECTED", "authorized collection must not mark scan ready", 1)
+	}
+	for _, hostResult := range result.Hosts {
+		if hostResult.CollectorAvailable || hostResult.ScanReady || hostResult.ExecutionReady {
+			return fail(stderr, "INSPECT_REJECTED", "authorized collection must not mark scan ready", 1)
+		}
 	}
 	return output(stdout, stderr, true, result, "")
 }

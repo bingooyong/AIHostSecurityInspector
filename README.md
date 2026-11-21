@@ -2,7 +2,7 @@
 
 企业主机智能安全巡检平台。专业工具负责发现，规则引擎负责判断，AI负责研判，证据负责证明，人负责最终决策。
 
-当前交付：工程/安全/设计基线、离线 CLI，以及隔离环境内的 fixture 巡检、本地身份/MCP stdio、loopback API 与本地管理端。这些是 PARTIAL 可运行切片，不是企业主机扫描。`doctor`/`plan`/`inspect-fixture` 不得把 collector 或 scan 标成就绪。完整MVP必须六项全部验收。
+当前交付：工程/安全/设计基线、离线 CLI，以及隔离环境内的 fixture 巡检、授权 loopback 采集、本地身份/MCP stdio、loopback API 与本地管理端。这些是 PARTIAL 可运行切片，不是通用内网扫描器，也不是企业主机扫描。`doctor`/`plan`/`inspect-fixture`/`inspect-local`/`inspect-authorized` 不得把 collector 或 scan 标成就绪。完整MVP必须六项全部验收。
 
 ## 运行
 
@@ -17,11 +17,12 @@ make build
 ./build/hostsec plan --file examples/hosts.yaml --host linux-test-001 --profile deep --dry-run --json
 ./build/hostsec doctor --json
 ./build/hostsec inspect-fixture --file examples/hosts.yaml --host linux-test-001 --root <ABS_FIXTURE> --out <ABS_OUT> --profile quick --json
+./build/hostsec inspect-authorized --file examples/lab-localhost.yaml --allowlist examples/lab-allowlist.yaml --bindings examples/lab-bindings.yaml --intent-file <ABS_INTENT> --out <ABS_OUT> --profile quick --json
 ./build/hostsec mcp stdio --file examples/hosts.yaml --identities examples/identities.json --principal operator-alice
 ./build/hostsec api --listen 127.0.0.1:18080 --file examples/hosts.yaml --identities examples/identities.json
 ```
 
-`doctor` 明确 Collector 未实现、scan_ready=false，并退出1；这不是扫描失败假绿。四种Profile均为离线描述，plan始终execution_ready=false、limits.enforced=false。deep/IR展示审批要求；本地审批工作流仍不是平台审批。样例只含文档地址，不连接目标。`scan` 与 `mcp serve` 仍被拒绝。`mcp stdio` 继承 `--principal`，请求 JSON 不能自报角色。API 只绑定 loopback，身份来自 `X-HostSec-Principal` 且必须存在于本地 identities。
+`doctor` 明确 Collector 未实现、scan_ready=false，并退出1；这不是扫描失败假绿。四种Profile均为离线描述，plan始终execution_ready=false、limits.enforced=false。deep/IR展示审批要求；本地审批工作流仍不是平台审批。样例只含文档地址，不连接目标。`scan` 与 `mcp serve` 仍被拒绝。`inspect-authorized` 只采集操作者在本轮 allowlist 中明确点名、并与执行意图绑定的主机；本发行版这些目标必须是 loopback 实验室监听或本机实验室文件系统，不能用来扫描内网地址。`mcp stdio` 继承 `--principal`，请求 JSON 不能自报角色。API 只绑定 loopback，身份来自 `X-HostSec-Principal` 且必须存在于本地 identities。
 
 资产支持严格单文档YAML/JSON，最大1MiB/1000主机；显式授权、Profile白名单、稳定且非IP的host_id、strict host key与认证引用。未知/重复/空值/别名/多文档/非普通文件会被拒绝。分组混合未授权主机会整体拒绝。原V1示例含未实现字段，故当前可运行严格样例位于examples/hosts.yaml；不静默忽略来源字段。空授权列表可展示，空目标不可计划。
 

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"os"
 	"strings"
 	"testing"
 )
@@ -149,4 +150,37 @@ func TestCollectRequiresIdentities(t *testing.T) {
 	if code == 0 {
 		t.Fatal("collect without required flags succeeded")
 	}
+}
+
+func TestInspectAuthorizedCLIRejectsDocumentationHost(t *testing.T) {
+	dir := t.TempDir()
+	allowlist := dir + "/allowlist.yaml"
+	if err := osWrite(allowlist, "version: 1\nhosts:\n  - linux-test-001\n"); err != nil {
+		t.Fatal(err)
+	}
+	code, out, err := call("inspect-authorized", "--file", "../../../examples/hosts.yaml", "--allowlist", allowlist, "--intent-file", allowlist, "--out", dir, "--profile", "quick")
+	if code == 0 || out != "" || !json.Valid([]byte(err)) {
+		t.Fatalf("documentation host accepted %d %s %s", code, out, err)
+	}
+}
+
+func TestInspectAuthorizedCLIRequiresAllowlistAndIntent(t *testing.T) {
+	code, out, err := call("inspect-authorized", "--file", "../../../examples/lab-localhost.yaml", "--out", t.TempDir())
+	if code == 0 || out != "" || !json.Valid([]byte(err)) {
+		t.Fatalf("missing required flags accepted %d %s %s", code, out, err)
+	}
+}
+
+func TestHelpMentionsAuthorizedCollectionNotIntranetScanner(t *testing.T) {
+	code, out, _ := call("--help")
+	if code != 0 || !strings.Contains(out, "authorized collection") || !strings.Contains(out, "not a general intranet scanner") || !strings.Contains(out, "offline") {
+		t.Fatalf("help does not keep the authorized-collection distinction: %s", out)
+	}
+	if strings.Contains(out, "hostsec scan ") && !strings.Contains(out, "scan remains unsupported") {
+		t.Fatal("help must not present scan as an available command")
+	}
+}
+
+func osWrite(path, body string) error {
+	return os.WriteFile(path, []byte(body), 0o600)
 }

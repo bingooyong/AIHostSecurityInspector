@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "version": "0.1.0-dev",
+  "os": "linux",
+  "architecture": "amd64",
+  "offline_planning_available": true,
+  "linux_platform_supported": true,
+  "collector_available": false,
+  "scan_ready": false,
+  "limitations": [
+    "Collector and scan execution are not implemented; only offline planning is available.",
+    "No target, credential store, scanner, database, or model endpoint was accessed."
+  ]
+}

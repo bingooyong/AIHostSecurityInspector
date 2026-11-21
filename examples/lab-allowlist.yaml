@@ -1,0 +1,7 @@
+# Explicit per-run allowlist. Inventory authorization is not enough.
+# This example only names loopback lab stand-ins. It is not an intranet target list.
+version: 1
+profile: quick
+hosts:
+  - linux-box-lab-ssh-001
+  - linux-box-lab-ssh-002
