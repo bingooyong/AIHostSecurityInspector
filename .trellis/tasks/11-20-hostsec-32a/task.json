@@ -33,12 +33,19 @@
   "meta": {
     "hostsec_id": "HOSTSEC-32A",
     "phase": "WP1",
-    "delivery_status": "PLANNED",
+    "delivery_status": "PARTIAL",
     "depends_on": [
       "HOSTSEC-04",
       "HOSTSEC-06"
     ],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
+      "backend/internal/approval/verify.go",
+      "backend/internal/approval/ledger.go",
+      "backend/internal/audit/journal.go",
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+    ],
     "layout_adr": "ADR-008",
     "planning_refinement": "docs/implementation/WP1-DETAILED-PLAN.md",
     "layout_slice_status": "NOT_APPLICABLE"

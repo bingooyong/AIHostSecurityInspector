@@ -27,13 +27,17 @@
   "meta": {
     "hostsec_id": "HOSTSEC-31",
     "phase": "WP6",
-    "delivery_status": "PLANNED",
+    "delivery_status": "BLOCKED",
     "depends_on": [
       "HOSTSEC-30",
       "HOSTSEC-41",
       "HOSTSEC-32"
     ],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+    ],
     "layout_adr": "ADR-008"
   }
 }
