@@ -74,6 +74,10 @@ func (v *osView) Close() error {
 	return v.root.Close()
 }
 
+func ValidateInspectRoot(root string) error {
+	return validateRoot(root)
+}
+
 func validateRoot(root string) error {
 	if root == "" {
 		return errors.New("collector root is required")
