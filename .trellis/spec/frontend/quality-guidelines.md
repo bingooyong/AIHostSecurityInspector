@@ -6,7 +6,7 @@ Lint, typecheck, unit, and Playwright gates for the future frontend package.
 
 ## 2. Signatures
 
-Required scripts: `lint`, `typecheck`, `test`, `build`. `make check` runs them after `npm ci`. Absence of Playwright live-API E2E keeps HOSTSEC-34 PARTIAL.
+Required scripts: `lint`, `typecheck`, `test`, `build`, `e2e`. `make check` runs them after `npm ci`. Playwright against the loopback hostsec API exists; HOSTSEC-34 stays PARTIAL until platform identity and a hosted API are accepted.
 
 ## 3. Contracts
 
@@ -29,4 +29,4 @@ Empty, loading, error, 403, and partial-scan journeys for every feature that HOS
 
 ## 7. Wrong vs correct
 
-Wrong: mark HOSTSEC-34 IMPLEMENTED because lint/typecheck/test/build pass locally. Correct: keep PARTIAL until Playwright E2E, server-enforced platform identity, and hosted API acceptance exist.
+Wrong: mark HOSTSEC-34 IMPLEMENTED because lint/typecheck/test/build/Playwright-loopback pass locally. Correct: keep PARTIAL until server-enforced platform identity and hosted API acceptance exist.

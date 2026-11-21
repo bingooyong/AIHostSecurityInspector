@@ -75,14 +75,14 @@ func (s *Service) require(caller authorization.Principal, action string) error {
 	return nil
 }
 
-func (s *Service) ListAuthorizedHosts(ctx context.Context, caller authorization.Principal) ([]asset.Host, error) {
+func (s *Service) ListAuthorizedHosts(ctx context.Context, caller authorization.Principal, limit, offset int) (Page[PublicHost], error) {
 	if err := ctx.Err(); err != nil {
-		return nil, err
+		return Page[PublicHost]{}, err
 	}
 	if err := s.require(caller, authorization.ActionListHosts); err != nil {
-		return nil, err
+		return Page[PublicHost]{}, err
 	}
-	return caller.FilterHosts(s.Inventory.Authorized().Hosts), nil
+	return Paginate(PublicHosts(caller.FilterHosts(s.Inventory.Authorized().Hosts)), limit, offset)
 }
 
 func (s *Service) ListScanProfiles(_ context.Context, caller authorization.Principal) ([]policy.Profile, error) {
@@ -171,6 +171,11 @@ func (s *Service) RunHostScan(ctx context.Context, caller authorization.Principa
 		}
 		return orchestrator.Job{}, orchestrator.Result{}, fail(CodeToolNotInstalled, "deep fixture execution is not enabled without a live collector")
 	}
+	if idempotency != "" {
+		if existing, ok := s.Jobs.LookupByKey(caller.ID, idempotency); ok {
+			return s.storedScan(existing)
+		}
+	}
 	s.mu.Lock()
 	s.seq++
 	scanID := fmt.Sprintf("scan-local-%d", s.seq)
@@ -178,6 +183,9 @@ func (s *Service) RunHostScan(ctx context.Context, caller authorization.Principa
 	job, err := s.Jobs.Create(orchestrator.Job{ScanID: scanID, HostID: hostID, Profile: profile, Owner: caller.ID, IdempotencyKey: idempotency})
 	if err != nil {
 		return orchestrator.Job{}, orchestrator.Result{}, err
+	}
+	if job.ScanID != scanID {
+		return s.storedScan(job)
 	}
 	for _, next := range []string{domain.JobValidating, domain.JobQueued, domain.JobRunning, domain.JobCollecting} {
 		if job, err = s.Jobs.Advance(job.ScanID, next); err != nil {
@@ -217,6 +225,27 @@ func (s *Service) rememberEvidence(scanID string, items []domain.Evidence) {
 	}
 }
 
+func (s *Service) storedScan(job orchestrator.Job) (orchestrator.Job, orchestrator.Result, error) {
+	s.mu.Lock()
+	result := s.results[job.ScanID]
+	s.mu.Unlock()
+	return job, result, nil
+}
+
+func (s *Service) ListScans(_ context.Context, caller authorization.Principal, limit, offset int) (Page[orchestrator.Job], error) {
+	if err := s.require(caller, authorization.ActionReadScan); err != nil {
+		return Page[orchestrator.Job]{}, err
+	}
+	visible := make([]orchestrator.Job, 0)
+	for _, job := range s.Jobs.List() {
+		if err := s.visibleHost(caller, job.HostID); err != nil {
+			continue
+		}
+		visible = append(visible, job)
+	}
+	return Paginate(visible, limit, offset)
+}
+
 func (s *Service) GetScanStatus(_ context.Context, caller authorization.Principal, scanID string) (orchestrator.Job, error) {
 	if err := s.require(caller, authorization.ActionReadScan); err != nil {
 		return orchestrator.Job{}, err
@@ -231,7 +260,7 @@ func (s *Service) GetScanStatus(_ context.Context, caller authorization.Principa
 	return job, nil
 }
 
-func (s *Service) ListFindings(_ context.Context, caller authorization.Principal, scanID string) ([]domain.Finding, []domain.RuleResult, error) {
+func (s *Service) findingsFor(caller authorization.Principal, scanID string) ([]domain.Finding, []domain.RuleResult, error) {
 	if err := s.require(caller, authorization.ActionReadScan); err != nil {
 		return nil, nil, err
 	}
@@ -249,6 +278,18 @@ func (s *Service) ListFindings(_ context.Context, caller authorization.Principal
 		return nil, nil, fail(CodeNotFound, "scan results are unknown")
 	}
 	return result.Findings, result.RuleResults, nil
+}
+
+func (s *Service) ListFindings(_ context.Context, caller authorization.Principal, scanID string, limit, offset int) (Page[domain.Finding], []domain.RuleResult, error) {
+	findings, rules, err := s.findingsFor(caller, scanID)
+	if err != nil {
+		return Page[domain.Finding]{}, nil, err
+	}
+	page, err := Paginate(findings, limit, offset)
+	if err != nil {
+		return Page[domain.Finding]{}, nil, err
+	}
+	return page, rules, nil
 }
 
 func (s *Service) GetEvidenceMetadata(_ context.Context, caller authorization.Principal, evidenceID string) (EvidenceMeta, error) {
@@ -275,7 +316,7 @@ func (s *Service) AnalyzeScanFindings(ctx context.Context, caller authorization.
 	if err := s.require(caller, authorization.ActionAnalyze); err != nil {
 		return analyzer.Result{}, err
 	}
-	findings, _, err := s.ListFindings(ctx, caller, scanID)
+	findings, _, err := s.findingsFor(caller, scanID)
 	if err != nil {
 		return analyzer.Result{}, err
 	}

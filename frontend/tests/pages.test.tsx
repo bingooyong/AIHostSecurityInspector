@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { App } from "../src/app/App";
 import { EvidencePage } from "../src/features/evidence/EvidencePage";
 import { JobsPage } from "../src/features/jobs/JobsPage";
@@ -53,5 +53,28 @@ describe("HostSec local console pages", () => {
   it("renders an error state", () => {
     render(<App initial={{ status: "error", detail: "local API unavailable", hosts: [], jobs: [], evidence: [], rules: [], approvals: [] }} />);
     expect(screen.getByTestId("status-banner")).toHaveTextContent("Error");
+  });
+
+  it("loads paginated hosts from a live loopback payload", async () => {
+    window.history.pushState({}, "", "/?principal=operator-alice");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo) => {
+        const url = String(input);
+        if (url.includes("/v1/hosts")) {
+          return Response.json({
+            items: [{ host_id: "linux-test-001", zone: "zone-a", business_system: "lab", authorized: true }],
+            total: 1,
+            limit: 20,
+            offset: 0,
+            next_offset: null
+          });
+        }
+        return Response.json({ items: [], total: 0, limit: 20, offset: 0, next_offset: null });
+      })
+    );
+    render(<App live />);
+    expect(await screen.findByTestId("host-linux-test-001")).toBeInTheDocument();
+    vi.unstubAllGlobals();
   });
 });

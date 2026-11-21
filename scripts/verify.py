@@ -31,6 +31,8 @@ commands = [
     ("frontend-typecheck", ["npm", "run", "typecheck"], root / "frontend"),
     ("frontend-test", ["npm", "run", "test"], root / "frontend"),
     ("frontend-build", ["npm", "run", "build"], root / "frontend"),
+    ("frontend-playwright-install", ["npx", "playwright", "install", "chromium"], root / "frontend"),
+    ("frontend-e2e", ["npm", "run", "e2e"], root / "frontend"),
     ("future-contract", ["python3", "scripts/contracts.py"], root),
     ("baseline", ["python3", "scripts/validate_baseline.py"], root),
     ("vulnerability", ["govulncheck", "-show", "verbose", "./..."], backend),
@@ -46,7 +48,8 @@ for name, command, cwd in commands:
     clock = time.monotonic()
     relative_cwd = str(cwd.relative_to(root))
     try:
-        process = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=240, env=tool_env)
+        timeout = 420 if name in {"frontend-playwright-install", "frontend-e2e"} else 240
+        process = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=timeout, env=tool_env)
         stdout, stderr, code = process.stdout, process.stderr, process.returncode
     except (OSError, subprocess.TimeoutExpired) as error:
         stdout, stderr, code = "", str(error), 124

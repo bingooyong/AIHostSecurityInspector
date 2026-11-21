@@ -13,7 +13,7 @@ export type JobView = {
   status: string;
   collector_available: boolean;
   scan_ready: boolean;
-  limitations: string[];
+  limitations?: string[];
 };
 
 export type EvidenceView = {
@@ -35,4 +35,12 @@ export type ApprovalView = {
   request_id: string;
   status: string;
   requester_principal: string;
+};
+
+export type Page<T> = {
+  items: T[];
+  total: number;
+  limit: number;
+  offset: number;
+  next_offset: number | null;
 };

@@ -1,4 +1,4 @@
-import type { ApprovalView, EvidenceView, HostView, JobView, RuleView } from "./types";
+import type { ApprovalView, EvidenceView, HostView, JobView, Page, RuleView } from "./types";
 
 export type ConsoleSnapshot = {
   hosts: HostView[];
@@ -9,7 +9,44 @@ export type ConsoleSnapshot = {
 };
 
 export async function fetchSnapshot(baseUrl: string, principal: string): Promise<ConsoleSnapshot> {
-  const response = await fetch(`${baseUrl}/v1/hosts`, {
+  const hostsPage = await getJSON<Page<HostView>>(baseUrl, "/v1/hosts?limit=20&offset=0", principal);
+  const jobsPage = await getJSON<Page<JobView>>(baseUrl, "/v1/scans?limit=20&offset=0", principal);
+  const jobs = Array.isArray(jobsPage.items) ? jobsPage.items.map(publicJob) : [];
+  const hosts = Array.isArray(hostsPage.items) ? hostsPage.items.map(publicHost) : [];
+  const evidence: EvidenceView[] = [];
+  const rules: RuleView[] = [];
+  for (const job of jobs) {
+    const findings = await getJSON<{ findings: Page<FindingRow>; rule_results: RuleView[] }>(
+      baseUrl,
+      `/v1/scans/${encodeURIComponent(job.scan_id)}/findings?limit=20&offset=0`,
+      principal
+    );
+    for (const finding of findings.findings.items ?? []) {
+      for (const ref of finding.evidence_refs ?? []) {
+        evidence.push({
+          evidence_id: ref,
+          scan_id: finding.scan_id,
+          host_id: finding.host_id,
+          module: "metadata",
+          integrity_status: "unknown",
+          title: finding.title
+        });
+      }
+    }
+    rules.push(...(findings.rule_results ?? []));
+  }
+  return { hosts, jobs, evidence, rules, approvals: [] as ApprovalView[] };
+}
+
+type FindingRow = {
+  scan_id: string;
+  host_id: string;
+  title?: string;
+  evidence_refs?: string[];
+};
+
+async function getJSON<T>(baseUrl: string, path: string, principal: string): Promise<T> {
+  const response = await fetch(`${baseUrl}${path}`, {
     headers: { "X-HostSec-Principal": principal }
   });
   if (response.status === 401 || response.status === 403) {
@@ -20,15 +57,25 @@ export async function fetchSnapshot(baseUrl: string, principal: string): Promise
   if (!response.ok) {
     throw new Error("console request failed");
   }
-  const payload: unknown = await response.json();
-  if (!Array.isArray(payload)) {
-    throw new Error("unexpected host payload");
-  }
+  return (await response.json()) as T;
+}
+
+function publicHost(host: HostView): HostView {
   return {
-    hosts: payload as HostView[],
-    jobs: [],
-    evidence: [],
-    rules: [],
-    approvals: []
+    host_id: host.host_id,
+    zone: host.zone,
+    business_system: host.business_system,
+    authorized: Boolean(host.authorized)
+  };
+}
+
+function publicJob(job: JobView): JobView {
+  return {
+    scan_id: job.scan_id,
+    host_id: job.host_id,
+    status: job.status,
+    collector_available: Boolean(job.collector_available),
+    scan_ready: Boolean(job.scan_ready),
+    limitations: job.limitations ?? []
   };
 }

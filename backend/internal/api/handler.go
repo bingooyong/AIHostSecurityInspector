@@ -7,6 +7,8 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"net/url"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -27,17 +29,19 @@ func New(service *app.Service, directory authorization.Directory) *Server {
 
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /healthz", s.healthz)
 	mux.HandleFunc("GET /v1/hosts", s.wrap(s.listHosts))
 	mux.HandleFunc("GET /v1/profiles", s.wrap(s.listProfiles))
 	mux.HandleFunc("POST /v1/plans", s.wrap(s.createPlan))
 	mux.HandleFunc("POST /v1/approvals/requests", s.wrap(s.requestApproval))
 	mux.HandleFunc("POST /v1/scans", s.wrap(s.createScan))
+	mux.HandleFunc("GET /v1/scans", s.wrap(s.listScans))
 	mux.HandleFunc("GET /v1/scans/{id}", s.wrap(s.getScan))
 	mux.HandleFunc("GET /v1/scans/{id}/findings", s.wrap(s.listFindings))
 	mux.HandleFunc("GET /v1/evidence/{id}", s.wrap(s.getEvidence))
 	mux.HandleFunc("POST /v1/scans/{id}/analyze", s.wrap(s.analyze))
 	mux.HandleFunc("POST /v1/scans/{id}/report", s.wrap(s.report))
-	return mux
+	return loopbackCORS(mux)
 }
 
 func ListenAllowed(addr string) error {
@@ -93,8 +97,22 @@ func (s *Server) wrap(next func(http.ResponseWriter, *http.Request, authorizatio
 	}
 }
 
+func (s *Server) healthz(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, map[string]any{
+		"status":              "local",
+		"collector_available": false,
+		"scan_ready":          false,
+		"execution_ready":     false,
+	}, nil)
+}
+
 func (s *Server) listHosts(w http.ResponseWriter, r *http.Request, caller authorization.Principal) {
-	hosts, err := s.Service.ListAuthorizedHosts(r.Context(), caller)
+	limit, offset, err := pageQuery(r)
+	if err != nil {
+		writeJSON(w, nil, err)
+		return
+	}
+	hosts, err := s.Service.ListAuthorizedHosts(r.Context(), caller, limit, offset)
 	writeJSON(w, hosts, err)
 }
 
@@ -145,13 +163,28 @@ func (s *Server) createScan(w http.ResponseWriter, r *http.Request, caller autho
 	writeJSON(w, map[string]any{"job": job, "result": result}, err)
 }
 
+func (s *Server) listScans(w http.ResponseWriter, r *http.Request, caller authorization.Principal) {
+	limit, offset, err := pageQuery(r)
+	if err != nil {
+		writeJSON(w, nil, err)
+		return
+	}
+	jobs, err := s.Service.ListScans(r.Context(), caller, limit, offset)
+	writeJSON(w, jobs, err)
+}
+
 func (s *Server) getScan(w http.ResponseWriter, r *http.Request, caller authorization.Principal) {
 	job, err := s.Service.GetScanStatus(r.Context(), caller, r.PathValue("id"))
 	writeJSON(w, job, err)
 }
 
 func (s *Server) listFindings(w http.ResponseWriter, r *http.Request, caller authorization.Principal) {
-	findings, rules, err := s.Service.ListFindings(r.Context(), caller, r.PathValue("id"))
+	limit, offset, err := pageQuery(r)
+	if err != nil {
+		writeJSON(w, nil, err)
+		return
+	}
+	findings, rules, err := s.Service.ListFindings(r.Context(), caller, r.PathValue("id"), limit, offset)
 	writeJSON(w, map[string]any{"findings": findings, "rule_results": rules}, err)
 }
 
@@ -177,6 +210,50 @@ func (s *Server) report(w http.ResponseWriter, r *http.Request, caller authoriza
 	}
 	doc, markdown, err := s.Service.GenerateScanReport(r.Context(), caller, r.PathValue("id"), in.Format)
 	writeJSON(w, map[string]any{"report": doc, "markdown": markdown}, err)
+}
+
+func pageQuery(r *http.Request) (int, int, error) {
+	limit, offset := 0, 0
+	if raw := r.URL.Query().Get("limit"); raw != "" {
+		n, err := strconv.Atoi(raw)
+		if err != nil {
+			return 0, 0, &app.Error{Code: app.CodeSchema, Message: "limit is invalid"}
+		}
+		limit = n
+	}
+	if raw := r.URL.Query().Get("offset"); raw != "" {
+		n, err := strconv.Atoi(raw)
+		if err != nil {
+			return 0, 0, &app.Error{Code: app.CodeSchema, Message: "offset is invalid"}
+		}
+		offset = n
+	}
+	return limit, offset, nil
+}
+
+func loopbackCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if origin := r.Header.Get("Origin"); allowLoopbackOrigin(origin) {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Vary", "Origin")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-HostSec-Principal")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		}
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func allowLoopbackOrigin(origin string) bool {
+	parsed, err := url.Parse(origin)
+	if err != nil || parsed.Scheme != "http" {
+		return false
+	}
+	host := parsed.Hostname()
+	return host == "127.0.0.1" || host == "localhost"
 }
 
 func decodeBody(r *http.Request, dest any) error {

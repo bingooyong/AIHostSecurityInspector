@@ -7,7 +7,7 @@ export function JobsPage({ status, jobs, detail }: { status: PageStatus; jobs: J
       <h1>Jobs</h1>
       <StatusBanner status={status} detail={detail} />
       {jobs.map((job) => (
-        <article key={job.scan_id}>
+        <article key={job.scan_id} data-testid={`job-${job.scan_id}`}>
           <p>
             {job.scan_id} · {job.status}
           </p>
@@ -16,7 +16,7 @@ export function JobsPage({ status, jobs, detail }: { status: PageStatus; jobs: J
           ) : null}
           {job.status === "PARTIAL" ? <p>Coverage is partial; this is not a clean bill of health.</p> : null}
           <ul>
-            {job.limitations.map((item) => (
+            {(job.limitations ?? []).map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>

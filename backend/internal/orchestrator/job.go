@@ -1,6 +1,7 @@
 package orchestrator
 
 import (
+	"sort"
 	"sync"
 
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain"
@@ -109,4 +110,28 @@ func (s *JobStore) Get(scanID string) (Job, error) {
 		return Job{}, &domain.Error{Code: domain.CodeInvalidID, Message: "scan is unknown"}
 	}
 	return job, nil
+}
+
+func (s *JobStore) LookupByKey(owner, key string) (Job, bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if key == "" {
+		return Job{}, false
+	}
+	id, ok := s.keys[owner+"/"+key]
+	if !ok {
+		return Job{}, false
+	}
+	return s.items[id], true
+}
+
+func (s *JobStore) List() []Job {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	out := make([]Job, 0, len(s.items))
+	for _, job := range s.items {
+		out = append(out, job)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].ScanID < out[j].ScanID })
+	return out
 }

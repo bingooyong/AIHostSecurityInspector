@@ -33,4 +33,11 @@ func TestJobStoreRejectsSkipAndCompletedReady(t *testing.T) {
 	if err != nil || repeat.ScanID != again.ScanID {
 		t.Fatal("idempotency failed", err, repeat)
 	}
+	found, ok := store.LookupByKey("operator-alice", "idem-1")
+	if !ok || found.ScanID != again.ScanID {
+		t.Fatalf("lookup missed stored key: %+v", found)
+	}
+	if listed := store.List(); len(listed) != 2 {
+		t.Fatalf("list: %+v", listed)
+	}
 }

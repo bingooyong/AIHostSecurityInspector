@@ -1352,12 +1352,13 @@
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
       "status": "PARTIAL",
       "completion_evidence": [
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/TASK-MATRIX.md",
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/TASK-MATRIX.md",
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/BLOCKED.md",
         "backend/internal/mcp/server.go",
         "backend/internal/mcp/server_test.go",
         "backend/internal/app/service.go",
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
+        "backend/internal/app/page.go",
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/results.json"
       ]
     },
     {
@@ -1486,11 +1487,11 @@
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
       "status": "PARTIAL",
       "completion_evidence": [
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/TASK-MATRIX.md",
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/TASK-MATRIX.md",
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/BLOCKED.md",
         "backend/internal/api/handler.go",
         "backend/internal/api/handler_test.go",
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/results.json"
       ]
     },
     {
@@ -1527,13 +1528,14 @@
       "parallel_condition": "仅在前置任务验收且文件所有权互斥后并行；集成与状态变更串行",
       "status": "PARTIAL",
       "completion_evidence": [
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/TASK-MATRIX.md",
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/TASK-MATRIX.md",
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/BLOCKED.md",
         "frontend/package.json",
         "frontend/package-lock.json",
         "frontend/src/app/App.tsx",
-        "frontend/tests/pages.test.tsx",
-        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
+        "frontend/src/shared/api/client.ts",
+        "frontend/tests/e2e/console.spec.ts",
+        "docs/05-testing/evidence/hostsec-wp4-2026-11-21-loopback-e2e/results.json"
       ]
     },
     {

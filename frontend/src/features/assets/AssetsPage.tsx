@@ -11,7 +11,7 @@ export function AssetsPage({ status, hosts, detail }: { status: PageStatus; host
       ) : (
         <ul>
           {hosts.map((host) => (
-            <li key={host.host_id}>
+            <li key={host.host_id} data-testid={`host-${host.host_id}`}>
               {host.host_id} · zone {host.zone} · {host.business_system}
             </li>
           ))}

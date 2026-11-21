@@ -120,7 +120,7 @@ func TestValidVersion(t *testing.T) {
 
 func TestMCPStdioAndAPILoopback(t *testing.T) {
 	orig := Stdin
-	Stdin = strings.NewReader(`{"jsonrpc":"2.0","id":1,"method":"tools/list"}` + "\n")
+	Stdin = strings.NewReader(`{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"hostsec-test","version":"0"}}}` + "\n" + `{"jsonrpc":"2.0","id":1,"method":"tools/list"}` + "\n")
 	defer func() { Stdin = orig }()
 	code, out, err := call("mcp", "stdio", "--file", "../../../examples/hosts.yaml", "--identities", "../../../examples/identities.json", "--principal", "operator-alice")
 	if code != 0 || err != "" || !strings.Contains(out, "list_authorized_hosts") || strings.Contains(out, "execute_shell") {

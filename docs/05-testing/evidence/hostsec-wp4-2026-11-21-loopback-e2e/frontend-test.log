@@ -1,0 +1,21 @@
+cwd=frontend
+$ npm run test
+exit=0
+stdout:
+
+> hostsec-frontend@0.1.0-dev test
+> vitest run
+
+
+ RUN  v4.0.8 /workspace/frontend
+
+ ✓ tests/client.test.ts (3 tests) 6ms
+ ✓ tests/pages.test.tsx (6 tests) 44ms
+
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+   Start at  05:35:44
+   Duration  568ms (transform 124ms, setup 97ms, collect 161ms, tests 51ms, environment 546ms, prepare 9ms)
+
+
+stderr:

@@ -1,0 +1,7 @@
+cwd=backend
+$ go mod verify
+exit=0
+stdout:
+all modules verified
+
+stderr:

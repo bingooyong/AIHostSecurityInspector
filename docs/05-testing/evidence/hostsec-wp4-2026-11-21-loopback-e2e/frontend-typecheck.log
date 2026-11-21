@@ -1,0 +1,10 @@
+cwd=frontend
+$ npm run typecheck
+exit=0
+stdout:
+
+> hostsec-frontend@0.1.0-dev typecheck
+> tsc --noEmit
+
+
+stderr:

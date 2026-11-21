@@ -279,7 +279,7 @@ func runMCP(ctx context.Context, stdout, stderr io.Writer, inv asset.Inventory, 
 	if in == nil {
 		in = os.Stdin
 	}
-	if err := (mcp.Server{Service: svc, Caller: caller}).Serve(ctx, in, stdout); err != nil {
+	if err := (&mcp.Server{Service: svc, Caller: caller}).Serve(ctx, in, stdout); err != nil {
 		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
 			return fail(stderr, "CANCELLED", "operation cancelled", 1)
 		}
