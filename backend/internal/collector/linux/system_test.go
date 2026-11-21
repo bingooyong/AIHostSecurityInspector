@@ -59,6 +59,48 @@ func TestHostIdentityFromFixture(t *testing.T) {
 	}
 }
 
+func TestHostIdentityFromUbuntuFixture(t *testing.T) {
+	sys := System{Root: fixtureRoot(t, "ubuntu"), Now: func() time.Time { return time.Date(2026, 11, 21, 0, 0, 0, 0, time.UTC) }}
+	result, err := sys.Collect(context.Background(), identityReq())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.Status != domain.CollectionSuccess || result.Completeness != domain.CompletenessComplete {
+		t.Fatalf("unexpected status %+v", result)
+	}
+	payload, _ := json.Marshal(result.Records)
+	if strings.Contains(string(payload), "ubuntu-fixture-machine-id-24") || strings.Contains(string(payload), "bbbbbbbb-cccc-dddd-eeee-ffffffffffff") {
+		t.Fatal("raw machine-id or boot-id leaked")
+	}
+	rec := result.Records[0]
+	if rec["os"] != "ubuntu" {
+		t.Fatalf("os should be os-release ID, got %+v", rec)
+	}
+	if rec["distribution"] != "Ubuntu" {
+		t.Fatalf("distribution should be os-release NAME, got %+v", rec)
+	}
+	if rec["os_version"] != "24.04" || rec["version_codename"] != "noble" {
+		t.Fatalf("ubuntu version fields %+v", rec)
+	}
+	if rec["kernel"] != "6.8.0-1014-aws" || rec["architecture"] != "x86_64" {
+		t.Fatalf("kernel/arch %+v", rec)
+	}
+	if rec["boot_time"] != "2023-11-14T22:13:20Z" || rec["cpu_count"].(float64) != 2 || rec["memory_kb"].(float64) != 2048000 {
+		t.Fatalf("resource/boot fields %+v", rec)
+	}
+	if rec["view"] != "host" {
+		t.Fatalf("view=%v", rec["view"])
+	}
+	dist, _ := rec["distribution"].(string)
+	if strings.Contains(strings.ToLower(dist), "linux") {
+		t.Fatal("ubuntu fixture NAME unexpectedly contains linux; this test must not depend on that substring")
+	}
+	fp, _ := rec["identity_fingerprint"].(string)
+	if !domain.ValidSHA256(fp) {
+		t.Fatal("fingerprint is not sha256")
+	}
+}
+
 func TestContainerViewIsLabeled(t *testing.T) {
 	sys := System{Root: fixtureRoot(t, "container"), Now: func() time.Time { return time.Date(2026, 11, 21, 0, 0, 0, 0, time.UTC) }}
 	result, err := sys.Collect(context.Background(), identityReq())

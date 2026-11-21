@@ -1,0 +1,7 @@
+cwd=backend
+$ golangci-lint run ./...
+exit=0
+stdout:
+0 issues.
+
+stderr:

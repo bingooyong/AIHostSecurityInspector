@@ -3,6 +3,7 @@ package linux
 import (
 	"context"
 	"encoding/json"
+	"os"
 	"runtime"
 	"strings"
 	"testing"
@@ -23,6 +24,9 @@ func TestLiveRootStillRejectedWithoutLiveFlag(t *testing.T) {
 }
 
 func TestLiveLinuxCollectorsReadThisHost(t *testing.T) {
+	if os.Getenv("HOSTSEC_LIVE_LINUX") != "1" {
+		t.Skip("set HOSTSEC_LIVE_LINUX=1 to run live root filesystem collectors")
+	}
 	if runtime.GOOS != "linux" {
 		t.Skip("live collectors require linux")
 	}
@@ -44,10 +48,25 @@ func TestLiveLinuxCollectorsReadThisHost(t *testing.T) {
 	if len(ident.Records) == 0 {
 		t.Fatal("identity produced no records")
 	}
-	body, _ := json.Marshal(ident.Records[0])
-	if !strings.Contains(strings.ToLower(string(body)), "linux") {
-		t.Fatalf("identity is not linux: %s", body)
+	rec := ident.Records[0]
+	osName, _ := rec["os"].(string)
+	distribution, _ := rec["distribution"].(string)
+	kernel, _ := rec["kernel"].(string)
+	arch, _ := rec["architecture"].(string)
+	if strings.TrimSpace(osName) == "" || osName == "unknown" {
+		t.Fatalf("os missing or unknown: %+v", rec)
 	}
+	if strings.TrimSpace(distribution) == "" || distribution == "unknown" {
+		t.Fatalf("distribution missing or unknown: %+v", rec)
+	}
+	if strings.TrimSpace(kernel) == "" {
+		t.Fatalf("kernel missing: %+v", rec)
+	}
+	if strings.TrimSpace(arch) == "" {
+		t.Fatalf("architecture missing: %+v", rec)
+	}
+	// Identity.os is the os-release ID (debian, ubuntu, ...). Do not require
+	// the substring "linux" in NAME/distribution; Ubuntu's NAME is "Ubuntu".
 	if ident.Records[0]["architecture"] != runtime.GOARCH && ident.Records[0]["architecture"] != "x86_64" && ident.Records[0]["architecture"] != "amd64" {
 		t.Logf("architecture=%v goarch=%s", ident.Records[0]["architecture"], runtime.GOARCH)
 	}
