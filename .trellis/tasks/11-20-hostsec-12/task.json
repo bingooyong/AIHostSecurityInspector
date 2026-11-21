@@ -3,7 +3,7 @@
   "name": "hostsec-12",
   "title": "HOSTSEC-12 服务与持久化采集",
   "description": "systemd/timers/cron/at/rc/profile/启动项/模块",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "backend",
@@ -27,11 +27,15 @@
   "meta": {
     "hostsec_id": "HOSTSEC-12",
     "phase": "WP2",
-    "delivery_status": "PLANNED",
+    "delivery_status": "PARTIAL",
     "depends_on": [
       "HOSTSEC-08"
     ],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "backend/internal/collector/linux/persistence.go",
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21-h11-15/TASK-MATRIX.md",
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21-h11-15/results.json"
+    ],
     "layout_adr": "ADR-008"
   }
 }

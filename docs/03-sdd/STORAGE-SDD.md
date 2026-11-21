@@ -1,6 +1,6 @@
 # 存储、历史与恢复详细设计
 
-状态：PLANNED。本轮首切片离线解析与计划不创建数据库；SQLite 方向不表示已经接入驱动或实现扫描历史。
+状态：PARTIAL。库级切片 `backend/internal/storage` 与 `backend/internal/evidence/store.go` 使用 modernc.org/sqlite（CGO-free）做隔离临时库、版本化迁移、只追加对象和崩溃隔离；未接入 CLI/scan，integrity_status 默认 unverified，不表示扫描历史或平台存储已上线。
 
 ## 1. 分工与接口
 

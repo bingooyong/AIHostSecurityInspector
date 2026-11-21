@@ -1,0 +1,6 @@
+cwd=backend
+$ go build -trimpath -o /workspace/build/hostsec ./cmd/hostsec
+exit=0
+stdout:
+
+stderr:

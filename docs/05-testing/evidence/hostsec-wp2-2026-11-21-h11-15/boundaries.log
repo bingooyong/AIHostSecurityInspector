@@ -1,0 +1,7 @@
+cwd=backend
+$ go run ./tools/check-boundaries
+exit=0
+stdout:
+PASS: offline slice has no process execution or network client imports
+
+stderr:

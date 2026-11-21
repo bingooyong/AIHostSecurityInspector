@@ -1,0 +1,2 @@
+Nov 21 00:00:00 fixture-host sshd[10]: Accepted publickey for fixture-alice from 192.0.2.10 port 51234 ssh2
+Nov 21 00:01:00 fixture-host sshd[11]: Failed password for fixture-alice from 198.51.100.9 port 22 ssh2

@@ -1,6 +1,6 @@
 # 证据与离线结果包详细设计
 
-状态：PLANNED。文档约定实现，不表示本轮已有证据存储、Manifest、SHA-256 验证或导入导出能力。原始 V1.0 Schema 仅为草案，新契约必须按本设计和领域模型独立版本化。
+状态：PARTIAL。库级 EvidenceStore 已实现 Put/GetMetadata/OpenRaw/Recover（对象先落盘再登记元数据、0700/0600、孤立对象隔离不静默删除）；无签名/Manifest（HOSTSEC-16）、无导入导出、不能把 SHA-256 当来源真实或 verified。原始 V1.0 Schema 仅为草案，新契约必须按本设计和领域模型独立版本化。
 
 ## 1. 三个分离视图
 

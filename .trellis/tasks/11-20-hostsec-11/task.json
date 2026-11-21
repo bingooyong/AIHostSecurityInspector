@@ -3,7 +3,7 @@
   "name": "hostsec-11",
   "title": "HOSTSEC-11 Linux账号权限采集",
   "description": "用户组/UID0/sudo/公钥指纹/登录；不读私钥",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "backend",
@@ -27,11 +27,15 @@
   "meta": {
     "hostsec_id": "HOSTSEC-11",
     "phase": "WP2",
-    "delivery_status": "PLANNED",
+    "delivery_status": "PARTIAL",
     "depends_on": [
       "HOSTSEC-08"
     ],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "backend/internal/collector/linux/accounts.go",
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21-h11-15/TASK-MATRIX.md",
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21-h11-15/results.json"
+    ],
     "layout_adr": "ADR-008"
   }
 }
