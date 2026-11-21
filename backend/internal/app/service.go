@@ -17,6 +17,7 @@ import (
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/planner"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/policy"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/report"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/storage"
 )
 
 type PlanRecord struct {
@@ -64,6 +65,7 @@ type Service struct {
 	seq         int
 	FixtureRoot string
 	OutDir      string
+	DB          *storage.DB
 	Now         func() time.Time
 }
 
@@ -390,14 +392,42 @@ func (s *Service) ListAudit(_ context.Context, caller authorization.Principal, l
 	return Paginate(visible, limit, offset)
 }
 
+func (s *Service) UseDB(ctx context.Context, db *storage.DB) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.DB = db
+	if db == nil {
+		return nil
+	}
+	rows, err := db.ListAudit(ctx)
+	if err != nil {
+		return err
+	}
+	s.audit = s.audit[:0]
+	for _, row := range rows {
+		s.audit = append(s.audit, AuditEvent{
+			EventID: row.EventID, At: row.At, Actor: row.Actor, Action: row.Action,
+			HostID: row.HostID, ScanID: row.ScanID, PlanID: row.PlanID, Decision: row.Decision,
+		})
+	}
+	return nil
+}
+
 func (s *Service) recordAudit(actor, action, hostID, scanID, planID, decision string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.seq++
-	s.audit = append(s.audit, AuditEvent{
+	event := AuditEvent{
 		EventID: fmt.Sprintf("audit-%d", s.seq), At: s.Now().UTC().Format(domain.TimeLayout),
 		Actor: actor, Action: action, HostID: hostID, ScanID: scanID, PlanID: planID, Decision: decision,
-	})
+	}
+	s.audit = append(s.audit, event)
+	if s.DB != nil {
+		_ = s.DB.AppendAudit(context.Background(), storage.AuditRow{
+			EventID: event.EventID, At: event.At, Actor: event.Actor, Action: event.Action,
+			HostID: event.HostID, ScanID: event.ScanID, PlanID: event.PlanID, Decision: event.Decision,
+		})
+	}
 }
 
 func metaFrom(item domain.Evidence) EvidenceMeta {

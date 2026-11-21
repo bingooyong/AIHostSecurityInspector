@@ -51,7 +51,8 @@
       "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/TASK-MATRIX.md",
       "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
       "backend/internal/orchestrator/job.go",
-      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json",
+      "docs/05-testing/evidence/hostsec-wp5-2026-11-21-box-lab/TASK-MATRIX.md"
     ],
     "layout_adr": "ADR-008"
   }

@@ -20,6 +20,7 @@ type Process struct {
 	Root string
 	Now  func() time.Time
 	view fileView
+	Live bool
 }
 
 type processRecord struct {
@@ -64,7 +65,7 @@ func (p Process) Collect(ctx context.Context, req collector.Request) (collector.
 		ctx, cancel = context.WithTimeout(ctx, req.Limits.Timeout)
 		defer cancel()
 	}
-	if err := validateRoot(p.Root); err != nil {
+	if err := validateRootMode(p.Root, p.Live); err != nil {
 		result.Warnings = append(result.Warnings, "collector_root_rejected")
 		return system.finish(result, started, domain.CollectionNotAvailable, "ROOT_REJECTED"), nil
 	}

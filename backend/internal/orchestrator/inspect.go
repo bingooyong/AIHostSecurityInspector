@@ -19,10 +19,12 @@ import (
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/report"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/rules"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/transport/ssh"
 )
 
 type Request struct {
 	Root      string
+	Live      bool
 	Inventory asset.Inventory
 	HostID    string
 	Profile   string
@@ -30,6 +32,7 @@ type Request struct {
 	ScanID    string
 	AttemptID string
 	Now       func() time.Time
+	SSH       *ssh.DialConfig
 }
 
 type Result struct {
@@ -203,38 +206,7 @@ func authorizedHost(inv asset.Inventory, hostID, profile string) (asset.Host, er
 }
 
 func collectModule(ctx context.Context, root string, now func() time.Time, req collector.Request) collector.Result {
-	switch req.ModuleID {
-	case linux.ModuleHostIdentity:
-		got, _ := (linux.System{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleProcessInventory:
-		got, _ := (linux.Process{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleNetworkInventory:
-		got, _ := (linux.Network{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleAccountInventory:
-		got, _ := (linux.Accounts{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleServiceInventory, linux.ModulePersistenceInventory:
-		got, _ := (linux.Persistence{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleSecurityConfig:
-		got, _ := (linux.Security{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModulePackageInventory:
-		got, _ := (linux.Packages{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleTargetedFileScan:
-		got, _ := (linux.Files{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	default:
-		return collector.Result{
-			ModuleID: req.ModuleID, Version: collector.Version, Status: domain.CollectionNotAvailable,
-			Completeness: domain.CompletenessUnavailable, Records: []map[string]any{}, RawRefs: []string{},
-			Warnings: []string{"module_not_implemented_in_fixture_inspect"}, ErrorCode: "MODULE_NOT_AVAILABLE",
-		}
-	}
+	return linux.CollectModule(ctx, root, false, now, req)
 }
 
 func putResult(ctx context.Context, store *evidence.Store, req Request, result collector.Result) error {

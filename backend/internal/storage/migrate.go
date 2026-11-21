@@ -42,6 +42,18 @@ CREATE TABLE evidence_objects (
 );
 CREATE UNIQUE INDEX evidence_objects_evidence_view ON evidence_objects(evidence_id, view_type);
 `,
+	`-- HOSTSEC-15/32 durable append-only audit events
+CREATE TABLE audit_events (
+  event_id TEXT PRIMARY KEY,
+  at TEXT NOT NULL,
+  actor TEXT NOT NULL,
+  action TEXT NOT NULL,
+  host_id TEXT,
+  scan_id TEXT,
+  plan_id TEXT,
+  decision TEXT NOT NULL
+);
+`,
 }
 
 func (d *DB) Migrate(ctx context.Context) error {
@@ -82,13 +94,15 @@ func (d *DB) Migrate(ctx context.Context) error {
 			return err
 		}
 	}
-	var stored string
-	if err := tx.QueryRowContext(ctx, `SELECT checksum FROM schema_migrations WHERE version = 1`).Scan(&stored); err != nil {
-		return err
-	}
-	want := sha256.Sum256([]byte(migrations[0]))
-	if stored != hex.EncodeToString(want[:]) {
-		return fmt.Errorf("schema checksum mismatch")
+	for i, body := range migrations {
+		var stored string
+		if err := tx.QueryRowContext(ctx, `SELECT checksum FROM schema_migrations WHERE version = ?`, i+1).Scan(&stored); err != nil {
+			return err
+		}
+		want := sha256.Sum256([]byte(body))
+		if stored != hex.EncodeToString(want[:]) {
+			return fmt.Errorf("schema checksum mismatch")
+		}
 	}
 	return tx.Commit()
 }

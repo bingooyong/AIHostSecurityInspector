@@ -1,0 +1,6 @@
+cwd=backend
+$ gofmt -l cmd internal tools
+exit=0
+stdout:
+
+stderr:

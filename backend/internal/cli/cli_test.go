@@ -131,3 +131,22 @@ func TestMCPStdioAndAPILoopback(t *testing.T) {
 		t.Fatalf("non-loopback API accepted %d %s %s", code, out, err)
 	}
 }
+
+func TestInspectLocalCLIRejectsDocumentationHost(t *testing.T) {
+	code, out, err := call("inspect-local", "--file", "../../../examples/hosts.yaml", "--host", "linux-test-001", "--out", t.TempDir())
+	if code == 0 || out != "" || !json.Valid([]byte(err)) {
+		t.Fatalf("documentation host accepted %d %s %s", code, out, err)
+	}
+}
+
+func TestCollectRequiresIdentities(t *testing.T) {
+	code, out, err := call("collect", "--json")
+	if code == 0 || out != "" && !json.Valid([]byte(out)) && !json.Valid([]byte(err)) {
+		if code == 0 {
+			t.Fatalf("collect without args succeeded %s %s", out, err)
+		}
+	}
+	if code == 0 {
+		t.Fatal("collect without required flags succeeded")
+	}
+}

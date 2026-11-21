@@ -28,7 +28,7 @@
   "meta": {
     "hostsec_id": "HOSTSEC-15",
     "phase": "WP3",
-    "delivery_status": "PARTIAL",
+    "delivery_status": "IMPLEMENTED",
     "depends_on": [
       "HOSTSEC-04"
     ],
@@ -36,7 +36,8 @@
       "backend/internal/storage/db.go",
       "backend/internal/evidence/store.go",
       "docs/05-testing/evidence/hostsec-wp2-2026-11-21-h11-15/TASK-MATRIX.md",
-      "docs/05-testing/evidence/hostsec-wp2-2026-11-21-h11-15/results.json"
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21-h11-15/results.json",
+      "docs/05-testing/evidence/hostsec-wp5-2026-11-21-box-lab/TASK-MATRIX.md"
     ],
     "layout_adr": "ADR-008"
   }

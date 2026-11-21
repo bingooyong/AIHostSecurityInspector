@@ -78,6 +78,21 @@ func ValidHostID(s string) bool {
 	return err != nil
 }
 func IsAuthorized(h Host) bool { return h.Authorized != nil && *h.Authorized }
+
+// LoopbackOnly reports whether every inventory address is a literal loopback IP.
+// It does not resolve hostnames or probe the network.
+func LoopbackOnly(h Host) error {
+	if len(h.Addresses) == 0 {
+		return errors.New("host has no addresses")
+	}
+	for _, value := range h.Addresses {
+		ip, err := netip.ParseAddr(value)
+		if err != nil || !ip.IsLoopback() {
+			return errors.New("host is not a loopback-only lab target")
+		}
+	}
+	return nil
+}
 func ValidProfile(p string) bool {
 	return p == "quick" || p == "standard" || p == "deep" || p == "incident-response"
 }

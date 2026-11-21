@@ -19,6 +19,7 @@ type Network struct {
 	Root string
 	Now  func() time.Time
 	view fileView
+	Live bool
 }
 
 type networkRecord struct {
@@ -93,7 +94,7 @@ func (n Network) Collect(ctx context.Context, req collector.Request) (collector.
 		ctx, cancel = context.WithTimeout(ctx, req.Limits.Timeout)
 		defer cancel()
 	}
-	if err := validateRoot(n.Root); err != nil {
+	if err := validateRootMode(n.Root, n.Live); err != nil {
 		result.Warnings = append(result.Warnings, "collector_root_rejected")
 		return system.finish(result, started, domain.CollectionNotAvailable, "ROOT_REJECTED"), nil
 	}

@@ -1,0 +1,7 @@
+{
+  "path_in_lab_run": "/tmp/hostsec-wp5-lab-raw/ssh/hostsec.sqlite",
+  "size_bytes": 454656,
+  "mode": "0o600",
+  "sha256": "e0098431ae23db389ef990d9d17dccb51b6b559e7cba383580eb5bfb4cf9f2c8",
+  "dir_mode": "0o700"
+}

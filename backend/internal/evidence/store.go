@@ -73,7 +73,12 @@ func Open(ctx context.Context, root string, now func() time.Time) (*Store, error
 	if err != nil {
 		return nil, err
 	}
-	return &Store{root: root, now: now, db: db}, nil
+	store := &Store{root: root, now: now, db: db}
+	if _, err := store.Recover(ctx); err != nil {
+		_ = store.Close()
+		return nil, err
+	}
+	return store, nil
 }
 
 func (s *Store) Close() error {

@@ -18,10 +18,16 @@ import (
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/asset"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/audit"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/authorization"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/collector"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/collector/linux"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/mcp"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/orchestrator"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/planner"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/policy"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/storage"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/transport/ssh"
+	"path/filepath"
 )
 
 var Stdin io.Reader
@@ -46,6 +52,8 @@ Usage:
   hostsec intent --file PATH (--host ID | --targets group:NAME) --profile NAME --requester ID --valid-from RFC3339 --valid-until RFC3339 [--json]
   hostsec preflight --file PATH --intent-file PATH [--approval PATH] [--trust-store PATH] [--journal PATH] [--ledger PATH] [--consume] [--json]
   hostsec inspect-fixture --file PATH --host ID --root ABS_PATH --out DIR --profile quick|standard [--json]
+  hostsec inspect-local --file PATH --host ID --out DIR --profile quick|standard [--identity PATH --known-hosts PATH] [--json]
+  hostsec collect --module ID --scan-id ID --attempt-id ID --host-id ID --profile NAME --json
   hostsec mcp stdio --file PATH --identities PATH --principal ID [--root ABS_PATH] [--out DIR]
   hostsec api --listen 127.0.0.1:PORT --file PATH --identities PATH [--root ABS_PATH] [--out DIR]
 
@@ -53,6 +61,7 @@ Profiles: quick, standard, deep, incident-response.
 This release plans and verifies approvals offline. hostsec scan remains unsupported.
 inspect-fixture, mcp stdio and localhost api reuse the same authorization kernel.
 They read synthetic fixtures only and never set collector_available or scan_ready.
+inspect-local collects an authorized loopback host only and also leaves those flags false.
 mcp serve remains unsupported. API bind is loopback-only. Local identities are not a platform IdP.
 `
 
@@ -88,7 +97,7 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	fs := flag.NewFlagSet(command, flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	jsonOut := fs.Bool("json", false, "machine-readable JSON")
-	var file, host, targets, profile, against, requester, validFrom, validUntil, windowStart, windowEnd, timezone, intentFile, approvalFile, trustStore, inspectRoot, outDir, identities, principal, listen, journalPath, ledgerPath string
+	var file, host, targets, profile, against, requester, validFrom, validUntil, windowStart, windowEnd, timezone, intentFile, approvalFile, trustStore, inspectRoot, outDir, identities, principal, listen, journalPath, ledgerPath, module, scanID, attemptID, policyVersion, identityPath, knownHostsPath string
 	var dryRun, consume bool
 	var timeoutSeconds, maxConcurrency int
 	action := ""
@@ -144,6 +153,21 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		fs.StringVar(&inspectRoot, "root", "", "absolute synthetic fixture root")
 		fs.StringVar(&outDir, "out", "", "absolute output directory")
 		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
+	case "inspect-local":
+		fs.StringVar(&file, "file", "", "asset inventory file")
+		fs.StringVar(&host, "host", "", "registered host ID")
+		fs.StringVar(&profile, "profile", "quick", "scan profile")
+		fs.StringVar(&outDir, "out", "", "absolute output directory")
+		fs.StringVar(&identityPath, "identity", "", "SSH identity path")
+		fs.StringVar(&knownHostsPath, "known-hosts", "", "strict known_hosts path")
+		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
+	case "collect":
+		fs.StringVar(&module, "module", "", "collector module")
+		fs.StringVar(&scanID, "scan-id", "", "scan id")
+		fs.StringVar(&attemptID, "attempt-id", "", "attempt id")
+		fs.StringVar(&host, "host-id", "", "host id")
+		fs.StringVar(&profile, "profile", "quick", "scan profile")
+		fs.StringVar(&policyVersion, "policy-version", "1.0", "policy version")
 	case "mcp":
 		if len(rest) == 0 {
 			return fail(stderr, "INVALID_ARGUMENT", "mcp action is required", 2)
@@ -199,6 +223,8 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	switch command {
 	case "version":
 		return output(stdout, stderr, *jsonOut, map[string]string{"version": Version, "go_version": runtime.Version()}, Version)
+	case "collect":
+		return runCollect(ctx, stdout, stderr, module, scanID, attemptID, host, profile, policyVersion)
 	case "doctor":
 		result := DoctorResult{SchemaVersion: "1.0", Version: Version, OS: runtime.GOOS, Architecture: runtime.GOARCH, OfflinePlanningAvailable: true, LinuxPlatformSupported: runtime.GOOS == "linux" && (runtime.GOARCH == "amd64" || runtime.GOARCH == "arm64"), CollectorAvailable: false, ScanReady: false, Limitations: []string{"Collector and scan execution are not implemented; only offline planning is available.", "No target, credential store, scanner, database, or model endpoint was accessed."}}
 		if code := output(stdout, stderr, *jsonOut, result, "Offline planning available. Collector unavailable; scan_ready=false."); code != 0 {
@@ -224,6 +250,9 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	}
 	if command == "inspect-fixture" {
 		return runInspectFixture(ctx, stdout, stderr, *jsonOut, *inv, host, profile, inspectRoot, outDir)
+	}
+	if command == "inspect-local" {
+		return runInspectLocal(ctx, stdout, stderr, *inv, host, profile, outDir, identityPath, knownHostsPath)
 	}
 	if command == "mcp" {
 		return runMCP(ctx, stdout, stderr, *inv, identities, principal, inspectRoot, outDir)
@@ -323,6 +352,16 @@ func localService(inv asset.Inventory, identities, principal, root, outDir strin
 	svc := app.New(inv, dir)
 	svc.FixtureRoot = root
 	svc.OutDir = outDir
+	if outDir != "" {
+		db, dbErr := storage.Open(context.Background(), filepath.Join(outDir, "hostsec-service.sqlite"))
+		if dbErr != nil {
+			return nil, authorization.Principal{}, dbErr
+		}
+		if err := svc.UseDB(context.Background(), db); err != nil {
+			_ = db.Close()
+			return nil, authorization.Principal{}, err
+		}
+	}
 	return svc, caller, nil
 }
 
@@ -340,6 +379,68 @@ func runInspectFixture(ctx context.Context, stdout, stderr io.Writer, _ bool, in
 	if result.CollectorAvailable || result.ScanReady || result.ExecutionReady {
 		return fail(stderr, "INSPECT_REJECTED", "fixture inspect must not mark scan ready", 1)
 	}
+	return output(stdout, stderr, true, result, "")
+}
+
+func runInspectLocal(ctx context.Context, stdout, stderr io.Writer, inv asset.Inventory, host, profile, outDir, identityPath, knownHostsPath string) int {
+	if host == "" || outDir == "" {
+		return fail(stderr, "INVALID_ARGUMENT", "inspect-local requires --host and --out", 2)
+	}
+	req := orchestrator.Request{Inventory: inv, HostID: host, Profile: profile, OutDir: outDir, Live: true}
+	if identityPath != "" || knownHostsPath != "" {
+		if identityPath == "" || knownHostsPath == "" {
+			return fail(stderr, "INVALID_ARGUMENT", "inspect-local SSH requires --identity and --known-hosts", 2)
+		}
+		var selected asset.Host
+		for _, item := range inv.Hosts {
+			if item.ID == host {
+				selected = item
+				break
+			}
+		}
+		if selected.ID == "" {
+			return fail(stderr, "INSPECT_REJECTED", "host is unknown", 2)
+		}
+		if err := asset.LoopbackOnly(selected); err != nil {
+			return fail(stderr, "INSPECT_REJECTED", "host is not a loopback-only lab target", 2)
+		}
+		if selected.Connection.Transport != "ssh" {
+			return fail(stderr, "INSPECT_REJECTED", "host transport is not ssh", 2)
+		}
+		req.SSH = &ssh.DialConfig{
+			Address:      selected.Addresses[0],
+			IdentityPath: identityPath,
+			Timeout:      30 * time.Second,
+			Policy: ssh.Policy{
+				User: selected.Connection.User, Port: selected.Connection.Port, KnownHostsPath: knownHostsPath,
+				HostKeyPolicy: "strict", AllowedBinary: ssh.CollectorBinary,
+			},
+		}
+	}
+	result, err := orchestrator.InspectLocal(ctx, req)
+	if err != nil {
+		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			return fail(stderr, "CANCELLED", "operation cancelled", 1)
+		}
+		return fail(stderr, "INSPECT_REJECTED", "local inspect was rejected or failed", 2)
+	}
+	if result.CollectorAvailable || result.ScanReady || result.ExecutionReady {
+		return fail(stderr, "INSPECT_REJECTED", "local inspect must not mark scan ready", 1)
+	}
+	return output(stdout, stderr, true, result, "")
+}
+
+func runCollect(ctx context.Context, stdout, stderr io.Writer, module, scanID, attemptID, host, profile, policyVersion string) int {
+	if module == "" || scanID == "" || attemptID == "" || host == "" || profile == "" {
+		return fail(stderr, "INVALID_ARGUMENT", "collect requires --module, --scan-id, --attempt-id, --host-id and --profile", 2)
+	}
+	if policyVersion == "" {
+		policyVersion = policy.PolicyVersion
+	}
+	result := linux.CollectModule(ctx, "/", true, time.Now, collector.Request{
+		ScanID: scanID, AttemptID: attemptID, HostID: host, ModuleID: module, Profile: profile, PolicyVersion: policyVersion,
+		Limits: collector.Limits{Timeout: 30 * time.Second, MaxRecords: 4096, MaxBytes: 1 << 20},
+	})
 	return output(stdout, stderr, true, result, "")
 }
 
