@@ -14,6 +14,7 @@ import (
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/approval"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/asset"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/orchestrator"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/planner"
 )
 
@@ -36,9 +37,11 @@ Usage:
   hostsec plan --file PATH (--host ID | --targets group:NAME) --profile quick --dry-run [--json]
   hostsec intent --file PATH (--host ID | --targets group:NAME) --profile NAME --requester ID --valid-from RFC3339 --valid-until RFC3339 [--json]
   hostsec preflight --file PATH --intent-file PATH [--approval PATH] [--trust-store PATH] [--json]
+  hostsec inspect-fixture --file PATH --host ID --root ABS_PATH --out DIR --profile quick|standard [--json]
 
 Profiles: quick, standard, deep, incident-response.
-This release plans and verifies approvals offline. Scanning and AI are not implemented.
+This release plans and verifies approvals offline. hostsec scan remains unsupported.
+inspect-fixture reads a synthetic rooted fixture only; it does not set collector_available or scan_ready.
 `
 
 type diagnostic struct {
@@ -73,7 +76,7 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	fs := flag.NewFlagSet(command, flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	jsonOut := fs.Bool("json", false, "machine-readable JSON")
-	var file, host, targets, profile, against, requester, validFrom, validUntil, windowStart, windowEnd, timezone, intentFile, approvalFile, trustStore string
+	var file, host, targets, profile, against, requester, validFrom, validUntil, windowStart, windowEnd, timezone, intentFile, approvalFile, trustStore, inspectRoot, outDir string
 	var dryRun bool
 	var timeoutSeconds, maxConcurrency int
 	action := ""
@@ -118,6 +121,13 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 		fs.StringVar(&intentFile, "intent-file", "", "execution intent JSON")
 		fs.StringVar(&approvalFile, "approval", "", "signed approval JSON")
 		fs.StringVar(&trustStore, "trust-store", "", "trusted principal store JSON")
+		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
+	case "inspect-fixture":
+		fs.StringVar(&file, "file", "", "asset inventory file")
+		fs.StringVar(&host, "host", "", "registered host ID")
+		fs.StringVar(&profile, "profile", "quick", "scan profile")
+		fs.StringVar(&inspectRoot, "root", "", "absolute synthetic fixture root")
+		fs.StringVar(&outDir, "out", "", "absolute output directory")
 		fs.IntVar(&timeoutSeconds, "timeout-seconds", 0, "optional command deadline")
 	default:
 		return fail(stderr, "INVALID_ARGUMENT", "unsupported command", 2)
@@ -175,6 +185,9 @@ func Run(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	if command == "intent" {
 		return runIntent(ctx, stdout, stderr, *jsonOut, *inv, host, targets, profile, requester, validFrom, validUntil, timezone, windowStart, windowEnd)
 	}
+	if command == "inspect-fixture" {
+		return runInspectFixture(ctx, stdout, stderr, *jsonOut, *inv, host, profile, inspectRoot, outDir)
+	}
 	plan, err := planner.Build(ctx, *inv, planner.Request{HostID: host, Targets: targets, Profile: profile, DryRun: dryRun})
 	if err != nil {
 		return planFail(stderr, err)
@@ -212,6 +225,23 @@ func runAssets(ctx context.Context, stdout, stderr io.Writer, jsonOut bool, acti
 		result := map[string]any{"valid": true, "version": inv.Version, "host_count": len(inv.Hosts), "group_count": len(inv.Groups)}
 		return output(stdout, stderr, jsonOut, result, "Asset inventory valid.")
 	}
+}
+
+func runInspectFixture(ctx context.Context, stdout, stderr io.Writer, _ bool, inv asset.Inventory, host, profile, root, outDir string) int {
+	if host == "" || root == "" || outDir == "" {
+		return fail(stderr, "INVALID_ARGUMENT", "inspect-fixture requires --host, --root and --out", 2)
+	}
+	result, err := orchestrator.InspectFixture(ctx, orchestrator.Request{Root: root, Inventory: inv, HostID: host, Profile: profile, OutDir: outDir})
+	if err != nil {
+		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			return fail(stderr, "CANCELLED", "operation cancelled", 1)
+		}
+		return fail(stderr, "INSPECT_REJECTED", "fixture inspect was rejected or failed", 2)
+	}
+	if result.CollectorAvailable || result.ScanReady || result.ExecutionReady {
+		return fail(stderr, "INSPECT_REJECTED", "fixture inspect must not mark scan ready", 1)
+	}
+	return output(stdout, stderr, true, result, "")
 }
 
 func runIntent(ctx context.Context, stdout, stderr io.Writer, jsonOut bool, inv asset.Inventory, host, targets, profile, requester, validFrom, validUntil, timezone, windowStart, windowEnd string) int {

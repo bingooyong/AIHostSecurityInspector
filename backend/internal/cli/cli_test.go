@@ -105,6 +105,13 @@ func TestAssetsSnapshotAndIntent(t *testing.T) {
 	}
 }
 
+func TestInspectFixtureCLI(t *testing.T) {
+	code, out, err := call("inspect-fixture", "--file", "../../../examples/hosts.yaml", "--host", "linux-test-001", "--root", "/", "--out", t.TempDir())
+	if code == 0 || out != "" || !json.Valid([]byte(err)) {
+		t.Fatalf("live root accepted %d %s %s", code, out, err)
+	}
+}
+
 func TestValidVersion(t *testing.T) {
 	if !ValidVersion("0.1.0-dev") || !ValidVersion("1.2.3") || ValidVersion("") || ValidVersion("latest") {
 		t.Fatal("version validation mismatch")

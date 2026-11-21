@@ -62,17 +62,31 @@ func (d *DB) InsertEvidence(ctx context.Context, ev domain.Evidence, objects []O
 }
 
 func (d *DB) GetEvidence(ctx context.Context, evidenceID string) (domain.Evidence, error) {
-	row := d.sql.QueryRowContext(ctx, `SELECT evidence_id, host_id, scan_id, attempt_id, collected_at, received_at, module, collector_version, category,
+	row := d.sql.QueryRowContext(ctx, evidenceSelect+` WHERE evidence_id = ?`, evidenceID)
+	ev, err := scanEvidence(row)
+	if err == sql.ErrNoRows {
+		return domain.Evidence{}, &domain.Error{Code: domain.CodeUnknownEvidence, Message: "evidence is unknown"}
+	}
+	if err != nil {
+		return domain.Evidence{}, err
+	}
+	return ev, ev.Validate()
+}
+
+const evidenceSelect = `SELECT evidence_id, host_id, scan_id, attempt_id, collected_at, received_at, module, collector_version, category,
 		raw_summary, raw_ref, normalized_data, sha256, normalized_sha256, collection_status, integrity_status, completeness, warnings
-		FROM evidence WHERE evidence_id = ?`, evidenceID)
+		FROM evidence`
+
+type rowScanner interface {
+	Scan(dest ...any) error
+}
+
+func scanEvidence(row rowScanner) (domain.Evidence, error) {
 	var ev domain.Evidence
 	var rawRef, sha, nsha sql.NullString
 	var normalized, warnings string
 	err := row.Scan(&ev.EvidenceID, &ev.HostID, &ev.ScanID, &ev.AttemptID, &ev.CollectedAt, &ev.ReceivedAt, &ev.Module, &ev.CollectorVersion, &ev.Category,
 		&ev.RawSummary, &rawRef, &normalized, &sha, &nsha, &ev.CollectionStatus, &ev.IntegrityStatus, &ev.Completeness, &warnings)
-	if err == sql.ErrNoRows {
-		return domain.Evidence{}, &domain.Error{Code: domain.CodeUnknownEvidence, Message: "evidence is unknown"}
-	}
 	if err != nil {
 		return domain.Evidence{}, err
 	}
@@ -91,7 +105,24 @@ func (d *DB) GetEvidence(ctx context.Context, evidenceID string) (domain.Evidenc
 	if err := json.Unmarshal([]byte(warnings), &ev.Warnings); err != nil {
 		return domain.Evidence{}, err
 	}
-	return ev, ev.Validate()
+	return ev, nil
+}
+
+func (d *DB) ListEvidence(ctx context.Context, scanID string) ([]domain.Evidence, error) {
+	rows, err := d.sql.QueryContext(ctx, evidenceSelect+` WHERE scan_id = ? ORDER BY evidence_id`, scanID)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = rows.Close() }()
+	out := make([]domain.Evidence, 0)
+	for rows.Next() {
+		ev, scanErr := scanEvidence(rows)
+		if scanErr != nil {
+			return nil, scanErr
+		}
+		out = append(out, ev)
+	}
+	return out, rows.Err()
 }
 
 func (d *DB) ListObjects(ctx context.Context) ([]ObjectRow, error) {
@@ -122,7 +153,14 @@ func (d *DB) Object(ctx context.Context, evidenceID, viewType string) (ObjectRow
 }
 
 func (d *DB) MarkIntegrityFailed(ctx context.Context, evidenceID string) error {
-	_, err := d.sql.ExecContext(ctx, `UPDATE evidence SET integrity_status = ? WHERE evidence_id = ?`, domain.IntegrityFailed, evidenceID)
+	return d.MarkIntegrity(ctx, evidenceID, domain.IntegrityFailed)
+}
+
+func (d *DB) MarkIntegrity(ctx context.Context, evidenceID, status string) error {
+	if !domain.ValidIntegrity(status) {
+		return &domain.Error{Code: domain.CodeInvalidEnum, Message: "integrity status is invalid"}
+	}
+	_, err := d.sql.ExecContext(ctx, `UPDATE evidence SET integrity_status = ? WHERE evidence_id = ?`, status, evidenceID)
 	return err
 }
 

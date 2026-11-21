@@ -143,6 +143,10 @@ func (s *Store) GetMetadata(ctx context.Context, evidenceID string) (domain.Evid
 	return s.db.GetEvidence(ctx, evidenceID)
 }
 
+func (s *Store) List(ctx context.Context, scanID string) ([]domain.Evidence, error) {
+	return s.db.ListEvidence(ctx, scanID)
+}
+
 func (s *Store) OpenRaw(ctx context.Context, evidenceID string) (io.ReadCloser, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
