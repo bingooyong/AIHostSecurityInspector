@@ -1,0 +1,28 @@
+{
+  "os": "ubuntu-24.04",
+  "content": "/usr/share/xml/scap/ssg/content/ssg-ubuntu2404-ds.xml",
+  "rule_id": "xccdf_org.ssgproject.content_rule_package_prelink_removed",
+  "rule_title": "Package \"prelink\" Must not be Installed",
+  "rule_result": "pass",
+  "exit_code": 0,
+  "fetch_or_remediate_passed": false,
+  "stderr_warnings": [
+    "OpenSCAP Error: Unable to open file: '/usr/share/openscap/cpe/openscap-cpe-dict.xml' [./src/source/oscap_source.c:298]"
+  ],
+  "before": {
+    "os_release_id": "ubuntu",
+    "os_release_version_id": "24.04",
+    "etc_file_count": 175,
+    "usr_bin_exists": true
+  },
+  "after": {
+    "os_release_id": "ubuntu",
+    "os_release_version_id": "24.04",
+    "etc_file_count": 175,
+    "usr_bin_exists": true
+  },
+  "chroot_paths_changed": false,
+  "results_xml_kept": false,
+  "results_xml_sha256": "2420e3c1920aaf069245a958fd9744c45e7dc053ec9a11664d498db4f087325f",
+  "results_xml_bytes": 6151652
+}

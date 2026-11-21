@@ -27,7 +27,7 @@
   "meta": {
     "hostsec_id": "HOSTSEC-35",
     "phase": "WP7",
-    "delivery_status": "PARTIAL",
+    "delivery_status": "IMPLEMENTED",
     "depends_on": [
       "HOSTSEC-34",
       "HOSTSEC-44"

@@ -1,0 +1,7 @@
+=== RUN   TestLiveOpenSSHCollector
+--- PASS: TestLiveOpenSSHCollector (0.03s)
+=== RUN   TestLiveOpenSSHHostKeyMismatchRejected
+--- PASS: TestLiveOpenSSHHostKeyMismatchRejected (0.00s)
+PASS
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/transport/ssh	0.038s
+

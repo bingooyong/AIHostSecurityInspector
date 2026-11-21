@@ -63,3 +63,41 @@ func TestPreflightRejectsSnapshotDriftAndMissingDeepApproval(t *testing.T) {
 		t.Fatal("drifted assets accepted")
 	}
 }
+
+func TestPreflightRejectsPolicyDriftAndUnknownCapability(t *testing.T) {
+	inv := inventory(t)
+	intent, err := BuildIntent(t.Context(), inv, IntentRequest{
+		HostID: "linux-test-001", Profile: "quick", RequesterPrincipal: "operator-alice",
+		ValidFrom: "2026-11-20T00:00:00Z", ValidUntil: "2026-11-20T04:00:00Z",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	clock := func() time.Time { return time.Date(2026, 11, 20, 1, 0, 0, 0, time.UTC) }
+	drifted := intent
+	drifted.PolicyHash = "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+	if _, err := Preflight(t.Context(), inv, drifted, approval.TrustStore{}, nil, clock, nil, nil, false); err == nil {
+		t.Fatal("policy hash drift accepted")
+	}
+
+	result, err := PreflightCheck(t.Context(), PreflightInput{
+		Inventory: inv, Intent: intent, Now: clock, Capabilities: map[string]bool{},
+	})
+	if err == nil || result.ExecutionReady {
+		t.Fatalf("unknown capability accepted: %+v %v", result, err)
+	}
+
+	okCaps := map[string]bool{}
+	for _, name := range intent.RequiredCapabilities {
+		okCaps[name] = true
+	}
+	result, err = PreflightCheck(t.Context(), PreflightInput{
+		Inventory: inv, Intent: intent, Now: clock, Capabilities: okCaps,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.ExecutionReady || result.CollectorAvailable {
+		t.Fatal("capability check cannot mark execution ready")
+	}
+}

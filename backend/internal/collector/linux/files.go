@@ -22,6 +22,7 @@ type Files struct {
 	Now   func() time.Time
 	Allow []string
 	view  fileView
+	Live  bool
 }
 
 type fileRecord struct {
@@ -59,7 +60,7 @@ func (f Files) Collect(ctx context.Context, req collector.Request) (collector.Re
 		ctx, cancel = context.WithTimeout(ctx, req.Limits.Timeout)
 		defer cancel()
 	}
-	if err := validateRoot(f.Root); err != nil {
+	if err := validateRootMode(f.Root, f.Live); err != nil {
 		result.Warnings = append(result.Warnings, "collector_root_rejected")
 		return system.finish(result, started, domain.CollectionNotAvailable, "ROOT_REJECTED"), nil
 	}

@@ -1,0 +1,18 @@
+cwd=frontend
+$ npm run build
+exit=0
+stdout:
+
+> hostsec-frontend@0.1.0-dev build
+> tsc --noEmit && vite build
+
+vite v7.2.4 building client environment for production...
+transforming...
+✓ 34 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                  0.34 kB │ gzip:  0.24 kB
+dist/assets/index-BxBOpUXa.js  148.84 kB │ gzip: 48.04 kB
+✓ built in 410ms
+
+stderr:

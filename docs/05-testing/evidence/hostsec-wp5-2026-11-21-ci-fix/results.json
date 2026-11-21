@@ -1,0 +1,335 @@
+{
+  "executed_at": "2026-11-21T07:57:29.368471+00:00",
+  "scope": "current local quality gates; does not overwrite layout-migration historical evidence; no Linux collector runtime or remote CI acceptance",
+  "status": "PASS",
+  "evidence_dir": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix",
+  "results": [
+    {
+      "gate": "layout-structure",
+      "command": [
+        "python3",
+        "scripts/check_layout.py",
+        "--structure-only"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-21T07:56:54.521383+00:00",
+      "elapsed_seconds": 0.058,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/layout-structure.log"
+    },
+    {
+      "gate": "format",
+      "command": [
+        "gofmt",
+        "-l",
+        "cmd",
+        "internal",
+        "tools"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:56:54.579954+00:00",
+      "elapsed_seconds": 0.019,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/format.log"
+    },
+    {
+      "gate": "module-verify",
+      "command": [
+        "go",
+        "mod",
+        "verify"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:56:54.598569+00:00",
+      "elapsed_seconds": 0.796,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/module-verify.log"
+    },
+    {
+      "gate": "vet",
+      "command": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:56:55.394974+00:00",
+      "elapsed_seconds": 0.109,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/vet.log"
+    },
+    {
+      "gate": "unit-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:56:55.503865+00:00",
+      "elapsed_seconds": 5.765,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/unit-race.log"
+    },
+    {
+      "gate": "lint",
+      "command": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:57:01.269036+00:00",
+      "elapsed_seconds": 0.475,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/lint.log"
+    },
+    {
+      "gate": "boundaries",
+      "command": [
+        "go",
+        "run",
+        "./tools/check-boundaries"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:57:01.743709+00:00",
+      "elapsed_seconds": 0.062,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/boundaries.log"
+    },
+    {
+      "gate": "build-local",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "/workspace/AIHostSecurityInspector-lab/build/hostsec",
+        "./cmd/hostsec"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:57:01.805635+00:00",
+      "elapsed_seconds": 0.089,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/build-local.log"
+    },
+    {
+      "gate": "layout-behavior",
+      "command": [
+        "python3",
+        "scripts/check_layout.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-21T07:57:01.894239+00:00",
+      "elapsed_seconds": 0.136,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/layout-behavior.log"
+    },
+    {
+      "gate": "integration-schema",
+      "command": [
+        "python3",
+        "scripts/integration.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-21T07:57:02.029962+00:00",
+      "elapsed_seconds": 0.293,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/integration-schema.log"
+    },
+    {
+      "gate": "frontend-install",
+      "command": [
+        "npm",
+        "ci"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-21T07:57:02.322625+00:00",
+      "elapsed_seconds": 6.776,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/frontend-install.log"
+    },
+    {
+      "gate": "frontend-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-21T07:57:09.098356+00:00",
+      "elapsed_seconds": 1.228,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/frontend-lint.log"
+    },
+    {
+      "gate": "frontend-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-21T07:57:10.326686+00:00",
+      "elapsed_seconds": 1.043,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/frontend-typecheck.log"
+    },
+    {
+      "gate": "frontend-test",
+      "command": [
+        "npm",
+        "run",
+        "test"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-21T07:57:11.370142+00:00",
+      "elapsed_seconds": 0.904,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/frontend-test.log"
+    },
+    {
+      "gate": "frontend-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-21T07:57:12.274505+00:00",
+      "elapsed_seconds": 1.706,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/frontend-build.log"
+    },
+    {
+      "gate": "frontend-playwright-install",
+      "command": [
+        "npx",
+        "playwright",
+        "install",
+        "chromium"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-21T07:57:13.980521+00:00",
+      "elapsed_seconds": 0.636,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/frontend-playwright-install.log"
+    },
+    {
+      "gate": "frontend-e2e",
+      "command": [
+        "npm",
+        "run",
+        "e2e"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-21T07:57:14.616409+00:00",
+      "elapsed_seconds": 2.082,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/frontend-e2e.log"
+    },
+    {
+      "gate": "future-contract",
+      "command": [
+        "python3",
+        "scripts/contracts.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-21T07:57:16.698327+00:00",
+      "elapsed_seconds": 0.136,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/future-contract.log"
+    },
+    {
+      "gate": "baseline",
+      "command": [
+        "python3",
+        "scripts/validate_baseline.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-21T07:57:16.834337+00:00",
+      "elapsed_seconds": 0.183,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/baseline.log"
+    },
+    {
+      "gate": "vulnerability",
+      "command": [
+        "govulncheck",
+        "-show",
+        "verbose",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:57:17.017226+00:00",
+      "elapsed_seconds": 8.317,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/vulnerability.log"
+    },
+    {
+      "gate": "sbom",
+      "command": [
+        "cyclonedx-gomod",
+        "mod",
+        "-json",
+        "-output",
+        "/workspace/AIHostSecurityInspector-lab/build/sbom.cdx.json"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-21T07:57:25.334772+00:00",
+      "elapsed_seconds": 0.78,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/sbom.log"
+    },
+    {
+      "gate": "cross-build",
+      "command": [
+        "python3",
+        "scripts/build_release.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-21T07:57:26.114953+00:00",
+      "elapsed_seconds": 3.24,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/cross-build.log"
+    },
+    {
+      "gate": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-21T07:57:29.354986+00:00",
+      "elapsed_seconds": 0.008,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp5-2026-11-21-ci-fix/whitespace.log"
+    }
+  ]
+}

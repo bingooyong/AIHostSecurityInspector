@@ -3,6 +3,7 @@ package orchestrator
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"path/filepath"
 	"strings"
 	"time"
@@ -19,17 +20,23 @@ import (
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/report"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/rules"
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools"
+	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/transport/ssh"
 )
 
 type Request struct {
-	Root      string
-	Inventory asset.Inventory
-	HostID    string
-	Profile   string
-	OutDir    string
-	ScanID    string
-	AttemptID string
-	Now       func() time.Time
+	Root         string
+	Live         bool
+	Inventory    asset.Inventory
+	HostID       string
+	Profile      string
+	OutDir       string
+	ScanID       string
+	AttemptID    string
+	Now          func() time.Time
+	SSH          *ssh.DialConfig
+	Pressure     PressureSource
+	SnapshotHash string
+	PolicyHash   string
 }
 
 type Result struct {
@@ -102,14 +109,19 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 	if timeout <= 0 {
 		timeout = 30 * time.Second
 	}
-	for _, module := range prof.Modules {
-		if err := ctx.Err(); err != nil {
+	moduleTimeout := timeout / time.Duration(len(prof.Modules)+1)
+	for i, module := range prof.Modules {
+		if err := beforeModule(ctx, req.Pressure, prof.Limits.StopOnResourcePressure); err != nil {
+			if errors.Is(err, ErrResourcePressure) || errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+				out.Modules = append(out.Modules, skippedModules(prof.Modules[i:], req, err)...)
+				break
+			}
 			return out, err
 		}
 		result := collectModule(ctx, req.Root, req.Now, collector.Request{
 			ScanID: req.ScanID, AttemptID: req.AttemptID, HostID: req.HostID,
 			ModuleID: module, Profile: req.Profile, PolicyVersion: policy.PolicyVersion,
-			Limits: collector.Limits{Timeout: timeout / time.Duration(len(prof.Modules)+1), MaxRecords: 4096, MaxBytes: prof.Limits.MaxFileSizeBytes},
+			Limits: collector.Limits{Timeout: moduleTimeout, MaxRecords: 4096, MaxBytes: prof.Limits.MaxFileSizeBytes},
 		})
 		out.Modules = append(out.Modules, result)
 		if err := putResult(ctx, store, req, result); err != nil {
@@ -139,10 +151,11 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 	if err != nil {
 		return out, err
 	}
+	results = rejectPassOnFailedCollection(results, out.Modules)
 	out.RuleResults = results
 	out.Findings = findings
 	out.Evidence = items
-	out.JobStatus = domain.JobPartial
+	out.JobStatus = jobStatusFor(out.Modules)
 	exec := tools.Executor{}
 	for _, tool := range prof.Tools {
 		rep, toolErr := adapter.Lynis(ctx, exec, req.HostID, req.ScanID)
@@ -155,7 +168,7 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 		out.ToolReports = append(out.ToolReports, rep)
 	}
 	out.Intel = intel.Correlate(items, nil)
-	doc := report.Build(out.ScanID, out.HostID, out.Profile, items, results, findings, out.Integrity, out.Limitations)
+	doc := report.BuildFromInput(reportInput(out, bundle))
 	path, err := report.Write(req.OutDir, doc)
 	if err != nil {
 		return out, err
@@ -203,38 +216,7 @@ func authorizedHost(inv asset.Inventory, hostID, profile string) (asset.Host, er
 }
 
 func collectModule(ctx context.Context, root string, now func() time.Time, req collector.Request) collector.Result {
-	switch req.ModuleID {
-	case linux.ModuleHostIdentity:
-		got, _ := (linux.System{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleProcessInventory:
-		got, _ := (linux.Process{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleNetworkInventory:
-		got, _ := (linux.Network{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleAccountInventory:
-		got, _ := (linux.Accounts{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleServiceInventory, linux.ModulePersistenceInventory:
-		got, _ := (linux.Persistence{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleSecurityConfig:
-		got, _ := (linux.Security{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModulePackageInventory:
-		got, _ := (linux.Packages{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	case linux.ModuleTargetedFileScan:
-		got, _ := (linux.Files{Root: root, Now: now}).Collect(ctx, req)
-		return got
-	default:
-		return collector.Result{
-			ModuleID: req.ModuleID, Version: collector.Version, Status: domain.CollectionNotAvailable,
-			Completeness: domain.CompletenessUnavailable, Records: []map[string]any{}, RawRefs: []string{},
-			Warnings: []string{"module_not_implemented_in_fixture_inspect"}, ErrorCode: "MODULE_NOT_AVAILABLE",
-		}
-	}
+	return linux.CollectModule(ctx, root, false, now, req)
 }
 
 func putResult(ctx context.Context, store *evidence.Store, req Request, result collector.Result) error {

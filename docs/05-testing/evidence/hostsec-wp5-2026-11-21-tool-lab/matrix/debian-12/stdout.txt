@@ -1,0 +1,9 @@
+--- Starting Evaluation ---
+
+Title
+	Prefer to use a 64-bit Operating System when supported
+Rule
+	xccdf_org.ssgproject.content_rule_prefer_64bit_os
+Result
+	pass
+

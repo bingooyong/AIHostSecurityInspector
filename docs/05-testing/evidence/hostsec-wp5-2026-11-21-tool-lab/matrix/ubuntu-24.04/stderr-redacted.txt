@@ -1,0 +1,2 @@
+OpenSCAP Error: Unable to open file: '/usr/share/openscap/cpe/openscap-cpe-dict.xml' [./src/source/oscap_source.c:298]
+Failed to add default CPE to newly created CPE Session. [./src/CPE/cpe_session.c:58]

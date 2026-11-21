@@ -75,10 +75,14 @@ func (v *osView) Close() error {
 }
 
 func ValidateInspectRoot(root string) error {
-	return validateRoot(root)
+	return validateRootMode(root, false)
 }
 
-func validateRoot(root string) error {
+func ValidateLiveRoot(root string) error {
+	return validateRootMode(root, true)
+}
+
+func validateRootMode(root string, live bool) error {
 	if root == "" {
 		return errors.New("collector root is required")
 	}
@@ -86,11 +90,17 @@ func validateRoot(root string) error {
 		return errors.New("collector root must be an absolute path")
 	}
 	clean := filepath.Clean(root)
-	if clean == "/" {
-		return errors.New("live root filesystem collection is not enabled")
-	}
 	if strings.Contains(clean, "\x00") {
 		return errors.New("collector root is invalid")
+	}
+	if clean == "/" {
+		if live {
+			return nil
+		}
+		return errors.New("live root filesystem collection is not enabled")
+	}
+	if live {
+		return errors.New("live collection only accepts the local root filesystem")
 	}
 	return nil
 }

@@ -28,7 +28,7 @@
   "meta": {
     "hostsec_id": "HOSTSEC-40",
     "phase": "WP4",
-    "delivery_status": "PARTIAL",
+    "delivery_status": "IMPLEMENTED",
     "depends_on": [
       "HOSTSEC-04"
     ],
@@ -36,7 +36,8 @@
       "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
       "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
       "backend/internal/tools/executor.go",
-      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+      "docs/05-testing/evidence/hostsec-wp5-2026-11-21-box-lab/TASK-MATRIX.md"
     ],
     "layout_adr": "ADR-008"
   }

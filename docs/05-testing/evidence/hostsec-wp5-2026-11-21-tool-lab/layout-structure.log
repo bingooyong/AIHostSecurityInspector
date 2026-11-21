@@ -1,0 +1,7 @@
+cwd=.
+$ python3 scripts/check_layout.py --structure-only
+exit=0
+stdout:
+PASS: 178 Go source files isolated in backend; root has no Go module/workspace
+
+stderr:

@@ -2,8 +2,10 @@
 from pathlib import Path
 from copy import deepcopy
 import json
+import signal
 import subprocess
 import tempfile
+import time
 from jsonschema import Draft202012Validator, FormatChecker
 
 root = Path(__file__).resolve().parents[1]
@@ -53,6 +55,10 @@ for profile in ('quick','standard','deep','incident-response'):
 doctor=json.loads(run(['doctor','--json'],1).stdout)
 validate('doctor-v1.schema.json',doctor)
 assert not doctor['collector_available'] and not doctor['scan_ready']
+policy=json.loads((root/'policies/builtin-v1.json').read_text())
+validate('policy-v1.schema.json',policy)
+assert policy['mode']=='READ_ONLY' and policy['policy_id']=='hostsec-builtin'
+assert {p['name'] for p in policy['profiles']}=={'quick','standard','deep','incident-response'}
 for args in (
     ['scan','--host','linux-test-001'],['mcp','serve'],['version','--exec','CANARY_SECRET'],
     ['plan','--file','examples/hosts.yaml','--targets','group:mixed','--dry-run','--json'],
@@ -93,4 +99,44 @@ Draft202012Validator(json.loads((root/'schemas/execution-intent-v1.schema.json')
 assert intent['intent']['mode']=='READ_ONLY'
 preflight=json.loads(run(['preflight','--file','examples/hosts.yaml','--intent-file',str(Path(tempfile.mkdtemp())/'missing.json')],2).stderr)
 assert preflight['code'] in ('INVALID_ARGUMENT','PREFLIGHT_REJECTED')
-print(f'PASS: {count} real CLI processes; asset/plan/doctor/intent schemas; authorization, profile, injection, and JSON rejection')
+
+def wait_exit(proc, timeout=8):
+    try:
+        return proc.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        proc.wait(timeout=5)
+        raise AssertionError("CLI did not exit after signal or deadline")
+
+# OS signal wiring is in cmd/hostsec. A loopback API process is a real blocked command.
+for sig in (signal.SIGINT, signal.SIGTERM):
+    proc = subprocess.Popen(
+        [str(binary), "api", "--file", "examples/hosts.yaml", "--identities", "examples/identities.json", "--listen", "127.0.0.1:0"],
+        cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    )
+    time.sleep(0.4)
+    if proc.poll() is not None:
+        out, err = proc.communicate()
+        raise AssertionError(("api exited before signal", proc.returncode, out, err))
+    proc.send_signal(sig)
+    code = wait_exit(proc)
+    out, err = proc.communicate()
+    assert code == 1, (sig, code, out, err)
+    payload = json.loads(err)
+    assert payload["code"] == "CANCELLED", (sig, payload)
+    assert out == "", (sig, out)
+    count += 1
+
+# Deadline on the same blocked command must not report success.
+proc = subprocess.Popen(
+    [str(binary), "api", "--file", "examples/hosts.yaml", "--identities", "examples/identities.json", "--listen", "127.0.0.1:0", "--timeout-seconds", "1"],
+    cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+)
+code = wait_exit(proc, timeout=6)
+out, err = proc.communicate()
+assert code == 1, (code, out, err)
+assert json.loads(err)["code"] == "CANCELLED"
+assert out == ""
+count += 1
+
+print(f'PASS: {count} real CLI processes; asset/plan/doctor/intent schemas; authorization, profile, injection, JSON rejection, and signal/timeout cancellation')

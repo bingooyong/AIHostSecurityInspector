@@ -1,0 +1,10 @@
+cwd=frontend
+$ npm run lint
+exit=0
+stdout:
+
+> hostsec-frontend@0.1.0-dev lint
+> eslint src tests
+
+
+stderr:

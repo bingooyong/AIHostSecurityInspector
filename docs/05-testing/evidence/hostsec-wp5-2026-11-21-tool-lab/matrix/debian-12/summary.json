@@ -1,0 +1,31 @@
+{
+  "os": "debian-12",
+  "content": "/usr/share/xml/scap/ssg/content/ssg-debian12-ds.xml",
+  "rule_id": "xccdf_org.ssgproject.content_rule_prefer_64bit_os",
+  "rule_title": "Prefer to use a 64-bit Operating System when supported",
+  "rule_result": "pass",
+  "exit_code": 0,
+  "fetch_or_remediate_passed": false,
+  "stderr_warnings": [
+    "WARNING: Datastream component 'scap_org.open-scap_cref_security-oval-oval-definitions-bookworm.xml.bz2' points out to the remote 'https://www.debian.org/security/oval/oval-definitions-bookworm.xml.bz2'. Use '--fetch-remote-resources' option to download it.",
+    "WARNING: Skipping 'https://www.debian.org/security/oval/oval-definitions-bookworm.xml.bz2' file which is referenced from datastream",
+    "WARNING: Skipping ./security-oval-oval-definitions-bookworm.xml.bz2 file which is referenced from XCCDF content",
+    "OpenSCAP Error: Unable to open file: '/usr/share/openscap/cpe/openscap-cpe-dict.xml' [./src/source/oscap_source.c:298]"
+  ],
+  "before": {
+    "os_release_id": "debian",
+    "os_release_version_id": "12",
+    "etc_file_count": 171,
+    "usr_bin_exists": true
+  },
+  "after": {
+    "os_release_id": "debian",
+    "os_release_version_id": "12",
+    "etc_file_count": 171,
+    "usr_bin_exists": true
+  },
+  "chroot_paths_changed": false,
+  "results_xml_kept": false,
+  "results_xml_sha256": "8c2c8b451481f9198c0654d039e08a1184b66a52f531e8e0bc07f9090ce5ed0e",
+  "results_xml_bytes": 6658129
+}

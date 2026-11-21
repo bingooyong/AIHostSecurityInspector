@@ -45,7 +45,7 @@ func Open(ctx context.Context, path string) (*DB, error) {
 	if err := os.Chmod(filepath.Dir(path), 0o700); err != nil && !errors.Is(err, os.ErrPermission) {
 		return nil, classifyIO(err)
 	}
-	handle, err := sql.Open(driverName, fmt.Sprintf("file:%s?_pragma=busy_timeout(%d)&_pragma=foreign_keys(1)", filepath.ToSlash(path), busyTimeout))
+	handle, err := sql.Open(driverName, fmt.Sprintf("file:%s?_pragma=busy_timeout(%d)&_pragma=foreign_keys(1)&_pragma=journal_mode(WAL)&_pragma=synchronous(FULL)", filepath.ToSlash(path), busyTimeout))
 	if err != nil {
 		return nil, err
 	}

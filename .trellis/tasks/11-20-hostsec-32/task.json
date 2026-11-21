@@ -39,7 +39,8 @@
       "backend/internal/approval/workflow.go",
       "backend/internal/approval/workflow_test.go",
       "backend/internal/planner/consume_test.go",
-      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json",
+      "docs/05-testing/evidence/hostsec-wp5-2026-11-21-box-lab/TASK-MATRIX.md"
     ],
     "layout_adr": "ADR-008"
   }

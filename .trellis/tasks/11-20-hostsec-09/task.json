@@ -27,13 +27,14 @@
   "meta": {
     "hostsec_id": "HOSTSEC-09",
     "phase": "WP2",
-    "delivery_status": "PARTIAL",
+    "delivery_status": "IMPLEMENTED",
     "depends_on": [
       "HOSTSEC-08"
     ],
     "completion_evidence": [
       "backend/internal/collector/linux/process.go",
-      "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json"
+      "docs/05-testing/evidence/hostsec-wp2-2026-11-21/results.json",
+      "docs/05-testing/evidence/hostsec-wp5-2026-11-21-box-lab/TASK-MATRIX.md"
     ],
     "layout_adr": "ADR-008"
   }

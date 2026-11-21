@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "scan_id": "scan-lab-001",
+  "host_id": "linux-box-lab-001",
+  "profile": "standard",
+  "integrity": {
+    "ok": true,
+    "integrity": "verified",
+    "source_authenticity": "unverified",
+    "mismatches": [],
+    "missing": [],
+    "extra": []
+  },
+  "coverage": {
+    "evidence": 11,
+    "fail": 0,
+    "findings": 0,
+    "not_applicable": 0,
+    "pass": 0,
+    "unknown": 9
+  },
+  "rule_results": [
+    {
+      "rule_id": "PROC-001",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "evidence-process-inventory"
+      ],
+      "missing_evidence": [],
+      "reason_code": "evidence_unusable",
+      "baseline_ref": null
+    },
+    {
+      "rule_id": "PROC-002",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "evidence-process-inventory"
+      ],
+      "missing_evidence": [],
+      "reason_code": "evidence_unusable",
+      "baseline_ref": null
+    },
+    {
+      "rule_id": "NET-001",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "evidence-network-inventory"
+      ],
+      "missing_evidence": [],
+      "reason_code": "partial_not_enough_for_fail",
+      "baseline_ref": null
+    },
+    {
+      "rule_id": "IAM-001",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "evidence-account-inventory"
+      ],
+      "missing_evidence": [],
+      "reason_code": "partial_not_enough_for_fail",
+      "baseline_ref": null
+    },
+    {
+      "rule_id": "PERS-001",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "evidence-service-inventory"
+      ],
+      "missing_evidence": [],
+      "reason_code": "partial_not_enough_for_fail",
+      "baseline_ref": null
+    },
+    {
+      "rule_id": "PERS-002",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "evidence-persistence-inventory"
+      ],
+      "missing_evidence": [],
+      "reason_code": "evidence_unusable",
+      "baseline_ref": null
+    },
+    {
+      "rule_id": "IAM-003",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "evidence-account-inventory"
+      ],
+      "missing_evidence": [],
+      "reason_code": "evidence_unusable",
+      "baseline_ref": null
+    },
+    {
+      "rule_id": "MAL-005",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [],
+      "missing_evidence": [
+        "trusted_baseline"
+      ],
+      "reason_code": "missing_trusted_baseline",
+      "baseline_ref": null
+    },
+    {
+      "rule_id": "CFG-001",
+      "rule_version": "1.0",
+      "scan_id": "scan-lab-001",
+      "host_id": "linux-box-lab-001",
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "evidence-security-config"
+      ],
+      "missing_evidence": [],
+      "reason_code": "evidence_unusable",
+      "baseline_ref": null
+    }
+  ],
+  "findings": [],
+  "limitations": [
+    "lab collection on an authorized loopback host only",
+    "not enterprise host scanning",
+    "doctor collector_available and scan_ready remain false",
+    "local identity or local CA is not a platform IdP or production mTLS",
+    "SSH transport was not used; collection was local filesystem"
+  ]
+}

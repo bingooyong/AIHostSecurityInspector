@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ "$1" = "--version" ]; then
+  echo "osqueryi version 5.24.1"
+  exit 0
+fi
+echo 'this is not json'
+exit 0

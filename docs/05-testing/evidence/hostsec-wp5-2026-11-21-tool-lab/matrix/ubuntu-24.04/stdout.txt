@@ -1,0 +1,9 @@
+--- Starting Evaluation ---
+
+Title
+	Package "prelink" Must not be Installed
+Rule
+	xccdf_org.ssgproject.content_rule_package_prelink_removed
+Result
+	pass
+

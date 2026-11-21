@@ -23,6 +23,7 @@ type Persistence struct {
 	Root string
 	Now  func() time.Time
 	view fileView
+	Live bool
 }
 
 type serviceInventory struct {
@@ -87,7 +88,7 @@ func (p Persistence) Collect(ctx context.Context, req collector.Request) (collec
 		ctx, cancel = context.WithTimeout(ctx, req.Limits.Timeout)
 		defer cancel()
 	}
-	if err := validateRoot(p.Root); err != nil {
+	if err := validateRootMode(p.Root, p.Live); err != nil {
 		result.Warnings = append(result.Warnings, "collector_root_rejected")
 		return system.finish(result, started, domain.CollectionNotAvailable, "ROOT_REJECTED"), nil
 	}

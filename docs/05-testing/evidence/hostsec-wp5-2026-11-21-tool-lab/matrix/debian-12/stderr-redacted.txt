@@ -1,0 +1,5 @@
+WARNING: Datastream component 'scap_org.open-scap_cref_security-oval-oval-definitions-bookworm.xml.bz2' points out to the remote 'https://www.debian.org/security/oval/oval-definitions-bookworm.xml.bz2'. Use '--fetch-remote-resources' option to download it.
+WARNING: Skipping 'https://www.debian.org/security/oval/oval-definitions-bookworm.xml.bz2' file which is referenced from datastream
+WARNING: Skipping ./security-oval-oval-definitions-bookworm.xml.bz2 file which is referenced from XCCDF content
+OpenSCAP Error: Unable to open file: '/usr/share/openscap/cpe/openscap-cpe-dict.xml' [./src/source/oscap_source.c:298]
+Failed to add default CPE to newly created CPE Session. [./src/CPE/cpe_session.c:58]

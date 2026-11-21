@@ -1,0 +1,64 @@
+date_taipei=2026-11-21 20:55:18 CST
+uname_arch=x86_64
+os_release_id=debian
+os_release_version=13
+clamav	1.4.6+dfsg-1~deb13u1	amd64
+clamav-base	1.4.6+dfsg-1~deb13u1	all
+clamav-freshclam	1.4.6+dfsg-1~deb13u1	amd64
+libclamav12	1.4.6+dfsg-1~deb13u1	amd64
+libopenscap33	1.4.2+dfsg-1	amd64
+libyara10	4.5.2-1	amd64
+lynis	3.1.4-1	all
+mmdebstrap	1.5.7-1+deb13u1	all
+openscap-common	1.4.2+dfsg-1	all
+openscap-scanner	1.4.2+dfsg-1	amd64
+openscap-utils	1.4.2+dfsg-1	all
+osquery	5.24.1-1.linux	amd64
+ssg-base	0.1.76-1	all
+ssg-debderived	0.1.76-1	all
+ssg-debian	0.1.76-1	all
+ssg-nondebian	0.1.76-1	all
+ubuntu-keyring	2023.11.28.1-0.2	all
+yara	4.5.2-1	amd64
+--- osqueryi ---
+osqueryi version 5.24.1
+--- lynis ---
+3.1.4
+--- oscap ---
+OpenSCAP command line tool (oscap) 1.4.2
+Copyright 2009--2023 Red Hat Inc., Durham, North Carolina.
+
+==== Supported specifications ====
+SCAP Version: 1.3
+XCCDF Version: 1.2
+OVAL Version: 5.11.1
+CPE Version: 2.3
+--- clamscan ---
+ClamAV 1.4.6/28190/Sat Nov 21 14:27:04 2026
+--- yara ---
+4.5.2
+--- cvd ---
+== bytecode.cvd ==
+File: /var/lib/clamav/bytecode.cvd
+Build time: 11 Sep 2025 08:29 -0400
+Version: 339
+Signatures: 80
+Functionality level: 90
+Builder: nrandolp
+Verification OK.
+== daily.cvd ==
+File: /var/lib/clamav/daily.cvd
+Build time: 21 Nov 2026 06:27 +0000
+Version: 28190
+Signatures: 355845
+Functionality level: 90
+Builder: svc.clamav-publisher
+Verification OK.
+== main.cvd ==
+File: /var/lib/clamav/main.cvd
+Build time: 16 Dec 2025 23:18 +0000
+Version: 63
+Signatures: 3287027
+Functionality level: 90
+Builder: tomjudge
+Verification OK.

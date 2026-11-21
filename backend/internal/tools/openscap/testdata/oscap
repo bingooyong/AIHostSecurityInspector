@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ "$1" = "--version" ]; then echo "OpenSCAP 1.4.2"; exit 0; fi
+for arg in "$@"; do
+  if [ "$arg" = "remediate" ] || [ "$arg" = "--remediate" ] || [ "$arg" = "--fetch-remote-resources" ]; then
+    echo "forbidden arg" >&2
+    exit 2
+  fi
+done
+echo "oscap fixture eval"
+exit 0

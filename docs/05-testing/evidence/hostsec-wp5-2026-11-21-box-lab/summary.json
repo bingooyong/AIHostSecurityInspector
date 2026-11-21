@@ -1,0 +1,43 @@
+{
+  "collected_at_taipei_note": "timestamps in JSON are UTC; Asia/Taipei is UTC+8",
+  "os": {
+    "architecture": "x86_64",
+    "boot_id_digest": "6fc33377d791c9ce4d3d8ed8d08bd5e43f42029f90afe279b4c426d56c7de140",
+    "boot_time": "2026-11-21T04:42:16Z",
+    "container_signals": [],
+    "cpu_count": 8,
+    "cpu_model": "Intel(R) Xeon(R) Processor",
+    "disks": [
+      {
+        "blocks": 134217728,
+        "name": "vda"
+      },
+      {
+        "blocks": 134217728,
+        "name": "vdb"
+      }
+    ],
+    "distribution": "Debian GNU/Linux",
+    "hostname": "grok-bot-vm-187739891",
+    "identity_fingerprint": "5c6ef501b04fdc55d6ee31a6a91ea4a3bc472510099636e7f233b19831ce11dd",
+    "kernel": "6.12.113+",
+    "kernel_build": "#1 SMP PREEMPT_DYNAMIC Mon Nov 16 16:06:22 UTC 2026",
+    "machine_id_digest": "39870a3b221ea9598483dd93f17ab3f875fd961d6fafcba8be8b6141cca2b9bb",
+    "memory_kb": 16386416,
+    "os": "debian",
+    "os_version": "13",
+    "unknown_fields": [],
+    "version_codename": "trixie",
+    "view": "host"
+  },
+  "local_job_status": "PARTIAL",
+  "ssh_job_status": "PARTIAL",
+  "doctor_collector_available": false,
+  "listen_127_0_0_1_2222": true,
+  "packages_installed_for_lab": {
+    "openssh-server": "installed, system service not started",
+    "make": "installed",
+    "osquery": "not in Debian trixie",
+    "lynis": "available in Debian but not installed this round"
+  }
+}

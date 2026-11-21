@@ -1,0 +1,60 @@
+# Authorized loopback lab target only. This file never names a public or enterprise host.
+version: 1
+hosts:
+  - host_id: linux-box-lab-001
+    hostname: linux-box-lab-001
+    addresses: [127.0.0.1]
+    platform: linux
+    architecture: x86_64
+    zone: test-zone-a
+    environment: TEST
+    business_system: demo
+    owner: team-demo
+    criticality: medium
+    authorized: true
+    allowed_profiles: [quick, standard]
+    labels: [lab, loopback]
+    connection:
+      transport: local
+      host_key_policy: strict
+  - host_id: linux-box-lab-denied
+    hostname: linux-box-lab-denied
+    addresses: [127.0.0.1]
+    platform: linux
+    architecture: x86_64
+    zone: test-zone-a
+    environment: TEST
+    business_system: demo
+    owner: team-demo
+    criticality: medium
+    authorized: false
+    allowed_profiles: [quick]
+    labels: [lab]
+    connection:
+      transport: local
+      host_key_policy: strict
+  - host_id: linux-box-lab-ssh-001
+    hostname: linux-box-lab-ssh-001
+    addresses: [127.0.0.1]
+    platform: linux
+    architecture: x86_64
+    zone: test-zone-a
+    environment: TEST
+    business_system: demo
+    owner: team-demo
+    criticality: medium
+    authorized: true
+    allowed_profiles: [quick, standard]
+    labels: [lab, loopback, ssh]
+    connection:
+      transport: ssh
+      port: 2222
+      user: hostsec-lab
+      auth_ref: lab-identity:box
+      known_hosts_ref: lab-known-hosts:box
+      host_key_policy: strict
+groups:
+  lab:
+    hosts: [linux-box-lab-001]
+  lab-ssh:
+    hosts: [linux-box-lab-ssh-001]

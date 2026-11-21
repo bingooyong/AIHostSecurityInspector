@@ -1,0 +1,31 @@
+#!/bin/sh
+if [ "$1" = "--version" ]; then
+  echo "YARA 4.5.0"
+  exit 0
+fi
+rule_file=""
+file=""
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --timeout|--max-size)
+      shift 2
+      ;;
+    -*)
+      shift
+      ;;
+    *)
+      if [ -z "$rule_file" ]; then
+        rule_file=$1
+      else
+        file=$1
+      fi
+      shift
+      ;;
+  esac
+done
+if [ -n "$file" ] && grep -q 'harmless_marker' "$file" 2>/dev/null; then
+  echo "harmless_rule $file"
+  exit 0
+fi
+echo "no match"
+exit 0

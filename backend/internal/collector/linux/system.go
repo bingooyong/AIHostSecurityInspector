@@ -26,6 +26,7 @@ type System struct {
 	Root string
 	Now  func() time.Time
 	view fileView
+	Live bool
 }
 
 type identityRecord struct {
@@ -90,7 +91,7 @@ func (s System) Collect(ctx context.Context, req collector.Request) (collector.R
 		ctx, cancel = context.WithTimeout(ctx, req.Limits.Timeout)
 		defer cancel()
 	}
-	if err := validateRoot(s.Root); err != nil {
+	if err := validateRootMode(s.Root, s.Live); err != nil {
 		result.Warnings = append(result.Warnings, "collector_root_rejected")
 		return s.finish(result, started, domain.CollectionNotAvailable, "ROOT_REJECTED"), nil
 	}

@@ -57,7 +57,22 @@ func main() {
 
 func allowlistedImport(path, name string) bool {
 	slash := filepath.ToSlash(path)
-	return name == "net/http" && strings.HasPrefix(slash, "internal/api/")
+	if name == "net/http" && strings.HasPrefix(slash, "internal/api/") {
+		return true
+	}
+	if (name == "net" || name == "golang.org/x/crypto/ssh") && strings.HasPrefix(slash, "internal/transport/ssh/") {
+		return true
+	}
+	if name == "net" && strings.HasPrefix(slash, "internal/transport/mtls/") {
+		return true
+	}
+	if name == "os/exec" && strings.HasPrefix(slash, "internal/tools/") {
+		return true
+	}
+	if name == "net/http" && strings.HasPrefix(slash, "internal/analyzer/provider/") {
+		return true
+	}
+	return false
 }
 
 func collectorForbidden(name string) bool {
