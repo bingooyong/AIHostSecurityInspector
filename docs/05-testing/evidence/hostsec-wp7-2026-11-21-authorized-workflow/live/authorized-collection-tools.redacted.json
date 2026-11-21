@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "profile": "quick",
+  "job_status": "PARTIAL",
+  "job_status_reason": "allowlisted lab hosts collected=2 complete=0 incomplete=2 failed=0 cancelled=0; not a production completed scan",
+  "host_summaries": [
+    {
+      "host_id": "linux-box-lab-ssh-001",
+      "job_status": "PARTIAL",
+      "job_status_reason": "lab collection incomplete (success=1 partial=6 failed=0 timeout=0 cancelled=0); not a production completed scan",
+      "modules_success": 1,
+      "modules_partial": 6,
+      "modules_failed": 0,
+      "modules_timeout": 0,
+      "modules_cancelled": 0,
+      "integrity_ok": true,
+      "tool_reports": 0,
+      "collector_available": false,
+      "scan_ready": false,
+      "execution_ready": false,
+      "collected": true,
+      "has_report": true
+    },
+    {
+      "host_id": "linux-box-lab-ssh-002",
+      "job_status": "PARTIAL",
+      "job_status_reason": "lab collection incomplete (success=1 partial=6 failed=0 timeout=0 cancelled=0); not a production completed scan",
+      "modules_success": 1,
+      "modules_partial": 6,
+      "modules_failed": 0,
+      "modules_timeout": 0,
+      "modules_cancelled": 0,
+      "integrity_ok": true,
+      "tool_reports": 0,
+      "collector_available": false,
+      "scan_ready": false,
+      "execution_ready": false,
+      "collected": true,
+      "has_report": true
+    }
+  ],
+  "tool_reports": [
+    {
+      "name": "clamav",
+      "result": {
+        "tool": "clamav",
+        "status": "success",
+        "warning": "",
+        "findings": 0,
+        "notes": [
+          "version: ClamAV 1.4.6/28190/Sat Nov 21 14:27:04 2026",
+          "exit_code: 0",
+          "readonly allowlisted execution completed"
+        ]
+      }
+    },
+    {
+      "name": "lynis",
+      "result": {
+        "tool": "lynis",
+        "status": "not_available",
+        "warning": "tool_not_installed",
+        "findings": 0,
+        "notes": [
+          "approved tool binary was not found",
+          "missing tool cannot be reported as a clean scan"
+        ]
+      }
+    },
+    {
+      "name": "openscap",
+      "result": {
+        "tool": "openscap",
+        "status": "success",
+        "warning": "",
+        "findings": 0,
+        "notes": [
+          "version: OpenSCAP command line tool (oscap) 1.4.2",
+          "exit_code: 0",
+          "readonly allowlisted execution completed"
+        ]
+      }
+    },
+    {
+      "name": "osquery",
+      "result": {
+        "tool": "osquery",
+        "status": "success",
+        "warning": "",
+        "findings": 0,
+        "notes": [
+          "version: osqueryi version 5.24.1",
+          "exit_code: 0",
+          "readonly allowlisted execution completed"
+        ]
+      }
+    },
+    {
+      "name": "yara",
+      "result": {
+        "tool": "yara",
+        "status": "success",
+        "warning": "",
+        "findings": 0,
+        "notes": [
+          "version: 4.5.2",
+          "exit_code: 0",
+          "readonly allowlisted execution completed"
+        ]
+      }
+    }
+  ],
+  "collector_available": false,
+  "scan_ready": false,
+  "execution_ready": false,
+  "limitations": [
+    "authorized collection of explicitly allowlisted loopback lab hosts only",
+    "not a general intranet scanner and not enterprise host scanning",
+    "inventory authorization is not enough without a matching allowlist and intent",
+    "doctor collector_available and scan_ready remain false",
+    "local identity or local CA is not a platform IdP",
+    "a fully successful lab collection stays PARTIAL and is not a production completed scan",
+    "an intent-ledger, when provided, is consumed after a successful prepare and cannot be replayed",
+    "official tool adapters run on this lab control host only when HOSTSEC_LIVE_TOOLS=1 and are not remote SSH tool execution",
+    "official tool adapters ran on the lab control host under HOSTSEC_LIVE_TOOLS; this is not remote tool execution on each SSH stand-in"
+  ],
+  "intent_hash_prefix": "511fb767975d"
+}

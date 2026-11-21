@@ -164,6 +164,29 @@ func TestInspectAuthorizedCLIRejectsDocumentationHost(t *testing.T) {
 	}
 }
 
+func TestInspectAuthorizedCLIRefusesNonLoopbackWithSpecificMessage(t *testing.T) {
+	dir := t.TempDir()
+	allowlist := dir + "/allowlist.yaml"
+	if err := osWrite(allowlist, "version: 1\nprofile: quick\nhosts:\n  - linux-test-001\n"); err != nil {
+		t.Fatal(err)
+	}
+	intentPath := dir + "/intent.json"
+	code, out, err := call("intent", "--file", "../../../examples/hosts.yaml", "--host", "linux-test-001", "--profile", "quick", "--requester", "operator-alice", "--valid-from", "2026-11-21T00:00:00Z", "--valid-until", "2026-11-21T04:00:00Z")
+	if code != 0 || err != "" || !strings.Contains(out, "intent_hash") {
+		t.Fatalf("intent failed %d %s %s", code, out, err)
+	}
+	if err := osWrite(intentPath, out); err != nil {
+		t.Fatal(err)
+	}
+	code, out, err = call("inspect-authorized", "--file", "../../../examples/hosts.yaml", "--allowlist", allowlist, "--intent-file", intentPath, "--out", dir+"/out", "--profile", "quick")
+	if code == 0 || out != "" || !json.Valid([]byte(err)) {
+		t.Fatalf("documentation/intranet host accepted %d %s %s", code, out, err)
+	}
+	if !strings.Contains(err, "loopback lab targets only") {
+		t.Fatalf("expected loopback refusal, got %s", err)
+	}
+}
+
 func TestInspectAuthorizedCLIRequiresAllowlistAndIntent(t *testing.T) {
 	code, out, err := call("inspect-authorized", "--file", "../../../examples/lab-localhost.yaml", "--out", t.TempDir())
 	if code == 0 || out != "" || !json.Valid([]byte(err)) {
@@ -175,6 +198,9 @@ func TestHelpMentionsAuthorizedCollectionNotIntranetScanner(t *testing.T) {
 	code, out, _ := call("--help")
 	if code != 0 || !strings.Contains(out, "authorized collection") || !strings.Contains(out, "not a general intranet scanner") || !strings.Contains(out, "offline") {
 		t.Fatalf("help does not keep the authorized-collection distinction: %s", out)
+	}
+	if !strings.Contains(out, "intent-ledger") || !strings.Contains(out, "authorized-collection.json") {
+		t.Fatalf("help does not describe the authorized collection report and intent ledger: %s", out)
 	}
 	if strings.Contains(out, "hostsec scan ") && !strings.Contains(out, "scan remains unsupported") {
 		t.Fatal("help must not present scan as an available command")

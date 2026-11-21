@@ -22,7 +22,7 @@ make build
 ./build/hostsec api --listen 127.0.0.1:18080 --file examples/hosts.yaml --identities examples/identities.json
 ```
 
-`doctor` 明确 Collector 未实现、scan_ready=false，并退出1；这不是扫描失败假绿。四种Profile均为离线描述，plan始终execution_ready=false、limits.enforced=false。deep/IR展示审批要求；本地审批工作流仍不是平台审批。样例只含文档地址，不连接目标。`scan` 与 `mcp serve` 仍被拒绝。`inspect-authorized` 只采集操作者在本轮 allowlist 中明确点名、并与执行意图绑定的主机；本发行版这些目标必须是 loopback 实验室监听或本机实验室文件系统，不能用来扫描内网地址。`mcp stdio` 继承 `--principal`，请求 JSON 不能自报角色。API 只绑定 loopback，身份来自 `X-HostSec-Principal` 且必须存在于本地 identities。
+`doctor` 明确 Collector 未实现、scan_ready=false，并退出1；这不是扫描失败假绿。四种Profile均为离线描述，plan始终execution_ready=false、limits.enforced=false。deep/IR展示审批要求；本地审批工作流仍不是平台审批。样例只含文档地址，不连接目标。`scan` 与 `mcp serve` 仍被拒绝。`inspect-authorized` 只采集操作者在本轮 allowlist 中明确点名、并与执行意图绑定的主机；本发行版这些目标必须是 loopback 实验室监听或本机实验室文件系统，不能用来扫描内网地址。实验室采集即使模块全部成功也保持 PARTIAL，并在 `--out/authorized-collection.json` 写出聚合摘要；`--intent-ledger` 可在成功 prepare 后消费意图哈希以拒绝重放。`mcp stdio` 继承 `--principal`，请求 JSON 不能自报角色。API 只绑定 loopback，身份来自 `X-HostSec-Principal` 且必须存在于本地 identities。
 
 资产支持严格单文档YAML/JSON，最大1MiB/1000主机；显式授权、Profile白名单、稳定且非IP的host_id、strict host key与认证引用。未知/重复/空值/别名/多文档/非普通文件会被拒绝。分组混合未授权主机会整体拒绝。原V1示例含未实现字段，故当前可运行严格样例位于examples/hosts.yaml；不静默忽略来源字段。空授权列表可展示，空目标不可计划。
 
