@@ -1,0 +1,112 @@
+{
+  "tests": [
+    {
+      "Time": "2026-11-21T20:55:34.225319223+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/openscap",
+      "Test": "TestLiveOpenSCAPRefusesMismatchedHostContent",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-11-21T20:55:34.225393781+08:00",
+      "Action": "skip",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/openscap",
+      "Test": "TestLiveOpenSCAPChrootMatrix",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-11-21T20:55:34.22701238+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/openscap",
+      "Test": "TestOpenSCAPRejectsMismatchedContentAndRemediate",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-11-21T20:55:34.227380126+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/openscap",
+      "Elapsed": 0.005
+    },
+    {
+      "Time": "2026-11-21T20:55:34.230149762+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/clamav",
+      "Test": "TestClamAVEICARAndGuards",
+      "Elapsed": 0.01
+    },
+    {
+      "Time": "2026-11-21T20:55:34.243785058+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/yara",
+      "Test": "TestLiveYARAReviewedPackScopeAndTimeout",
+      "Elapsed": 0.02
+    },
+    {
+      "Time": "2026-11-21T20:55:34.248548667+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/yara",
+      "Test": "TestYARAReviewedRulesScopeAndTimeout",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-11-21T20:55:34.24900134+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/yara",
+      "Elapsed": 0.027
+    },
+    {
+      "Time": "2026-11-21T20:55:34.493973675+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/osquery",
+      "Test": "TestLiveOsqueryFixedQueries",
+      "Elapsed": 0.27
+    },
+    {
+      "Time": "2026-11-21T20:55:34.70066338+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/osquery",
+      "Test": "TestOsqueryFixedQueryAndGuards",
+      "Elapsed": 0.21
+    },
+    {
+      "Time": "2026-11-21T20:55:34.701253911+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/osquery",
+      "Elapsed": 0.482
+    },
+    {
+      "Time": "2026-11-21T20:55:49.598293625+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/lynis",
+      "Test": "TestLiveLynisControlledReportDir",
+      "Elapsed": 15.38
+    },
+    {
+      "Time": "2026-11-21T20:55:49.601226258+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/lynis",
+      "Test": "TestLynisWritesOnlyControlledReportDirAndMissingTool",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-11-21T20:55:49.602394658+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/lynis",
+      "Elapsed": 15.383
+    },
+    {
+      "Time": "2026-11-21T20:55:50.146063394+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/clamav",
+      "Test": "TestLiveClamAVScanApprovedEICAROnly",
+      "Elapsed": 15.92
+    },
+    {
+      "Time": "2026-11-21T20:55:50.146845959+08:00",
+      "Action": "pass",
+      "Package": "github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/clamav",
+      "Elapsed": 15.925
+    }
+  ],
+  "failed": []
+}

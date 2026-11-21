@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -17,6 +18,7 @@ var ErrReportDir = errors.New("lynis report directory is not controlled")
 type Request struct {
 	ReportDir     string
 	ApprovedItems []string
+	ProfilePath   string
 	Timeout       time.Duration
 	LookPath      func(string) (string, error)
 	Binary        string
@@ -47,7 +49,16 @@ func Run(ctx context.Context, req Request) (Result, error) {
 	if binary == "" {
 		binary = "lynis"
 	}
-	args := []string{"audit", "system", "--quick", "--no-log", "--report-dir", abs}
+	reportPath := filepath.Join(abs, "lynis-report.dat")
+	logPath := filepath.Join(abs, "lynis.log")
+	args := []string{
+		"audit", "system", "--quick", "--no-colors", "--no-plugins",
+		"--report-file", reportPath,
+		"--logfile", logPath,
+	}
+	if req.ProfilePath != "" {
+		args = append(args, "--profile", req.ProfilePath)
+	}
 	if len(req.ApprovedItems) > 0 {
 		args = append(args, "--tests", strings.Join(req.ApprovedItems, ","))
 	}
@@ -55,8 +66,12 @@ func Run(ctx context.Context, req Request) (Result, error) {
 	if timeout <= 0 {
 		timeout = 5 * time.Second
 	}
+	look := req.LookPath
+	if look == nil {
+		look = tools.LookPathWithFallbacks(nil, []string{"/usr/sbin/lynis", "/usr/bin/lynis"})
+	}
 	runner := tools.Runner{
-		LookPath: req.LookPath,
+		LookPath: look,
 		Specs: map[string]tools.Spec{
 			tools.ToolLynis: {Name: tools.ToolLynis, Binary: binary, Args: args, VersionArgs: []string{"--version"}, Timeout: timeout, MaxOutput: 1 << 20},
 		},
@@ -72,8 +87,10 @@ func Run(ctx context.Context, req Request) (Result, error) {
 	effects := diff(before, after)
 	out := Result{Result: base, SideEffects: effects}
 	if len(effects) > 0 {
-		out.Notes = append(out.Notes, "lynis wrote files in the controlled report directory")
-		out.ReportPath = filepath.Join(abs, "lynis-report.dat")
+		out.Notes = append(out.Notes, "lynis wrote files in the controlled report directory: "+strings.Join(effects, ", "))
+		if _, statErr := os.Stat(reportPath); statErr == nil {
+			out.ReportPath = reportPath
+		}
 	}
 	if out.Status == domain.CollectionSuccess && len(effects) == 0 {
 		out.Notes = append(out.Notes, "no report side effects were observed")
@@ -104,5 +121,6 @@ func diff(before, after map[string]os.FileInfo) []string {
 			out = append(out, name)
 		}
 	}
+	sort.Strings(out)
 	return out
 }

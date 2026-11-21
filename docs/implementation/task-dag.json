@@ -962,7 +962,12 @@
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/adapter/adapter.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/TASK-MATRIX.md",
+        "backend/internal/tools/osquery/osquery.go",
+        "backend/internal/tools/osquery/osquery_test.go",
+        "backend/internal/tools/osquery/live_test.go",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/live-tests.redacted.json"
       ]
     },
     {
@@ -1004,7 +1009,12 @@
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/adapter/adapter.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/TASK-MATRIX.md",
+        "backend/internal/tools/lynis/lynis.go",
+        "backend/internal/tools/lynis/lynis_test.go",
+        "backend/internal/tools/lynis/live_test.go",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/live-tests.redacted.json"
       ]
     },
     {
@@ -1046,7 +1056,12 @@
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/adapter/adapter.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/TASK-MATRIX.md",
+        "backend/internal/tools/openscap/openscap.go",
+        "backend/internal/tools/openscap/openscap_test.go",
+        "backend/internal/tools/openscap/live_test.go",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/matrix/matrix.json"
       ]
     },
     {
@@ -1088,7 +1103,12 @@
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/adapter/adapter.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/TASK-MATRIX.md",
+        "backend/internal/tools/clamav/clamav.go",
+        "backend/internal/tools/clamav/clamav_test.go",
+        "backend/internal/tools/clamav/live_test.go",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/live-tests.redacted.json"
       ]
     },
     {
@@ -1130,7 +1150,13 @@
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
         "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
         "backend/internal/adapter/adapter.go",
-        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json"
+        "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/TASK-MATRIX.md",
+        "backend/internal/tools/yara/yara.go",
+        "backend/internal/tools/yara/yara_test.go",
+        "backend/internal/tools/yara/live_test.go",
+        "backend/internal/tools/yara/rules/hostsec_harmless.yar",
+        "docs/05-testing/evidence/hostsec-wp5-2026-11-21-tool-lab/live-tests.redacted.json"
       ]
     },
     {

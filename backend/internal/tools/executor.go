@@ -26,6 +26,9 @@ type Result struct {
 	Warning  string   `json:"warning"`
 	Findings int      `json:"findings"`
 	Notes    []string `json:"notes"`
+	// Output is bounded stdout for adapters that must parse tool results.
+	// It is omitted from JSON so default reports do not leak host identity.
+	Output string `json:"-"`
 }
 
 var catalog = map[string]bool{

@@ -34,7 +34,7 @@ func DefaultSpecs() map[string]Spec {
 		ToolOsquery:  {Name: ToolOsquery, Binary: "osqueryi", Args: []string{"--version"}, VersionArgs: []string{"--version"}, Timeout: timeout, MaxOutput: maxOut},
 		ToolLynis:    {Name: ToolLynis, Binary: "lynis", Args: []string{"--version"}, VersionArgs: []string{"--version"}, Timeout: timeout, MaxOutput: maxOut},
 		ToolOpenSCAP: {Name: ToolOpenSCAP, Binary: "oscap", Args: []string{"--version"}, VersionArgs: []string{"--version"}, Timeout: timeout, MaxOutput: maxOut},
-		ToolClamAV:   {Name: ToolClamAV, Binary: "clamdscan", Args: []string{"--version"}, VersionArgs: []string{"--version"}, Timeout: timeout, MaxOutput: maxOut},
+		ToolClamAV:   {Name: ToolClamAV, Binary: "clamscan", Args: []string{"--version"}, VersionArgs: []string{"--version"}, Timeout: timeout, MaxOutput: maxOut},
 		ToolYARA:     {Name: ToolYARA, Binary: "yara", Args: []string{"--version"}, VersionArgs: []string{"--version"}, Timeout: timeout, MaxOutput: maxOut},
 	}
 }
@@ -99,7 +99,7 @@ func (r Runner) Run(ctx context.Context, req Request) (Result, error) {
 		maxOut = 1 << 20
 	}
 	stdout, stderr, exitCode, runErr := r.runCmd(runCtx, resolved, append([]string{}, spec.Args...), maxOut)
-	result := Result{Tool: req.Tool, Findings: 0, Notes: []string{}}
+	result := Result{Tool: req.Tool, Findings: 0, Notes: []string{}, Output: stdout}
 	if version != "" {
 		result.Notes = append(result.Notes, "version: "+version)
 	}

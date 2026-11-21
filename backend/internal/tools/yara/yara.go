@@ -5,6 +5,8 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -48,7 +50,12 @@ func Run(ctx context.Context, req Request) (tools.Result, error) {
 	if timeout <= 0 {
 		timeout = 2 * time.Second
 	}
-	args := []string{"--timeout", "1", req.RulePath, abs}
+	seconds := int(timeout.Seconds())
+	if seconds < 1 {
+		seconds = 1
+	}
+	// Official YARA 4.5+ requires --timeout=SECONDS (attached GNU form).
+	args := []string{"--timeout=" + strconv.Itoa(seconds), req.RulePath, abs}
 	runner := tools.Runner{
 		LookPath: req.LookPath,
 		Specs: map[string]tools.Spec{
@@ -85,14 +92,21 @@ func reviewRule(rulePath, reviewedDir string) error {
 	}
 	body := string(payload)
 	lower := strings.ToLower(body)
-	if strings.Contains(lower, "include") || strings.Contains(lower, "import") && strings.Contains(lower, "cuckoo") {
+	// Reject include/import directives, not the words appearing in comments.
+	if includeDirective.MatchString(body) || (strings.Contains(lower, "import") && strings.Contains(lower, "cuckoo") && importDirective.MatchString(body)) {
 		return ErrRule
 	}
-	if strings.Contains(lower, "external") || strings.Contains(body, "extvar") {
+	if externalToken.MatchString(body) {
 		return ErrRule
 	}
 	return nil
 }
+
+var (
+	includeDirective = regexp.MustCompile(`(?im)^\s*include\s+["']|\binclude\s+["']`)
+	importDirective  = regexp.MustCompile(`(?im)^\s*import\s+["']`)
+	externalToken    = regexp.MustCompile(`(?i)\bexternal\b|extvar`)
+)
 
 func allowedTarget(abs string, roots []string) bool {
 	for _, root := range roots {

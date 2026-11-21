@@ -11,7 +11,8 @@ import (
 )
 
 func TestExecutorDoesNotClaimCleanWhenMissing(t *testing.T) {
-	res, err := (Executor{}).Run(context.Background(), Request{Tool: ToolClamAV, HostID: "linux-test-001", ScanID: "scan-fixture-001"})
+	missing := Executor{Runner: &Runner{LookPath: func(string) (string, error) { return "", os.ErrNotExist }, Specs: DefaultSpecs()}}
+	res, err := missing.Run(context.Background(), Request{Tool: ToolClamAV, HostID: "linux-test-001", ScanID: "scan-fixture-001"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,7 +98,7 @@ func TestAdapterWiresRunnerAndStaysHonestWhenMissing(t *testing.T) {
 	if err != nil || res.Status != domain.CollectionSuccess || res.Tool != ToolLynis {
 		t.Fatalf("adapter fixture: %+v %v", res, err)
 	}
-	missing := Adapter{}
+	missing := Adapter{Runner: Runner{LookPath: func(string) (string, error) { return "", os.ErrNotExist }, Specs: DefaultSpecs()}}
 	res, err = missing.ClamAV(context.Background(), Request{HostID: "linux-test-001", ScanID: "scan-fixture-001"})
 	if err != nil || res.Status != domain.CollectionNotAvailable {
 		t.Fatalf("adapter missing: %+v %v", res, err)

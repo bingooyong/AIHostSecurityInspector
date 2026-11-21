@@ -1,14 +1,17 @@
 #!/bin/sh
 if [ "$1" = "--version" ]; then echo "lynis 3.1.4"; exit 0; fi
-# write a report only into the approved report directory argument
-report_dir=""
+# write a report only into the approved report file argument
+report_file=""
 while [ "$#" -gt 0 ]; do
   case "$1" in
-    --report-dir) report_dir=$2; shift 2 ;;
+    --report-file) report_file=$2; shift 2 ;;
+    --logfile|--log-file) shift 2 ;;
     *) shift ;;
   esac
 done
-if [ -z "$report_dir" ]; then echo "missing report dir" >&2; exit 2; fi
-echo "lynis fixture report" > "$report_dir/lynis-report.dat"
+if [ -z "$report_file" ]; then echo "missing report file" >&2; exit 2; fi
+report_dir=$(dirname "$report_file")
+echo "lynis fixture report" > "$report_file"
+echo "lynis fixture log" > "$report_dir/lynis.log"
 echo "suggestion[]=SSH-001|ssh hardening"
 exit 0
