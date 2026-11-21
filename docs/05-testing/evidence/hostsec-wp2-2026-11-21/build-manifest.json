@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0-dev",
+  "go_version": "go1.27.3",
+  "ldflags": "-buildid= -X github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli.Version=0.1.0-dev",
+  "cgo": false,
+  "workspace_dirty": true,
+  "reproducible_linux_amd64_sha256": "6432e3736bb61cc92bd8b907a5adab8c889562cb8bb0f54e3ccd553c63ff9a57",
+  "artifacts": [
+    {
+      "goos": "linux",
+      "goarch": "amd64",
+      "bytes": 6023163,
+      "sha256": "6432e3736bb61cc92bd8b907a5adab8c889562cb8bb0f54e3ccd553c63ff9a57",
+      "path": "build/hostsec-linux-amd64",
+      "validation": "CROSS_BUILD_ONLY",
+      "version": "0.1.0-dev"
+    },
+    {
+      "goos": "linux",
+      "goarch": "arm64",
+      "bytes": 5690515,
+      "sha256": "06c5f7457e6ccc88066909fc6db179dabe0f7207d745be9fdaf49a42878cf70f",
+      "path": "build/hostsec-linux-arm64",
+      "validation": "CROSS_BUILD_ONLY",
+      "version": "0.1.0-dev"
+    }
+  ],
+  "validation": "CROSS_BUILD_ONLY"
+}

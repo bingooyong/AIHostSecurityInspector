@@ -69,3 +69,18 @@ func TestAtomicAuthorizationAndSelectors(t *testing.T) {
 		t.Fatal("cancellation ignored")
 	}
 }
+
+func TestValidateOfflinePlanRejectsReady(t *testing.T) {
+	inv := inventory(t)
+	plan, err := Build(context.Background(), inv, Request{Targets: "group:pilot", Profile: "quick", DryRun: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := ValidateOfflinePlan(*plan); err != nil {
+		t.Fatal(err)
+	}
+	plan.ExecutionReady = true
+	if err := ValidateOfflinePlan(*plan); err == nil {
+		t.Fatal("execution-ready offline plan accepted")
+	}
+}

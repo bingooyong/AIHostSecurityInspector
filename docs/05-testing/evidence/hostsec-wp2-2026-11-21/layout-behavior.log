@@ -1,0 +1,8 @@
+cwd=.
+$ python3 scripts/check_layout.py
+exit=0
+stdout:
+PASS: 49 Go source files isolated in backend; root has no Go module/workspace
+PASS: 11 frozen CLI cases match with only documented OS/arch/Go-version fields adapted to this environment
+
+stderr:

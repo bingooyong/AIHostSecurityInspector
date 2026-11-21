@@ -1,11 +1,13 @@
 name: HostSec quality gates
 on:
   push:
+    branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened]
 permissions:
   contents: read
 concurrency:
-  group: hostsec-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   offline-cli:
@@ -28,6 +30,8 @@ jobs:
           python -m pip install -r scripts/requirements.txt
           make tools
       - name: Verify modules and execute gates
+        env:
+          HOSTSEC_EVIDENCE_DIR: docs/05-testing/evidence/ci
         run: |
           go -C backend mod verify
           make check
@@ -37,7 +41,7 @@ jobs:
         with:
           name: hostsec-offline-cli-evidence
           path: |
-            docs/05-testing/evidence/layout-migration
+            docs/05-testing/evidence/ci
             build/hostsec-linux-*
             build/build-manifest.json
             build/sbom.cdx.json

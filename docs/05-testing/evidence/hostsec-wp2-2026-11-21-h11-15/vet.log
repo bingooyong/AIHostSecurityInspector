@@ -1,0 +1,6 @@
+cwd=backend
+$ go vet ./...
+exit=0
+stdout:
+
+stderr:

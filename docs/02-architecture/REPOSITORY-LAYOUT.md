@@ -32,7 +32,7 @@ AIHostSecurityInspector/
 │   │   ├── evidence/ rules/ findings/ report/ storage/ audit/ # future 检测证据
 │   │   └── analyzer/ api/ mcp/ runner/ # future Provider/入口适配
 │   └── tools/check-boundaries/   # 当前 Go AST 工程门禁
-├── frontend/                    # future：package.json / src / tests，独立 TS 工程
+├── frontend/                    # 本地 React/TS 控制台（PARTIAL）：package.json / lock / src / tests
 ├── integrations/                # future：Skills / MCP client 配置与文档
 ├── schemas/                     # 当前跨入口、跨语言 JSON Schema
 ├── examples/                    # 当前无害部署/配置输入示例
@@ -52,7 +52,7 @@ AIHostSecurityInspector/
 - 每个 cmd 只装配实际需要的用例；CLI/MCP/API 复用授权、计划、编排、证据、规则与报告服务，不直接绕过访问 Collector。
 - 特权 Collector 只依赖采集/受限工具和必要数据契约；禁止 import analyzer、模型/HTTP Provider、API/MCP、SQLite/平台存储与任意 Shell。同 module 不等于必须链接所有包；进入 Collector 任务时用 `go list -deps ./cmd/hostsec-collector` 建立并校验传递依赖 allowlist。
 - Linux 平台文件/构建约束只留在 collector/transport 实现，domain/policy 不依赖 Linux syscall。Collector 不反向 import CLI，前端通过版本化 API/Schema 使用能力。
-- 前端有独立 package.json、锁文件、lint/typecheck/test/build；在 WP7 实施前不创建空 npm 工程，后续 CI 单独 job。
+- 前端有独立 package.json、锁文件、lint/typecheck/test/build；本地控制台已接入 `make check`。这不是企业部署、平台登录或 Playwright 生产验收。`check-boundaries` 仅允许 `internal/api` 直接导入 `net/http`，仍禁止全局 `net`/`os/exec`/`ssh`。
 - schemas 是机器契约来源；Go struct 与前端类型若生成应校验同步，不能再手写第二份无验证 Schema。样例/部署资源属于仓库根资源，运行时必须显式传入路径或受控打包，不能依赖进程 cwd 猜仓库位置。
 - `.agents/skills` 等现有目录是开发工作流工具安装位置，不迁移或覆盖；产品 Skill 分发源在 integrations，正式安装仍遵循对应客户端约定。
 

@@ -1,0 +1,4 @@
+# fixture sudoers — not a real host
+root ALL=(ALL:ALL) ALL
+fixture-alice ALL=(ALL) NOPASSWD: /usr/bin/systemctl
+%sudo ALL=(ALL:ALL) ALL

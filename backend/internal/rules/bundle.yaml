@@ -1,0 +1,121 @@
+bundle_id: mvp-v1
+version: 0.1.0
+platform: linux
+rules:
+  - rule_id: PROC-001
+    version: "1.0"
+    title: process executable is deleted
+    category: process
+    platform: linux
+    profiles: [quick, standard, deep]
+    severity: high
+    confidence: 80
+    required_evidence: [process_inventory]
+    detection_logic: {predicate: is_deleted_executable}
+    false_positive_notes: legitimate package upgrades may briefly show deleted executables
+    remediation_guidance: [investigate the process, restore the binary from a trusted package]
+    references: [HOSTSEC-17]
+  - rule_id: PROC-002
+    version: "1.0"
+    title: executable runs from a suspicious directory
+    category: process
+    platform: linux
+    profiles: [quick, standard, deep]
+    severity: high
+    confidence: 75
+    required_evidence: [process_inventory]
+    detection_logic: {predicate: path_under, field: exe_path}
+    false_positive_notes: maintenance scripts may run from /tmp
+    remediation_guidance: [move the binary to an approved path]
+    references: [HOSTSEC-17]
+  - rule_id: NET-001
+    version: "1.0"
+    title: unapproved listening port
+    category: network
+    platform: linux
+    profiles: [quick, standard, deep]
+    severity: medium
+    confidence: 70
+    required_evidence: [network_inventory]
+    detection_logic: {predicate: listen_not_in_baseline}
+    false_positive_notes: dynamic ports need a trusted allow list
+    remediation_guidance: [close the listener or add it to the approved role table]
+    references: [HOSTSEC-17]
+  - rule_id: IAM-001
+    version: "1.0"
+    title: unapproved UID 0 account
+    category: identity
+    platform: linux
+    profiles: [quick, standard, deep]
+    severity: critical
+    confidence: 85
+    required_evidence: [account_inventory]
+    detection_logic: {predicate: uid0_not_in_baseline}
+    false_positive_notes: approved break-glass accounts must be in the trusted baseline
+    remediation_guidance: [disable the extra UID 0 account]
+    references: [HOSTSEC-17]
+  - rule_id: PERS-001
+    version: "1.0"
+    title: unapproved systemd unit
+    category: persistence
+    platform: linux
+    profiles: [quick, standard, deep]
+    severity: high
+    confidence: 80
+    required_evidence: [service_inventory]
+    detection_logic: {predicate: unit_not_in_baseline}
+    false_positive_notes: vendor units may be missing from an incomplete baseline
+    remediation_guidance: [disable the unit or approve it after review]
+    references: [HOSTSEC-17]
+  - rule_id: PERS-002
+    version: "1.0"
+    title: unapproved cron entry
+    category: persistence
+    platform: linux
+    profiles: [quick, standard, deep]
+    severity: high
+    confidence: 75
+    required_evidence: [persistence_inventory]
+    detection_logic: {predicate: cron_not_in_baseline}
+    false_positive_notes: whitespace-normalized comments are not jobs
+    remediation_guidance: [remove or approve the cron entry]
+    references: [HOSTSEC-17]
+  - rule_id: IAM-003
+    version: "1.0"
+    title: SSH authorized key set changed
+    category: identity
+    platform: linux
+    profiles: [quick, standard, deep]
+    severity: high
+    confidence: 80
+    required_evidence: [account_inventory]
+    detection_logic: {predicate: fingerprint_baseline_diff}
+    false_positive_notes: first scan can only create a candidate baseline
+    remediation_guidance: [review added or removed SSH key fingerprints]
+    references: [HOSTSEC-17]
+  - rule_id: MAL-005
+    version: "1.0"
+    title: unapproved SUID or SGID file in allowlist
+    category: malware
+    platform: linux
+    profiles: [standard, deep]
+    severity: high
+    confidence: 70
+    required_evidence: [targeted_file_scan]
+    detection_logic: {predicate: suid_not_in_baseline}
+    false_positive_notes: truncated scans cannot prove the whole disk is clean
+    remediation_guidance: [remove the bit or add the path to the allow set]
+    references: [HOSTSEC-17]
+  - rule_id: CFG-001
+    version: "1.0"
+    title: critical configuration digest changed
+    category: config
+    platform: linux
+    profiles: [quick, standard, deep]
+    severity: medium
+    confidence: 70
+    required_evidence: [security_config]
+    detection_logic: {predicate: config_hash_baseline_diff}
+    false_positive_notes: approved configuration changes still need human review
+    remediation_guidance: [diff the configuration against the trusted version]
+    references: [HOSTSEC-17]

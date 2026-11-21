@@ -27,11 +27,21 @@
   "meta": {
     "hostsec_id": "HOSTSEC-16",
     "phase": "WP3",
-    "delivery_status": "PLANNED",
+    "delivery_status": "PARTIAL",
     "depends_on": [
       "HOSTSEC-15"
     ],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/TASK-MATRIX.md",
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/BLOCKED.md",
+      "backend/internal/evidence/manifest.go",
+      "docs/05-testing/evidence/hostsec-wp3-2026-11-21-planned32/results.json",
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/TASK-MATRIX.md",
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
+      "backend/internal/evidence/signature.go",
+      "backend/internal/bundle/sign.go",
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
+    ],
     "layout_adr": "ADR-008"
   }
 }

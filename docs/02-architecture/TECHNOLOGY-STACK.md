@@ -6,7 +6,7 @@
 
 | 项目 | 决定 | 实施约束 |
 |---|---|---|
-| 语言/模块 | Go 1.27.3；`github.com/bingooyong/AIHostSecurityInspector/backend` | Go module位于backend/，module path含/backend；checksum固定；跨平台控制端不表示跨平台 Collector |
+| 语言/模块 | Go 1.27.4；`github.com/bingooyong/AIHostSecurityInspector/backend` | Go module位于backend/，module path含/backend；checksum固定；跨平台控制端不表示跨平台 Collector。1.27.4 用于修复 GO-2026-6859（R14），不是功能升级。 |
 | CLI | 标准库 flag | 每命令独立 FlagSet；不增加 Cobra 等本轮不必要依赖 |
 | YAML | `go.yaml.in/yaml/v4 v4.0.0` | 严格字段、唯一键、输入大小/深度/别名边界；JSON 同样严格 |
 | JSON | 标准库 encoding/json | 单文档、结构化结果；关系约束须由领域校验补充 |

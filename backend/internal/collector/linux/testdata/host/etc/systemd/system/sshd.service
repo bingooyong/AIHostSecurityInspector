@@ -1,0 +1,5 @@
+[Unit]
+Description=OpenSSH fixture daemon
+[Service]
+User=root
+ExecStart=/usr/sbin/sshd -D

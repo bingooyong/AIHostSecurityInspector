@@ -1,0 +1,17 @@
+{
+  "executed_at": "2026-11-20T14:00:00Z",
+  "scope": "WP1 remaining slice: domain, snapshot, local approval, intent/preflight, versioned reproducible cross-build. No collector runtime, no enterprise hosts, no remote CI claim.",
+  "status": "PARTIAL",
+  "go_test_race": "PASS",
+  "vet": "PASS",
+  "boundaries": "PASS",
+  "contracts": "PASS",
+  "integration_cli_processes": 30,
+  "layout_frozen_cli": "PASS",
+  "cross_build": "CROSS_BUILD_ONLY",
+  "reproducible_linux_amd64_sha256": "2c17ee43729914f74a6fc72b988d090425efc6eb858b3d5d4c9ec6ac5d83fa5a",
+  "doctor_scan_ready": false,
+  "plan_execution_ready": false,
+  "lint": "NOT_RUN",
+  "remote_ci": "UNVERIFIED"
+}

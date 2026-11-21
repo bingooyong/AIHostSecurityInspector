@@ -21,4 +21,4 @@ From the repository root run make test/vet/lint/boundaries/layout/baseline/check
 - backend/tools/check-boundaries/main.go and scripts/check_layout.py: runtime/import and repository/module boundaries.
 - scripts/verify.py: records gates/cwd/exits under current evidence directory; does not rewrite bootstrap evidence.
 
-Collector/Rule/Analyzer extension tests, Linux runtime acceptance and platform/frontend gates remain planned until those modules exist.
+Collector/Rule/Analyzer extension tests now exist as PARTIAL local/fixture coverage. Linux runtime acceptance, SSH, platform identity, and hosted frontend E2E remain unverified.

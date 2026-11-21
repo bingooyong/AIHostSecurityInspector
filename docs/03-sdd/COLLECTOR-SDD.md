@@ -1,6 +1,6 @@
 # Linux Collector 与工具 Adapter 详细设计
 
-状态：PLANNED；本轮只完成契约设计，不采集当前工作站或连接测试/生产主机。首期目标 Linux x86_64/ARM64，发行版支持须由实际 VM/容器矩阵证明。Windows 独立后续任务，不以空接口宣称支持。
+状态：PARTIAL。rooted Linux fixture 已实现 host_identity、process_inventory、network_inventory、account_inventory、service_inventory、persistence_inventory；doctor.collector_available 仍为 false，无真实主机/双架构 VM 验收，不采集当前工作站或连接测试/生产主机。首期目标 Linux x86_64/ARM64，发行版支持须由实际 VM/容器矩阵证明。Windows 独立后续任务，不以空接口宣称支持。
 
 ## 1. 调用契约
 

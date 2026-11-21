@@ -2,11 +2,15 @@ GO ?= go
 REPO_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 BACKEND := $(REPO_ROOT)/backend
 BUILD_DIR := $(REPO_ROOT)/build
+VERSION ?= 0.1.0-dev
+HOSTSEC_PKG := github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli
+GO_LDFLAGS := -buildid= -X $(HOSTSEC_PKG).Version=$(VERSION)
+HOSTSEC_EVIDENCE_DIR ?= docs/05-testing/evidence/ci-local
 export PATH := $(BUILD_DIR)/tools:$(PATH)
-.PHONY: tools build test vet lint schema boundaries baseline layout integration check release sbom vuln
+.PHONY: tools build test vet lint schema boundaries baseline layout integration check release sbom vuln frontend-lint frontend-test frontend-build
 build:
 	mkdir -p "$(BUILD_DIR)"
-	$(GO) -C "$(BACKEND)" build -trimpath -o "$(BUILD_DIR)/hostsec" ./cmd/hostsec
+	$(GO) -C "$(BACKEND)" build -trimpath -ldflags "$(GO_LDFLAGS)" -o "$(BUILD_DIR)/hostsec" ./cmd/hostsec
 
 test:
 	$(GO) -C "$(BACKEND)" test -race -count=1 ./...
@@ -41,12 +45,25 @@ sbom:
 release:
 	python3 "$(REPO_ROOT)/scripts/build_release.py"
 
+frontend-lint:
+	npm --prefix "$(REPO_ROOT)/frontend" ci
+	npm --prefix "$(REPO_ROOT)/frontend" run lint
+	npm --prefix "$(REPO_ROOT)/frontend" run typecheck
+
+frontend-test:
+	npm --prefix "$(REPO_ROOT)/frontend" run test
+
+frontend-build:
+	npm --prefix "$(REPO_ROOT)/frontend" run build
+
 check:
-	python3 "$(REPO_ROOT)/scripts/verify.py"
+	HOSTSEC_EVIDENCE_DIR="$(HOSTSEC_EVIDENCE_DIR)" python3 "$(REPO_ROOT)/scripts/verify.py"
 
 # Repository-local tooling avoids replacing user-installed binaries.
+# Pin the toolchain to backend/go.mod so golangci-lint is not built with an older Go than the module.
+GO_MODULE_VERSION := $(shell awk '/^go /{print $$2; exit}' "$(BACKEND)/go.mod")
 tools:
 	mkdir -p "$(BUILD_DIR)/tools"
-	GOBIN="$(BUILD_DIR)/tools" $(GO) -C "$(BACKEND)" install golang.org/x/vuln/cmd/govulncheck@v1.6.0
-	GOBIN="$(BUILD_DIR)/tools" $(GO) -C "$(BACKEND)" install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.15.0
-	GOBIN="$(BUILD_DIR)/tools" $(GO) -C "$(BACKEND)" install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@v1.12.0
+	GOBIN="$(BUILD_DIR)/tools" GOTOOLCHAIN=go$(GO_MODULE_VERSION) $(GO) -C "$(BACKEND)" install golang.org/x/vuln/cmd/govulncheck@v1.6.0
+	GOBIN="$(BUILD_DIR)/tools" GOTOOLCHAIN=go$(GO_MODULE_VERSION) $(GO) -C "$(BACKEND)" install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.15.0
+	GOBIN="$(BUILD_DIR)/tools" GOTOOLCHAIN=go$(GO_MODULE_VERSION) $(GO) -C "$(BACKEND)" install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@v1.12.0

@@ -1,51 +1,32 @@
 # Hook Guidelines
 
-> How hooks are used in this project.
+## 1. Scope / trigger
 
----
+Data-fetching and UI hooks for the planned frontend.
 
-## Overview
+## 2. Signatures
 
-<!--
-Document your project's hook conventions here.
+Hooks wrap the typed API client. They propagate cancellation and never retry mutating approval/scan requests unless the server documents idempotency keys.
 
-Questions to answer:
-- What custom hooks do you have?
-- How do you handle data fetching?
-- What are the naming conventions?
-- How do you share stateful logic?
--->
+## 3. Contracts
 
-(To be filled by the team)
+- Query hooks expose loading/empty/error/forbidden.
+- Mutation hooks disable double submit.
+- No hook may call Collector, SSH, or shell APIs.
+- Tokens stay in httpOnly cookies or the API session; hooks do not log Authorization headers.
 
----
+## 4. Validation and errors
 
-## Custom Hook Patterns
+Failed fetches leave previous data untouched unless the server says the resource was deleted. 403 is distinct from empty.
 
-<!-- How to create and structure custom hooks -->
+## 5. Good / base / bad
 
-(To be filled by the team)
+Good: `usePlan(hostId)` with abort on unmount. Bad: a `useExec(cmd: string)` helper.
 
----
+## 6. Tests required
 
-## Data Fetching
+Hook tests with a fake fetch that returns 401/403/timeout fixtures.
 
-<!-- How data fetching is handled (React Query, SWR, etc.) -->
+## 7. Wrong vs correct
 
-(To be filled by the team)
-
----
-
-## Naming Conventions
-
-<!-- Hook naming rules (use*, etc.) -->
-
-(To be filled by the team)
-
----
-
-## Common Mistakes
-
-<!-- Hook-related mistakes your team has made -->
-
-(To be filled by the team)
+Wrong: storing approval-id in the hook and treating it as permission. Correct: the server verifies the signed approval.

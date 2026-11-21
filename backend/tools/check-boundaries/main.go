@@ -33,8 +33,12 @@ func main() {
 				if err != nil {
 					return err
 				}
-				if forbidden[name] {
+				if forbidden[name] && !allowlistedImport(path, name) {
 					fmt.Fprintf(os.Stderr, "%s: forbidden offline-slice import %s\n", path, name)
+					failed = true
+				}
+				if strings.Contains(filepath.ToSlash(path), "internal/collector/") && collectorForbidden(name) {
+					fmt.Fprintf(os.Stderr, "%s: collector must not import %s\n", path, name)
 					failed = true
 				}
 			}
@@ -49,4 +53,37 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println("PASS: offline slice has no process execution or network client imports")
+}
+
+func allowlistedImport(path, name string) bool {
+	slash := filepath.ToSlash(path)
+	return name == "net/http" && strings.HasPrefix(slash, "internal/api/")
+}
+
+func collectorForbidden(name string) bool {
+	if name == "database/sql" || name == "os/exec" {
+		return true
+	}
+	markers := []string{
+		"/internal/cli",
+		"/internal/planner",
+		"/internal/approval",
+		"/internal/audit",
+		"/internal/authorization",
+		"/internal/analyzer",
+		"/internal/provider",
+		"/internal/mcp",
+		"/internal/webapi",
+		"/internal/api",
+		"/internal/app",
+		"/internal/runner",
+		"/internal/risk",
+		"/internal/storage",
+	}
+	for _, marker := range markers {
+		if strings.Contains(name, marker) {
+			return true
+		}
+	}
+	return false
 }

@@ -11,7 +11,7 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 
 ## 0. 开发命令与当前能力
 
-以下命令从仓库根运行，定义以 `Makefile`、`scripts/`、`backend/go.mod` 和 CI 为准，不按模板猜测。当前 Go 版本为 1.27.3，Python 依赖固定在 `scripts/requirements.txt`；版本变化时同步本节。
+以下命令从仓库根运行，定义以 `Makefile`、`scripts/`、`backend/go.mod` 和 CI 为准，不按模板猜测。当前 Go 版本为 1.27.4（补丁级升级以修复 GO-2026-6859），Python 依赖固定在 `scripts/requirements.txt`；版本变化时同步本节。
 
 | 命令 | 用途与副作用 |
 | --- | --- |
@@ -37,7 +37,7 @@ go -C backend mod verify
 go -C backend run ./tools/check-boundaries
 ```
 
-当前 CLI 只有 `version`、`assets validate/list`、`plan --dry-run` 和 `doctor` 的离线切片。`doctor` 明确 Collector 不可用并返回1；plan始终 `execution_ready=false`、`limits.enforced=false`。不为制造成功而改成0/true，也不把离线计划当成主机扫描。
+当前 CLI 在离线切片上提供 `version`、`assets validate/list/snapshot/diff`、`plan --dry-run`、`intent`、`preflight`、`inspect-fixture`、`mcp stdio` 和 loopback `api`。`doctor` 明确 Collector 不可用并返回1；plan/preflight/inspect-fixture/mcp/api 始终不得把 `collector_available`/`scan_ready`/`execution_ready` 设为 true，`limits.enforced=false`。`hostsec scan` 与 `mcp serve` 仍拒绝。本地 stdio MCP 与 127.0.0.1 API 复用同一授权内核，不是企业扫描或平台身份。不为制造成功而改成0/true，也不把 fixture/本地控制台当成主机扫描。
 
 **历史证据保护：** 当前 `scripts/verify.py` 将聚合结果写入固定的 `docs/05-testing/evidence/layout-migration/`，部分检查还会更新 `build/`。该目录已有需保留的证据时，不直接重跑覆盖旧日志；先为本次验证安排新的证据目录或在隔离副本中运行并记录环境。修改验证脚本的输出机制须有明确任务范围，不能为了本次文档修改顺带改写脚本。新结果不能覆盖原始V1、bootstrap或layout-migration历史证据。
 

@@ -1,0 +1,20 @@
+cwd=backend
+$ go test -race -count=1 ./...
+exit=0
+stdout:
+?   	github.com/bingooyong/AIHostSecurityInspector/backend/cmd/hostsec	[no test files]
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/approval	1.034s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/asset	1.079s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/audit	1.026s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/authorization	1.012s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli	1.031s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/collector	1.013s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/collector/linux	1.130s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain	1.022s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/evidence	1.092s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/planner	1.024s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/policy	1.008s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/storage	1.031s
+?   	github.com/bingooyong/AIHostSecurityInspector/backend/tools/check-boundaries	[no test files]
+
+stderr:

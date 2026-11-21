@@ -1,51 +1,32 @@
 # Quality Guidelines
 
-> Code quality standards for frontend development.
+## 1. Scope / trigger
 
----
+Lint, typecheck, unit, and Playwright gates for the future frontend package.
 
-## Overview
+## 2. Signatures
 
-<!--
-Document your project's quality standards here.
+Required scripts: `lint`, `typecheck`, `test`, `build`, `e2e`. `make check` runs them after `npm ci`. Playwright against the loopback hostsec API exists; HOSTSEC-34 stays PARTIAL until platform identity and a hosted API are accepted.
 
-Questions to answer:
-- What patterns are forbidden?
-- What linting rules do you enforce?
-- What are your testing requirements?
-- What code review standards apply?
--->
+## 3. Contracts
 
-(To be filled by the team)
+- No `any` for schema payloads; unknown extras fail parsing.
+- Accessibility: findings and approvals are keyboard reachable.
+- Logging redacts tokens, host output, and file paths from raw evidence.
+- Feature flags cannot enable scan/remediation in the UI before the backend capability exists.
 
----
+## 4. Validation and errors
 
-## Forbidden Patterns
+A typecheck-only change is not product acceptance. E2E against production or customer hosts is forbidden.
 
-<!-- Patterns that should never be used and why -->
+## 5. Good / base / bad
 
-(To be filled by the team)
+Good: fixture-driven Playwright. Bad: snapshots of production findings, or skipping typecheck in CI.
 
----
+## 6. Tests required
 
-## Required Patterns
+Empty, loading, error, 403, and partial-scan journeys for every feature that HOSTSEC-34 implements.
 
-<!-- Patterns that must always be used -->
+## 7. Wrong vs correct
 
-(To be filled by the team)
-
----
-
-## Testing Requirements
-
-<!-- What level of testing is expected -->
-
-(To be filled by the team)
-
----
-
-## Code Review Checklist
-
-<!-- What reviewers should check -->
-
-(To be filled by the team)
+Wrong: mark HOSTSEC-34 IMPLEMENTED because lint/typecheck/test/build/Playwright-loopback pass locally. Correct: keep PARTIAL until server-enforced platform identity and hosted API acceptance exist.

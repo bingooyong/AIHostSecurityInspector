@@ -1,43 +1,18 @@
 # Frontend Development Guidelines
 
-> Best practices for frontend development in this project.
+Package: frontend (frontend/); layer: local React + TypeScript console. A lockfile, lint/typecheck/test/build scripts, and isolated pages exist. This is not an enterprise web deployment, platform login, or Playwright-vs-production acceptance.
 
----
+## Pre-Development Checklist
 
-## Overview
+- [Directory structure](directory-structure.md): required before creating the frontend package.
+- [Component guidelines](component-guidelines.md), [hooks](hook-guidelines.md), [state](state-management.md): required for UI work.
+- [Quality](quality-guidelines.md) and [type safety](type-safety.md): required for any TypeScript.
+- Read `docs/02-architecture/REPOSITORY-LAYOUT.md`, `docs/03-sdd` API/CLI contracts, and `docs/04-security/SECURITY-BOUNDARIES.md`. Do not copy Go authorization, rule evaluation, or approval decisions into the browser.
 
-This directory contains guidelines for frontend development. Fill in each file with your project's specific conventions.
+## Quality Check
 
----
+HOSTSEC-34 is PARTIAL: local pages for assets/jobs/evidence/rules/approvals, plus lint/typecheck/test/build gates. Authorization remains in Go. Playwright against a live API, platform identity, and production hosting remain unverified.
 
-## Guidelines Index
+## Existing examples
 
-| Guide | Description | Status |
-|-------|-------------|--------|
-| [Directory Structure](./directory-structure.md) | Module organization and file layout | To fill |
-| [Component Guidelines](./component-guidelines.md) | Component patterns, props, composition | To fill |
-| [Hook Guidelines](./hook-guidelines.md) | Custom hooks, data fetching patterns | To fill |
-| [State Management](./state-management.md) | Local state, global state, server state | To fill |
-| [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | To fill |
-| [Type Safety](./type-safety.md) | Type patterns, validation | To fill |
-
----
-
-## How to Fill These Guidelines
-
-For each guideline file:
-
-1. Document your project's **actual conventions** (not ideals)
-2. Include **code examples** from your codebase
-3. List **forbidden patterns** and why
-4. Add **common mistakes** your team has made
-
-The goal is to help AI assistants and new team members understand how YOUR project works.
-
----
-
-**Language**: All documentation should be written in **English**.
-
-## HostSec location contract
-
-Frontend is PLANNED under repository frontend/. No package.json or running UI exists. When WP7 starts, migrate these unfilled templates into the configured frontend package/layer schema and register the real directory. React/TypeScript client uses versioned APIs/Schema; no Go implementation or security decisions in UI/Skills. See docs/02-architecture/REPOSITORY-LAYOUT.md.
+None. Consume versioned `schemas/` and the future Web API only. Skills/MCP clients live in `integrations/`, not in this UI.

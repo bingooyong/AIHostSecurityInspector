@@ -1,51 +1,31 @@
 # State Management
 
-> How state is managed in this project.
+## 1. Scope / trigger
 
----
+Client state for WP7. Server remains source of truth for assets, plans, evidence, and approvals.
 
-## Overview
+## 2. Signatures
 
-<!--
-Document your project's state management conventions here.
+Local UI state (modals, table filters) may live in component state. Resource state comes from the API cache keyed by server IDs.
 
-Questions to answer:
-- What state management solution do you use?
-- How is local vs global state decided?
-- How do you handle server state?
-- What are the patterns for derived state?
--->
+## 3. Contracts
 
-(To be filled by the team)
+- Do not keep a second copy of RuleResult/Finding that can diverge from the last server payload.
+- Optimistic updates are forbidden for authorization, approval consume, and scan start.
+- URL query params may restore filters, not credentials.
 
----
+## 4. Validation and errors
 
-## State Categories
+Hydration from localStorage must ignore unknown fields and must not restore secrets.
 
-<!-- Local state, global state, server state, URL state -->
+## 5. Good / base / bad
 
-(To be filled by the team)
+Good: server cache with explicit invalidation after approval. Bad: a global store that sets `execution_ready=true` in the browser.
 
----
+## 6. Tests required
 
-## When to Use Global State
+State tests proving a 403 cannot be overwritten by cached success.
 
-<!-- Criteria for promoting state to global -->
+## 7. Wrong vs correct
 
-(To be filled by the team)
-
----
-
-## Server State
-
-<!-- How server data is cached and synchronized -->
-
-(To be filled by the team)
-
----
-
-## Common Mistakes
-
-<!-- State management mistakes your team has made -->
-
-(To be filled by the team)
+Wrong: derive “host is safe” from the absence of findings in client state. Correct: show coverage, UNKNOWN, and human review from the payload.

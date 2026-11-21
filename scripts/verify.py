@@ -9,7 +9,10 @@ import time
 
 root = Path(__file__).resolve().parents[1]
 backend = root / "backend"
-out = root / "docs/05-testing/evidence/layout-migration"
+requested = Path(os.environ.get("HOSTSEC_EVIDENCE_DIR", "docs/05-testing/evidence/ci-local"))
+out = requested if requested.is_absolute() else root / requested
+if out.resolve() == (root / "docs/05-testing/evidence/layout-migration").resolve():
+    raise SystemExit("refusing to overwrite layout-migration historical evidence; set HOSTSEC_EVIDENCE_DIR")
 out.mkdir(parents=True, exist_ok=True)
 (root / "build").mkdir(exist_ok=True)
 commands = [
@@ -23,6 +26,13 @@ commands = [
     ("build-local", ["go", "build", "-trimpath", "-o", str(root / "build/hostsec"), "./cmd/hostsec"], backend),
     ("layout-behavior", ["python3", "scripts/check_layout.py"], root),
     ("integration-schema", ["python3", "scripts/integration.py"], root),
+    ("frontend-install", ["npm", "ci"], root / "frontend"),
+    ("frontend-lint", ["npm", "run", "lint"], root / "frontend"),
+    ("frontend-typecheck", ["npm", "run", "typecheck"], root / "frontend"),
+    ("frontend-test", ["npm", "run", "test"], root / "frontend"),
+    ("frontend-build", ["npm", "run", "build"], root / "frontend"),
+    ("frontend-playwright-install", ["npx", "playwright", "install", "chromium"], root / "frontend"),
+    ("frontend-e2e", ["npm", "run", "e2e"], root / "frontend"),
     ("future-contract", ["python3", "scripts/contracts.py"], root),
     ("baseline", ["python3", "scripts/validate_baseline.py"], root),
     ("vulnerability", ["govulncheck", "-show", "verbose", "./..."], backend),
@@ -38,7 +48,8 @@ for name, command, cwd in commands:
     clock = time.monotonic()
     relative_cwd = str(cwd.relative_to(root))
     try:
-        process = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=240, env=tool_env)
+        timeout = 420 if name in {"frontend-playwright-install", "frontend-e2e"} else 240
+        process = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=timeout, env=tool_env)
         stdout, stderr, code = process.stdout, process.stderr, process.returncode
     except (OSError, subprocess.TimeoutExpired) as error:
         stdout, stderr, code = "", str(error), 124
@@ -65,6 +76,6 @@ if passed:
     )
     hashes = {str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest() for path in source_files}
     (out / "verified-files.json").write_text(json.dumps(hashes, indent=2) + "\n")
-summary = {"executed_at": datetime.now(timezone.utc).isoformat(), "scope": "backend module layout migration; unchanged offline CLI; no Linux collector runtime or remote CI acceptance", "status": "PASS" if passed else "FAIL", "results": results}
+summary = {"executed_at": datetime.now(timezone.utc).isoformat(), "scope": "current local quality gates; does not overwrite layout-migration historical evidence; no Linux collector runtime or remote CI acceptance", "status": "PASS" if passed else "FAIL", "evidence_dir": str(out.relative_to(root)), "results": results}
 (out / "results.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
 raise SystemExit(0 if passed else 1)

@@ -1,0 +1,7 @@
+cwd=.
+$ python3 scripts/validate_baseline.py
+exit=0
+stdout:
+PASS: 48 acyclic task contracts, 22 unchanged source files, 63 local document links
+
+stderr:

@@ -1,0 +1,7 @@
+cwd=.
+$ python3 scripts/contracts.py
+exit=0
+stdout:
+PASS: schema shape positives and negatives; execution-intent v1 checked; provenance/runtime collection still PLANNED
+
+stderr:

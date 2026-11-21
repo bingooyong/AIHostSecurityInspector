@@ -1,0 +1,4 @@
+root:x:0:
+daemon:x:1:
+fixture-alice:x:1000:
+sudo:x:27:fixture-alice

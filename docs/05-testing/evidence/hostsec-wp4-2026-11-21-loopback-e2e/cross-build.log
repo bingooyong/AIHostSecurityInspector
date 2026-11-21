@@ -1,0 +1,35 @@
+cwd=.
+$ python3 scripts/build_release.py
+exit=0
+stdout:
+{
+  "version": "0.1.0-dev",
+  "go_version": "go1.27.4",
+  "ldflags": "-buildid= -X github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli.Version=0.1.0-dev",
+  "cgo": false,
+  "workspace_dirty": true,
+  "reproducible_linux_amd64_sha256": "175d8aff87fc725c0a2546813ed82e551083ccf7b759374c761b59f27aa1dbc2",
+  "artifacts": [
+    {
+      "goos": "linux",
+      "goarch": "amd64",
+      "bytes": 21628083,
+      "sha256": "175d8aff87fc725c0a2546813ed82e551083ccf7b759374c761b59f27aa1dbc2",
+      "path": "build/hostsec-linux-amd64",
+      "validation": "CROSS_BUILD_ONLY",
+      "version": "0.1.0-dev"
+    },
+    {
+      "goos": "linux",
+      "goarch": "arm64",
+      "bytes": 20317135,
+      "sha256": "f6e568595f19ed573f93c3c9bd51307c4d87ecf2813f9f93010b8f6151b84a18",
+      "path": "build/hostsec-linux-arm64",
+      "validation": "CROSS_BUILD_ONLY",
+      "version": "0.1.0-dev"
+    }
+  ],
+  "validation": "CROSS_BUILD_ONLY"
+}
+
+stderr:

@@ -1,7 +1,16 @@
 /build/
 /dist/
+/frontend/dist/
+/frontend/coverage/
+/frontend/test-results/
+/frontend/playwright-report/
+/frontend/blob-report/
+/frontend/playwright/.cache/
+node_modules/
 /coverage.out
 *.test
 .DS_Store
 __pycache__/
 .venv/
+/docs/05-testing/evidence/ci-local/
+/docs/05-testing/evidence/ci/

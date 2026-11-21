@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "note": "Synthetic local identities for isolated development. Not a platform IdP and not production RBAC.",
+  "principals": [
+    {
+      "id": "operator-alice",
+      "roles": ["operator"],
+      "zones": ["test-zone-a"],
+      "business_systems": ["demo"]
+    },
+    {
+      "id": "approver-bob",
+      "roles": ["approver"],
+      "zones": ["test-zone-a"],
+      "business_systems": ["demo"]
+    },
+    {
+      "id": "auditor-carol",
+      "roles": ["auditor"],
+      "zones": ["test-zone-a"],
+      "business_systems": ["demo"]
+    },
+    {
+      "id": "operator-zone-b",
+      "roles": ["operator"],
+      "zones": ["test-zone-b"],
+      "business_systems": ["other"]
+    }
+  ]
+}
