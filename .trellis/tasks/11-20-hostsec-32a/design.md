@@ -31,3 +31,13 @@ Verify(ctx,intent,approval,principal,trust,clock)为无副作用验证，返回V
 审批格式/信任根版本化，rollback保留已消费nonce与审计历史；不恢复已失效/已消费审批。新旧journal迁移需对账，不删除日志“修复”验证错误。
 
 完成证据：docs/05-testing/evidence/hostsec-32a：信任假设、签名字节/golden、全部拒绝矩阵、双进程至多一次许可、崩溃/锁/磁盘失败和审计持久记录；不得包含私钥。 对应日志必须包含命令、工作目录、实际退出、输入/源码版本与验证范围；没有结果不写PASS。
+
+## 2026-11-25 PR7 防重放补强设计（当前切片）
+
+复核确认 ledger.go 在 Open 时缓存、Consume 只持对象 mutex，并直接 WriteFile。可复现假设：两个提前打开的对象可消费相同 nonce，独立 nonce 写入丢失；写失败先污染 used。
+
+沿 32A → 07 → 36 授权采集关键路径复用本任务，不新增 DAG 节点、不更改交付计数。替代方案：只加全局 mutex 无跨进程保障；迁入数据库超出当前兼容切片；采用现有 JSON 字符串数组 + 稳定 .lock 侧车 + 锁内重读 + 同目录随机临时文件 fsync/rename/目录 fsync。锁用非阻塞 flock，竞争失败关闭，避免无限等待阻碍取消。内存 ledger 保持现有行为。
+
+安全边界：ledger/lock 为私有普通单链接文件，拒绝最终 symlink/FIFO/过宽权限、损坏/null/超过 1 MiB 状态。受信任操作者须提供私有本地目录及同一规范路径；不抵御可改父目录/删除 lock/回滚备份的本机所有者，不声称 NFS 分布式锁。缺失库仅初始化时允许；本对象一旦观察/提交持久状态，状态消失不能重建为空。成功只在同步后返回；rename 后同步错误可能已消费，保守拒绝，重试不得恢复 nonce。
+
+仅修改 approval Ledger、其测试、相关 CLI 操作文档/质量规范和本任务记录。deep/IR、doctor/scan/mcp、loopback-only 契约完全不变。审计 journal 与独立 ledger 不宣称跨文件事务；原有 journal 是审计路径。

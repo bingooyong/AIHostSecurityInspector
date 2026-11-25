@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/bingooyong/AIHostSecurityInspector/backend/internal/adapter"
@@ -139,7 +140,7 @@ func InspectLocal(ctx context.Context, req Request) (Result, error) {
 	out.RuleResults = results
 	out.Findings = findings
 	out.Evidence = items
-	out.JobStatus = jobStatusFor(out.Modules)
+	out.JobStatus, out.JobStatusReason = labJobStatus(out.Modules)
 	exec := tools.Executor{}
 	for _, tool := range prof.Tools {
 		rep, toolErr := runNamed(ctx, exec, tool, req.HostID, req.ScanID)
@@ -213,11 +214,7 @@ func statusForContext(err error) string {
 	return domain.CollectionFailed
 }
 
-func jobStatusFor(modules []collector.Result) string {
-	if len(modules) == 0 {
-		return domain.JobFailed
-	}
-	failed, partial, cancelled, timeout := 0, 0, 0, 0
+func countModuleStatuses(modules []collector.Result) (success, partial, failed, timeout, cancelled int) {
 	for _, module := range modules {
 		switch module.Status {
 		case domain.CollectionCancelled:
@@ -229,20 +226,35 @@ func jobStatusFor(modules []collector.Result) string {
 		case domain.CollectionPartial, domain.CollectionNotAvailable, domain.CollectionNotApplicable:
 			partial++
 		case domain.CollectionSuccess:
+			success++
 		default:
 			failed++
 		}
 	}
-	if cancelled > 0 {
-		return domain.JobCancelled
+	return success, partial, failed, timeout, cancelled
+}
+
+// labJobStatus never returns COMPLETED. A fully successful lab collection is
+// still PARTIAL because this path is not a production completed scan.
+func labJobStatus(modules []collector.Result) (string, string) {
+	if len(modules) == 0 {
+		return domain.JobFailed, "no modules were collected"
 	}
-	if failed == len(modules) || timeout == len(modules) {
-		return domain.JobFailed
+	success, partial, failed, timeout, cancelled := countModuleStatuses(modules)
+	counts := fmt.Sprintf("success=%d partial=%d failed=%d timeout=%d cancelled=%d", success, partial, failed, timeout, cancelled)
+	if cancelled > 0 {
+		return domain.JobCancelled, "lab collection cancelled (" + counts + "); not a production completed scan"
+	}
+	if failed == len(modules) {
+		return domain.JobFailed, "all lab modules failed (" + counts + ")"
+	}
+	if timeout == len(modules) {
+		return domain.JobFailed, "all lab modules timed out (" + counts + ")"
 	}
 	if failed > 0 || timeout > 0 || partial > 0 {
-		return domain.JobPartial
+		return domain.JobPartial, "lab collection incomplete (" + counts + "); not a production completed scan"
 	}
-	return domain.JobPartial
+	return domain.JobPartial, "all lab modules collected successfully; status remains PARTIAL because this is not a production completed scan"
 }
 
 func rejectPassOnFailedCollection(results []domain.RuleResult, modules []collector.Result) []domain.RuleResult {

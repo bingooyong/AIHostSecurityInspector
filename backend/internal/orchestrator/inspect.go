@@ -56,6 +56,7 @@ type Result struct {
 	ReportPath         string                      `json:"report_path"`
 	Evidence           []domain.Evidence           `json:"evidence"`
 	JobStatus          string                      `json:"job_status"`
+	JobStatusReason    string                      `json:"job_status_reason,omitempty"`
 	Limitations        []string                    `json:"limitations"`
 }
 
@@ -155,7 +156,7 @@ func InspectFixture(ctx context.Context, req Request) (Result, error) {
 	out.RuleResults = results
 	out.Findings = findings
 	out.Evidence = items
-	out.JobStatus = jobStatusFor(out.Modules)
+	out.JobStatus, out.JobStatusReason = labJobStatus(out.Modules)
 	exec := tools.Executor{}
 	for _, tool := range prof.Tools {
 		rep, toolErr := adapter.Lynis(ctx, exec, req.HostID, req.ScanID)

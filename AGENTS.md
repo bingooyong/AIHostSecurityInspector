@@ -37,7 +37,7 @@ go -C backend mod verify
 go -C backend run ./tools/check-boundaries
 ```
 
-当前 CLI 在离线切片上提供 `version`、`assets validate/list/snapshot/diff`、`plan --dry-run`、`intent`、`preflight`、`inspect-fixture`、`mcp stdio` 和 loopback `api`。`doctor` 明确 Collector 不可用并返回1；plan/preflight/inspect-fixture/mcp/api 始终不得把 `collector_available`/`scan_ready`/`execution_ready` 设为 true，`limits.enforced=false`。`hostsec scan` 与 `mcp serve` 仍拒绝。本地 stdio MCP 与 127.0.0.1 API 复用同一授权内核，不是企业扫描或平台身份。不为制造成功而改成0/true，也不把 fixture/本地控制台当成主机扫描。
+当前 CLI 在离线切片上提供 `version`、`assets validate/list/snapshot/diff`、`plan --dry-run`、`intent`、`preflight`、`inspect-fixture`、`inspect-local`、`inspect-authorized`、`mcp stdio` 和 loopback `api`。`doctor` 明确 Collector 不可用并返回1；plan/preflight/inspect-fixture/inspect-local/inspect-authorized/mcp/api 始终不得把 `collector_available`/`scan_ready`/`execution_ready` 设为 true，`limits.enforced=false`。`hostsec scan` 与 `mcp serve` 仍拒绝。`inspect-authorized` 是操作者显式授权采集路径（清单授权 + 本轮 allowlist + 意图绑定 + SSH strict known_hosts/identity），本发行版只接受 loopback 实验室目标，不是通用内网扫描器。实验室成功采集仍保持 PARTIAL，并写出聚合报告；提供 `--intent-ledger` 时，意图在成功 prepare 后被消费且不可重放。本地 stdio MCP 与 127.0.0.1 API 复用同一授权内核，不是企业扫描或平台身份。不为制造成功而改成0/true，也不把 fixture/本地控制台当成主机扫描。
 
 **历史证据保护：** 当前 `scripts/verify.py` 将聚合结果写入固定的 `docs/05-testing/evidence/layout-migration/`，部分检查还会更新 `build/`。该目录已有需保留的证据时，不直接重跑覆盖旧日志；先为本次验证安排新的证据目录或在隔离副本中运行并记录环境。修改验证脚本的输出机制须有明确任务范围，不能为了本次文档修改顺带改写脚本。新结果不能覆盖原始V1、bootstrap或layout-migration历史证据。
 

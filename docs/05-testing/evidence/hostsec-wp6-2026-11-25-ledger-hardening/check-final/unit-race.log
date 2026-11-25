@@ -1,0 +1,47 @@
+cwd=backend
+$ go test -race -count=1 ./...
+exit=0
+stdout:
+?   	github.com/bingooyong/AIHostSecurityInspector/backend/cmd/hostsec	[no test files]
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/adapter	1.020s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/analyzer	1.252s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/analyzer/provider	1.222s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/analyzer/redaction	1.018s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/api	1.147s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/app	1.029s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/approval	3.219s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/asset	1.078s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/audit	1.041s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/authorization	1.025s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/baseline	1.028s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/bundle	1.067s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli	1.065s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/collector	1.020s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/collector/linux	1.176s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/domain	1.028s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/evidence	1.314s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/findings	1.036s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/intel	1.055s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/mcp	1.168s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/orchestrator	1.311s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/planner	1.056s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/policy	1.022s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/report	1.022s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/risk	1.021s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/rules	1.027s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/runner	1.104s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/sign	1.015s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/skillcontract	1.011s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/storage	1.060s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools	1.225s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/clamav	1.020s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/lynis	1.023s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/openscap	1.019s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/osquery	1.225s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/tools/yara	1.022s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/transport/mtls	1.026s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/transport/ssh	1.153s
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/vulnerability	1.023s
+?   	github.com/bingooyong/AIHostSecurityInspector/backend/tools/check-boundaries	[no test files]
+
+stderr:

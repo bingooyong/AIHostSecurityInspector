@@ -12,9 +12,10 @@ import (
 )
 
 var (
-	ErrInsecurePolicy = errors.New("ssh host key policy is not strict")
-	ErrKnownHosts     = errors.New("known_hosts is invalid")
-	ErrArbitraryExec  = errors.New("arbitrary remote command is rejected")
+	ErrInsecurePolicy    = errors.New("ssh host key policy is not strict")
+	ErrKnownHosts        = errors.New("known_hosts is invalid")
+	ErrKnownHostsBinding = errors.New("known_hosts does not bind the requested loopback target")
+	ErrArbitraryExec     = errors.New("arbitrary remote command is rejected")
 )
 
 type Policy struct {

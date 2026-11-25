@@ -1,0 +1,11 @@
+# Placeholder absolute paths for the two loopback SSH stand-ins.
+# Replace these paths with the files created by scripts/lab_authorized_hosts.sh.
+# This file never contains private keys and never names an intranet address.
+version: 1
+hosts:
+  - host_id: linux-box-lab-ssh-001
+    identity_path: /tmp/hostsec-lab-ssh-001/id_ed25519
+    known_hosts_path: /tmp/hostsec-lab-ssh-001/known_hosts
+  - host_id: linux-box-lab-ssh-002
+    identity_path: /tmp/hostsec-lab-ssh-002/id_ed25519
+    known_hosts_path: /tmp/hostsec-lab-ssh-002/known_hosts

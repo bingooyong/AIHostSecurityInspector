@@ -1,0 +1,66 @@
+{
+  "intent": {
+    "schema_version": "1.0",
+    "canonical_version": "execution-intent-canonical-v1",
+    "requester_principal": "operator-alice",
+    "host_ids": [
+      "linux-box-lab-ssh-001",
+      "linux-box-lab-ssh-002"
+    ],
+    "identity_refs": [
+      "hostid-linux-box-lab-ssh-001",
+      "hostid-linux-box-lab-ssh-002"
+    ],
+    "asset_snapshot_hash": "f651612cb6895795cfbff3c770709b0d40656875d62998e41cc1b78e441e3853",
+    "policy_id": "hostsec-builtin",
+    "policy_version": "1.0",
+    "policy_hash": "42fcfa27bbec2d0c23291ebe1612f034b706ed1fb2fc0ae8c5a74e0c12d7b071",
+    "profile": "quick",
+    "modules": [
+      "host_identity",
+      "process_inventory",
+      "network_inventory",
+      "account_inventory",
+      "service_inventory",
+      "persistence_inventory",
+      "security_config"
+    ],
+    "tools": [],
+    "allowed_paths": [],
+    "excluded_paths": [
+      "/proc",
+      "/sys",
+      "/dev",
+      "/run",
+      "/var/lib/mysql",
+      "/var/lib/postgresql",
+      "/var/lib/docker",
+      "/var/backups",
+      "/backup"
+    ],
+    "excluded_mount_types": [
+      "nfs",
+      "nfs4",
+      "cifs",
+      "fuse",
+      "smbfs"
+    ],
+    "limits": {
+      "timeout_seconds": 900,
+      "max_concurrency": 2,
+      "max_files": 10000,
+      "max_file_size_bytes": 33554432,
+      "io_max_bytes_per_second": 10485760,
+      "stop_on_resource_pressure": true,
+      "maintenance_window_required": false
+    },
+    "required_capabilities": [
+      "linux_proc"
+    ],
+    "valid_from": "2026-11-21T00:00:00Z",
+    "valid_until": "2026-11-22T00:00:00Z",
+    "maintenance_window": null,
+    "mode": "READ_ONLY"
+  },
+  "intent_hash": "511fb767975db0776ab1be3841400cefdd7ef333b198a48d31e734659572928f"
+}

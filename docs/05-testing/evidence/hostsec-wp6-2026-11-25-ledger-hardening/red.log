@@ -1,0 +1,30 @@
+--- FAIL: TestLedgerIndependentHandles (0.00s)
+    ledger_test.go:49: stale handle accepted replay: <nil>
+--- FAIL: TestLedgerFailedWriteDoesNotConsume (0.01s)
+    ledger_test.go:82: failed write poisoned nonce: approval nonce already consumed
+--- FAIL: TestLedgerRejectsChangedState (0.00s)
+    --- FAIL: TestLedgerRejectsChangedState/missing (0.00s)
+        ledger_test.go:109: changed state silently replaced
+    --- FAIL: TestLedgerRejectsChangedState/corrupt (0.00s)
+        ledger_test.go:109: changed state silently replaced
+    --- FAIL: TestLedgerRejectsChangedState/null (0.00s)
+        ledger_test.go:109: changed state silently replaced
+--- FAIL: TestLedgerRejectsUnsafeFiles (0.01s)
+    --- FAIL: TestLedgerRejectsUnsafeFiles/symlink (0.00s)
+        ledger_test.go:141: unsafe ledger accepted
+    --- FAIL: TestLedgerRejectsUnsafeFiles/hardlink (0.00s)
+        ledger_test.go:141: unsafe ledger accepted
+    --- FAIL: TestLedgerRejectsUnsafeFiles/public (0.00s)
+        ledger_test.go:141: unsafe ledger accepted
+    --- FAIL: TestLedgerRejectsUnsafeFiles/null (0.00s)
+        ledger_test.go:141: unsafe ledger accepted
+    --- FAIL: TestLedgerRejectsUnsafeFiles/oversized (0.01s)
+        ledger_test.go:141: unsafe ledger accepted
+--- FAIL: TestLedgerLockFailsClosed (0.00s)
+    ledger_test.go:162: busy lock ignored
+    ledger_test.go:168: lock failure consumed nonce: approval nonce already consumed
+--- FAIL: TestLedgerProcessContention (0.02s)
+    ledger_test.go:248: expected exactly one consumer, got 4
+FAIL
+FAIL	github.com/bingooyong/AIHostSecurityInspector/backend/internal/approval	0.045s
+FAIL

@@ -3,7 +3,7 @@
   "name": "hostsec-32a",
   "title": "HOSTSEC-32A 本地审批与审计",
   "description": "Before any deep execution, verify expiry/targets/profile/plan hash/requester separation and durable audit",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": "backend",
@@ -12,11 +12,11 @@
   "assignee": "lvyong",
   "createdAt": "2026-11-20",
   "completedAt": null,
-  "branch": null,
+  "branch": "lab/authorized-host-collection",
   "base_branch": "main",
   "worktree_path": null,
   "commit": null,
-  "pr_url": null,
+  "pr_url": "https://github.com/bingooyong/AIHostSecurityInspector/pull/7",
   "subtasks": [],
   "children": [],
   "parent": "11-20-hostsec-master",
@@ -29,7 +29,7 @@
     "backend/internal/approval/testdata/",
     "backend/internal/audit/testdata/"
   ],
-  "notes": "",
+  "notes": "2026-11-25 PR7 ledger hardening: stable nonblocking cross-process lock, read-under-lock, atomic synced snapshots, failure-closed state validation. Local make check 23/23 PASS; no delivery-status promotion; see ledger-hardening REVIEW.md.",
   "meta": {
     "hostsec_id": "HOSTSEC-32A",
     "phase": "WP1",
@@ -49,7 +49,8 @@
       "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/BLOCKED.md",
       "backend/internal/planner/intent.go",
       "backend/internal/planner/consume_test.go",
-      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json"
+      "docs/05-testing/evidence/hostsec-wp4-2026-11-21-local-surfaces/results.json",
+      "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/REVIEW.md"
     ],
     "layout_adr": "ADR-008",
     "planning_refinement": "docs/implementation/WP1-DETAILED-PLAN.md",

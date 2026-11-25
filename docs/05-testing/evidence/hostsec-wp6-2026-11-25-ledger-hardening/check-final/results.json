@@ -1,0 +1,335 @@
+{
+  "executed_at": "2026-11-25T02:05:48.482945+00:00",
+  "scope": "current local quality gates; does not overwrite layout-migration historical evidence; no Linux collector runtime or remote CI acceptance",
+  "status": "PASS",
+  "evidence_dir": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final",
+  "results": [
+    {
+      "gate": "layout-structure",
+      "command": [
+        "python3",
+        "scripts/check_layout.py",
+        "--structure-only"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-25T02:04:27.728142+00:00",
+      "elapsed_seconds": 0.108,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/layout-structure.log"
+    },
+    {
+      "gate": "format",
+      "command": [
+        "gofmt",
+        "-l",
+        "cmd",
+        "internal",
+        "tools"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:04:27.836769+00:00",
+      "elapsed_seconds": 0.032,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/format.log"
+    },
+    {
+      "gate": "module-verify",
+      "command": [
+        "go",
+        "mod",
+        "verify"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:04:27.868742+00:00",
+      "elapsed_seconds": 1.144,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/module-verify.log"
+    },
+    {
+      "gate": "vet",
+      "command": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:04:29.012599+00:00",
+      "elapsed_seconds": 0.159,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/vet.log"
+    },
+    {
+      "gate": "unit-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:04:29.171348+00:00",
+      "elapsed_seconds": 7.688,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/unit-race.log"
+    },
+    {
+      "gate": "lint",
+      "command": [
+        "golangci-lint",
+        "run",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:04:36.859351+00:00",
+      "elapsed_seconds": 0.596,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/lint.log"
+    },
+    {
+      "gate": "boundaries",
+      "command": [
+        "go",
+        "run",
+        "./tools/check-boundaries"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:04:37.455247+00:00",
+      "elapsed_seconds": 0.043,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/boundaries.log"
+    },
+    {
+      "gate": "build-local",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "/workspace/AIHostSecurityInspector-lab/build/hostsec",
+        "./cmd/hostsec"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:04:37.498018+00:00",
+      "elapsed_seconds": 0.082,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/build-local.log"
+    },
+    {
+      "gate": "layout-behavior",
+      "command": [
+        "python3",
+        "scripts/check_layout.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-25T02:04:37.580342+00:00",
+      "elapsed_seconds": 0.133,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/layout-behavior.log"
+    },
+    {
+      "gate": "integration-schema",
+      "command": [
+        "python3",
+        "scripts/integration.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-25T02:04:37.713858+00:00",
+      "elapsed_seconds": 2.074,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/integration-schema.log"
+    },
+    {
+      "gate": "frontend-install",
+      "command": [
+        "npm",
+        "ci"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-25T02:04:39.787729+00:00",
+      "elapsed_seconds": 46.707,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/frontend-install.log"
+    },
+    {
+      "gate": "frontend-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-25T02:05:26.494704+00:00",
+      "elapsed_seconds": 1.464,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/frontend-lint.log"
+    },
+    {
+      "gate": "frontend-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-25T02:05:27.958902+00:00",
+      "elapsed_seconds": 1.253,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/frontend-typecheck.log"
+    },
+    {
+      "gate": "frontend-test",
+      "command": [
+        "npm",
+        "run",
+        "test"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-25T02:05:29.211686+00:00",
+      "elapsed_seconds": 1.066,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/frontend-test.log"
+    },
+    {
+      "gate": "frontend-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-25T02:05:30.277390+00:00",
+      "elapsed_seconds": 1.981,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/frontend-build.log"
+    },
+    {
+      "gate": "frontend-playwright-install",
+      "command": [
+        "npx",
+        "playwright",
+        "install",
+        "chromium"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-25T02:05:32.258722+00:00",
+      "elapsed_seconds": 0.723,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/frontend-playwright-install.log"
+    },
+    {
+      "gate": "frontend-e2e",
+      "command": [
+        "npm",
+        "run",
+        "e2e"
+      ],
+      "cwd": "frontend",
+      "started_at": "2026-11-25T02:05:32.981881+00:00",
+      "elapsed_seconds": 3.253,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/frontend-e2e.log"
+    },
+    {
+      "gate": "future-contract",
+      "command": [
+        "python3",
+        "scripts/contracts.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-25T02:05:36.234935+00:00",
+      "elapsed_seconds": 0.233,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/future-contract.log"
+    },
+    {
+      "gate": "baseline",
+      "command": [
+        "python3",
+        "scripts/validate_baseline.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-25T02:05:36.467953+00:00",
+      "elapsed_seconds": 0.132,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/baseline.log"
+    },
+    {
+      "gate": "vulnerability",
+      "command": [
+        "govulncheck",
+        "-show",
+        "verbose",
+        "./..."
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:05:36.600318+00:00",
+      "elapsed_seconds": 5.806,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/vulnerability.log"
+    },
+    {
+      "gate": "sbom",
+      "command": [
+        "cyclonedx-gomod",
+        "mod",
+        "-json",
+        "-output",
+        "/workspace/AIHostSecurityInspector-lab/build/sbom.cdx.json"
+      ],
+      "cwd": "backend",
+      "started_at": "2026-11-25T02:05:42.405991+00:00",
+      "elapsed_seconds": 1.024,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/sbom.log"
+    },
+    {
+      "gate": "cross-build",
+      "command": [
+        "python3",
+        "scripts/build_release.py"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-25T02:05:43.429859+00:00",
+      "elapsed_seconds": 5.035,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/cross-build.log"
+    },
+    {
+      "gate": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": ".",
+      "started_at": "2026-11-25T02:05:48.465190+00:00",
+      "elapsed_seconds": 0.005,
+      "exit_code": 0,
+      "status": "PASS",
+      "log": "docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/check-final/whitespace.log"
+    }
+  ]
+}
