@@ -36,3 +36,14 @@ make check
 完成证据：docs/05-testing/evidence/hostsec-32a：信任假设、签名字节/golden、全部拒绝矩阵、双进程至多一次许可、崩溃/锁/磁盘失败和审计持久记录；不得包含私钥。
 
 回滚：审批格式/信任根版本化，rollback保留已消费nonce与审计历史；不恢复已失效/已消费审批。新旧journal迁移需对账，不删除日志“修复”验证错误。
+
+## 2026-11-25 PR7 切片执行计划
+
+- [x] RED：ledger_test.go 添加预先打开实例同 nonce 拒绝、不同 nonce 不丢失、写失败后重试、状态消失/损坏与文件类型拒绝、双进程竞争。运行 `go -C backend test -count=1 ./internal/approval -run TestLedger`，确认行为断言失败。
+- [x] GREEN：ledger.go 保持 OpenLedger/Consume API，持侧车锁重读当前 JSON，检查 nonce 后用同目录随机临时文件同步原子替换，同步目录后返回；失败不提前更新内存。
+- [x] 回归：approval/orchestrator/planner/audit race；make check 使用全新证据目录，默认 fixtures-only。
+- [x] 审查：检查稳定锁跨 rename、旧格式兼容、失败关闭、nonce 保留、无秘密/原始主机数据；补操作说明与质量规范。
+- [x] 本地验收：冻结 CLI 契约与非 loopback 拒绝，记录真实 36/11/1；23/23 PASS，证据见 docs/05-testing/evidence/hostsec-wp6-2026-11-25-ledger-hardening/REVIEW.md。
+- [ ] 交付：提交同 PR7 分支，推送后 CI 仅查一次，不合并。
+
+回滚仅还原代码，不回滚/删除已消费 ledger 和 .lock。未完成真实双架构 VM/平台身份/内网采集不宣称交付。

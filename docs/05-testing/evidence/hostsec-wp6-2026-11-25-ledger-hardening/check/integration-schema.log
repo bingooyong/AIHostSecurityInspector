@@ -1,0 +1,10 @@
+cwd=.
+$ python3 scripts/integration.py
+exit=1
+stdout:
+
+stderr:
+Traceback (most recent call last):
+  File "/workspace/AIHostSecurityInspector-lab/scripts/integration.py", line 9, in <module>
+    from jsonschema import Draft202012Validator, FormatChecker
+ModuleNotFoundError: No module named 'jsonschema'

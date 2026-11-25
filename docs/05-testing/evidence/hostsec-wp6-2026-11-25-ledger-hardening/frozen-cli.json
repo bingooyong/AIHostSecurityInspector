@@ -1,0 +1,38 @@
+{
+  "commands": [
+    {
+      "command": [
+        "./build/hostsec",
+        "doctor",
+        "--json"
+      ],
+      "exit_code": 1,
+      "stdout": "{\n  \"schema_version\": \"1.0\",\n  \"version\": \"0.1.0-dev\",\n  \"os\": \"linux\",\n  \"architecture\": \"amd64\",\n  \"offline_planning_available\": true,\n  \"linux_platform_supported\": true,\n  \"collector_available\": false,\n  \"scan_ready\": false,\n  \"limitations\": [\n    \"Collector and scan execution are not implemented; only offline planning is available.\",\n    \"No target, credential store, scanner, database, or model endpoint was accessed.\"\n  ]\n}\n",
+      "stderr": "{\"level\":\"error\",\"code\":\"COLLECTOR_UNAVAILABLE\",\"message\":\"Linux collector is not available in this release\"}\n"
+    },
+    {
+      "command": [
+        "./build/hostsec",
+        "scan"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "{\"level\":\"error\",\"code\":\"INVALID_ARGUMENT\",\"message\":\"unsupported command\"}\n"
+    },
+    {
+      "command": [
+        "./build/hostsec",
+        "mcp",
+        "serve"
+      ],
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "{\"level\":\"error\",\"code\":\"INVALID_ARGUMENT\",\"message\":\"unsupported mcp action\"}\n"
+    }
+  ],
+  "trellis_counts": {
+    "IMPLEMENTED": 36,
+    "PARTIAL": 11,
+    "BLOCKED": 1
+  }
+}

@@ -1,0 +1,14 @@
+=== RUN   TestInspectAuthorizedIntentLedgerRejectsReplay
+--- PASS: TestInspectAuthorizedIntentLedgerRejectsReplay (0.02s)
+=== RUN   TestPrepareAuthorizedCollectionRefusesUnauthorizedUnknownAndNonLoopback
+--- PASS: TestPrepareAuthorizedCollectionRefusesUnauthorizedUnknownAndNonLoopback (0.00s)
+=== RUN   TestPrepareAuthorizedCollectionRefusesDeepProfile
+--- PASS: TestPrepareAuthorizedCollectionRefusesDeepProfile (0.00s)
+PASS
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/orchestrator	0.030s
+=== RUN   TestInspectAuthorizedCLIRefusesNonLoopbackWithSpecificMessage
+--- PASS: TestInspectAuthorizedCLIRefusesNonLoopbackWithSpecificMessage (0.00s)
+=== RUN   TestHelpMentionsAuthorizedCollectionNotIntranetScanner
+--- PASS: TestHelpMentionsAuthorizedCollectionNotIntranetScanner (0.00s)
+PASS
+ok  	github.com/bingooyong/AIHostSecurityInspector/backend/internal/cli	0.011s
